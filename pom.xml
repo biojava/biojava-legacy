@@ -226,14 +226,13 @@
 	<modules>
 				
 		<module>core</module>
-		<module>phylo</module>
-		<module>blast</module>
-		<module>biosql</module>
 		<module>alignment</module>
+		<module>biosql</module>
+		<module>blast</module>
+		<module>bytecode</module>
 		<module>das</module>
 		<module>gui</module>
-		<module>sequencing</module>
-		<module>bytecode</module>
-		
+		<module>sequencing</module>		
+		<module>phylo</module>
 	</modules>
 </project>

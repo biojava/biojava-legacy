@@ -585,7 +585,7 @@ public class SimpleRichLocation extends AbstractChangeable implements RichLocati
             RichSequence rs = (RichSequence)seq;
             if (this.getCircularLength()>0) {
                 if (!rs.getCircular()) throw new IllegalArgumentException("Attempt to apply circular location to non-circular sequence");
-                if (rs.length()==this.getCircularLength()) throw new IllegalArgumentException("Attempt to apply circular location to circular sequence of different length");
+                if (rs.length()!=this.getCircularLength()) throw new IllegalArgumentException("Attempt to apply circular location to circular sequence of different length");
             }
         }
         

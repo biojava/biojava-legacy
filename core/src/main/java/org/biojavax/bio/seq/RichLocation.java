@@ -512,7 +512,7 @@ public interface RichLocation extends Location, RichAnnotatable, Comparable {
 			// Calculate the length.
 			int locationLength = end - start;
 			// Move the start back till it can go no further
-			while (start >= seqLength)
+			while (start > seqLength)
 				start -= seqLength;
 			// Move the end back.
 			end = start + locationLength;

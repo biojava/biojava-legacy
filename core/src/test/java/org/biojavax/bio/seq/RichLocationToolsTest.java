@@ -86,4 +86,17 @@ public class RichLocationToolsTest extends TestCase {
         assert (loc.getMin()==1);
         assert (loc.getMax()==30);
     }
+
+    /** Test modulateCircularLocation at junction: method must return valid
+     * sequence position >0.
+     */
+    public void testmodulatecircularLocation() {
+        int seqlen = 10000; //Dummy
+        int start = seqlen;
+        int end = 1000; // Dummy
+
+        int[] res = RichLocation.Tools.modulateCircularLocation(start,end,seqlen);
+        assert (res[0]==seqlen);
+        assert (res[1]==seqlen+end);
+    }
 }

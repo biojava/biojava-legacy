@@ -65,7 +65,7 @@
 		</repository>
 	</distributionManagement>
 	<properties>
-		<jdk.version>1.6</jdk.version>
+		<jdk.version>1.5</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 	</properties>
@@ -116,7 +116,7 @@
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.1</version>
 					<configuration>
-						<tagBase>svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags</tagBase>
+						<tagBase>svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-legacy/tags</tagBase>
 						<remoteTagging>true</remoteTagging>
 						<preparationGoals>clean install</preparationGoals>
 						<autoVersionSubmodules>true</autoVersionSubmodules>

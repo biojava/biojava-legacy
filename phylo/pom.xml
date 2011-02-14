@@ -3,12 +3,12 @@
   <parent>
     <artifactId>biojava-legacy</artifactId>
     <groupId>org.biojava</groupId>
-    <version>1.8.1-SNAPSHOT</version>
+    <version>1.8.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.biojava</groupId>
   <artifactId>phylo</artifactId>
-  <version>1.8.1-SNAPSHOT</version>
+  <version>1.8.1</version>
   <name>phylo</name>
   <distributionManagement>
 		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>

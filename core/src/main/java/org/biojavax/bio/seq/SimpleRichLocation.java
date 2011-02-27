@@ -701,8 +701,13 @@ public class SimpleRichLocation extends AbstractChangeable implements RichLocati
             if (this.term!=null && fo.getTerm()!=null && !this.term.equals(fo.getTerm())) return this.term.compareTo(fo.getTerm());
             else return -1;
         }
-        if (this.getMin()!=fo.getMin()) return this.getMin()-fo.getMin();
-        return this.getMax()-fo.getMax();
+        if(this.strand.equals(RichLocation.Strand.POSITIVE_STRAND) || this.strand.equals(RichLocation.Strand.UNKNOWN_STRAND )) {
+            if (this.getMin()!=fo.getMin()) return this.getMin()-fo.getMin();
+            return this.getMax()-fo.getMax();
+        } else { // NEGATIVE STRAND
+            if (this.getMax()!=fo.getMax()) return fo.getMax()-this.getMax();
+            return fo.getMin()-this.getMin();
+        }
     }
     
     /**

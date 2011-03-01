@@ -134,10 +134,10 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
     //sections start at a line and continue till the first line afterwards with a
     //non-whitespace first character
     //we want to match any of the following as a new section within a section
-    //  \s{0,8} word \s{1,7} value
+    //  \s{0,8} word \s{0,7} value
     //  \s{21} /word = value
     //  \s{21} /word
-    protected static final Pattern sectp = Pattern.compile("^(\\s{0,8}(\\S+)\\s{1,7}(.*)|\\s{21}(/\\S+?)=(.*)|\\s{21}(/\\S+))$");
+    protected static final Pattern sectp = Pattern.compile("^(\\s{0,8}(\\S+)\\s{0,7}(.*)|\\s{21}(/\\S+?)=(.*)|\\s{21}(/\\S+))$");
     
     protected static final Pattern readableFiles = Pattern.compile(".*(g[bp]k*$|\\u002eg[bp].*)");
     protected static final Pattern headerLine = Pattern.compile("^LOCUS.*");
@@ -571,7 +571,7 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
     // reads an indented section, combining split lines and creating a list of key->value tuples
     private List readSection(BufferedReader br) throws ParseException {
         List section = new ArrayList();
-        String line;
+        String line = "";
         String currKey = null;
         StringBuffer currVal = new StringBuffer();
         boolean done = false;
@@ -581,7 +581,7 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
             while (!done) {
                 br.mark(320);
                 line = br.readLine();
-                String firstSecKey = section.size() == 0 ? "" : ((String[])section.get(0))[0];
+                String firstSecKey = section.isEmpty() ? "" : ((String[])section.get(0))[0];
                 if (line != null && line.matches("\\p{Space}*")) {
 		   // regular expression \p{Space}* will match line 
                    // having only white space characters
@@ -616,7 +616,7 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
             String message = ParseException.newMessage(this.getClass(), accession, identifier, "", sectionToString(section));
             throw new ParseException(e, message);
         } catch (RuntimeException e){
-            String message = ParseException.newMessage(this.getClass(), accession, identifier, "Bad section", sectionToString(section));
+            String message = ParseException.newMessage(this.getClass(), accession, identifier, "Bad line", line);
             throw new ParseException(e, message);
         }
         return section;

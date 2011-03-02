@@ -37,6 +37,7 @@ import org.biojava.bio.seq.io.ChunkedSymbolListFactory;
 import org.biojava.bio.seq.io.ParseException;
 import org.biojava.bio.symbol.Alphabet;
 import org.biojava.bio.symbol.IllegalAlphabetException;
+import org.biojava.bio.symbol.Location;
 import org.biojava.bio.symbol.SimpleSymbolListFactory;
 import org.biojava.bio.symbol.Symbol;
 import org.biojava.bio.symbol.SymbolList;
@@ -54,7 +55,9 @@ import org.biojavax.SimpleComment;
 import org.biojavax.SimpleNote;
 import org.biojavax.SimpleRichAnnotation;
 import org.biojavax.bio.BioEntryRelationship;
+import org.biojavax.bio.seq.EmptyRichLocation;
 import org.biojavax.bio.seq.RichFeature;
+import org.biojavax.bio.seq.RichLocation;
 import org.biojavax.bio.seq.RichSequence;
 import org.biojavax.bio.seq.SimpleRichFeature;
 import org.biojavax.bio.seq.SimpleRichFeatureRelationship;
@@ -437,9 +440,26 @@ public class SimpleRichSequenceBuilder extends RichSeqIOAdapter implements RichS
             rs.setIdentifier(this.identifier);
             rs.setTaxon(this.taxon);
             rs.setCircular(this.circular);
+            if(this.circular && this.symbols!=null) {
+                int circularlength = syms.length();
+                for(Object obj:rootFeatures) {
+                    Feature rf = (Feature)obj;
+                    RichLocation rlc = RichLocation.Tools.enrich(rf.getLocation());
+                    rlc.setCircularLength(circularlength);
+                }
+            }
             rs.setFeatureSet(this.rootFeatures);
             for (Iterator i = this.crossRefs.iterator(); i.hasNext(); ) rs.addRankedCrossRef((RankedCrossRef)i.next());
             for (Iterator i = this.relations.iterator(); i.hasNext(); ) rs.addRelationship((BioEntryRelationship)i.next());
+            if(this.circular && this.symbols!=null) {
+                int circularlength = syms.length();
+                for(Object obj:references) {
+                    RankedDocRef rdf = (RankedDocRef)obj;
+                    RichLocation rlc = RichLocation.Tools.enrich(rdf.getLocation());
+                    if(!(rlc instanceof EmptyRichLocation)) // Can be empty
+                        rlc.setCircularLength(circularlength);
+                }
+            }
             for (Iterator i = this.references.iterator(); i.hasNext(); ) rs.addRankedDocRef((RankedDocRef)i.next());
             for (Iterator i = this.comments.iterator(); i.hasNext(); ) rs.addComment((Comment)i.next());
             // set annotations

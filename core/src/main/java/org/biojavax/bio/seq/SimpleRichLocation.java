@@ -507,17 +507,17 @@ public class SimpleRichLocation extends AbstractChangeable implements RichLocati
      * sequence is returned.
      */
     public Location intersection(Location l) {
-        if (!(l instanceof RichLocation)) l = RichLocation.Tools.enrich(l);
-        if (l instanceof EmptyRichLocation) return l;
-        else if (l instanceof CompoundRichLocation) return l.intersection(this);
+        RichLocation rl= RichLocation.Tools.enrich(l);
+        if (rl instanceof EmptyRichLocation) return rl;
+        else if (rl instanceof CompoundRichLocation) return rl.intersection(this);
+        else if(circularLength != rl.getCircularLength()) return rl;
         else {
-            RichLocation rl = (RichLocation)l;
-            if (this.overlaps(l)) {
+            if (this.overlaps(rl)) {
                 if (this.getStrand().equals(rl.getStrand())) {
                     // We can do the one-v-one same-strand overlapping intersection here
-                    if (this.circularLength>0) {
+                    if (circularLength>0) {
                         // Modulate our start/end to shortest possible equivalent region
-                        int parts[] = RichLocation.Tools.modulateCircularLocationPair(this,rl,this.circularLength);
+                        int parts[] = RichLocation.Tools.modulateCircularLocationPair(this,rl,circularLength);
                         int ourModStart = parts[0];
                         int ourModEnd = parts[1];
                         int theirModStart = parts[2];
@@ -525,7 +525,9 @@ public class SimpleRichLocation extends AbstractChangeable implements RichLocati
                         // Now we can select the minimum and maximum positions using the modded locations
                         Position startPos = (ourModStart>theirModStart)?this.min:rl.getMinPosition();
                         Position endPos = (ourModEnd<theirModEnd)?this.max:rl.getMaxPosition();
-                        return new SimpleRichLocation(startPos,endPos,0,this.strand,this.crossRef);
+                        RichLocation templ = new SimpleRichLocation(startPos,endPos,0,this.strand,this.crossRef);
+                        templ.setCircularLength(circularLength);
+                        return templ;
                     } else {
                         return new SimpleRichLocation(this.posmax(this.min,rl.getMinPosition()),this.posmin(this.max,rl.getMaxPosition()),0,this.strand,this.crossRef);
                     }

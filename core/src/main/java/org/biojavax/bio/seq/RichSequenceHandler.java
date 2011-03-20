@@ -130,7 +130,7 @@ public interface RichSequenceHandler {
    *
    * @return  a List of Symbols
    */
-    public List toList(RichSequence seq);
+    public List<Symbol> toList(RichSequence seq);
     
   /**
    * Return a region of this sequence as a String.
@@ -175,5 +175,5 @@ public interface RichSequenceHandler {
    *
    * @return  an iterator
    */
-    public Iterator iterator(RichSequence seq);
+    public Iterator<Symbol> iterator(RichSequence seq);
 }

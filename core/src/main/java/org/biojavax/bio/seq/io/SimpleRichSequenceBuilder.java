@@ -242,7 +242,7 @@ public class SimpleRichSequenceBuilder extends RichSeqIOAdapter implements RichS
         ref.setRank(crossRefsRank++);
         this.crossRefs.add(ref);
     }
-    private Set crossRefs = new TreeSet();
+    private Set<RankedCrossRef> crossRefs = new TreeSet<RankedCrossRef>();
     private int crossRefsRank = 1;
     
     /**
@@ -269,7 +269,7 @@ public class SimpleRichSequenceBuilder extends RichSeqIOAdapter implements RichS
         if (comment==null) throw new ParseException("Comment cannot be null");
         this.comments.add(new SimpleComment(comment,commentRank++));
     }
-    private Set comments = new TreeSet();
+    private Set<Comment> comments = new TreeSet<Comment>();
     private int commentRank = 1;
     
     /**
@@ -342,7 +342,7 @@ public class SimpleRichSequenceBuilder extends RichSeqIOAdapter implements RichS
         if (relationship==null) throw new ParseException("Relationship cannot be null");
         this.relations.add(relationship);
     }
-    private Set relations = new TreeSet();
+    private Set<BioEntryRelationship> relations = new TreeSet<BioEntryRelationship>();
     
     /**
      * {@inheritDoc}
@@ -352,7 +352,7 @@ public class SimpleRichSequenceBuilder extends RichSeqIOAdapter implements RichS
         ref.setRank(referenceCount++);
         this.references.add(ref);
     }
-    private Set references = new TreeSet();
+    private Set<RankedDocRef> references = new TreeSet<RankedDocRef>();
     private int referenceCount = 1;
     
     /**
@@ -449,19 +449,18 @@ public class SimpleRichSequenceBuilder extends RichSeqIOAdapter implements RichS
                 }
             }
             rs.setFeatureSet(this.rootFeatures);
-            for (Iterator i = this.crossRefs.iterator(); i.hasNext(); ) rs.addRankedCrossRef((RankedCrossRef)i.next());
-            for (Iterator i = this.relations.iterator(); i.hasNext(); ) rs.addRelationship((BioEntryRelationship)i.next());
+            for (Iterator<RankedCrossRef> i = this.crossRefs.iterator(); i.hasNext(); ) rs.addRankedCrossRef(i.next());
+            for (Iterator<BioEntryRelationship> i = this.relations.iterator(); i.hasNext(); ) rs.addRelationship(i.next());
             if(this.circular && this.symbols!=null) {
                 int circularlength = syms.length();
-                for(Object obj:references) {
-                    RankedDocRef rdf = (RankedDocRef)obj;
+                for(RankedDocRef rdf:references) {
                     RichLocation rlc = RichLocation.Tools.enrich(rdf.getLocation());
                     if(!(rlc instanceof EmptyRichLocation)) // Can be empty
                         rlc.setCircularLength(circularlength);
                 }
             }
-            for (Iterator i = this.references.iterator(); i.hasNext(); ) rs.addRankedDocRef((RankedDocRef)i.next());
-            for (Iterator i = this.comments.iterator(); i.hasNext(); ) rs.addComment((Comment)i.next());
+            for (Iterator<RankedDocRef> i = this.references.iterator(); i.hasNext(); ) rs.addRankedDocRef(i.next());
+            for (Iterator<Comment> i = this.comments.iterator(); i.hasNext(); ) rs.addComment(i.next());
             // set annotations
             rs.setNoteSet(this.notes.getNoteSet());
         } catch (Exception e) {

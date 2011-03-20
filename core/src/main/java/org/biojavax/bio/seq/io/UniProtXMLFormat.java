@@ -824,8 +824,8 @@ public class UniProtXMLFormat extends RichSequenceFormat.BasicFormat {
         }
         
         // docrefs
-        for (Iterator i = rs.getRankedDocRefs().iterator(); i.hasNext(); ) {
-            RankedDocRef rdr = (RankedDocRef)i.next();
+        for (Iterator<RankedDocRef> i = rs.getRankedDocRefs().iterator(); i.hasNext(); ) {
+            RankedDocRef rdr = i.next();
             DocRef dr = rdr.getDocumentReference();
             
             xml.openTag(REFERENCE_TAG);
@@ -840,10 +840,10 @@ public class UniProtXMLFormat extends RichSequenceFormat.BasicFormat {
                 xml.closeTag(TITLE_TAG);
             }
             
-            List auths = new ArrayList(dr.getAuthorList());
-            List editors = new ArrayList(auths);
-            for (final Iterator j = editors.iterator(); j.hasNext(); ) {
-                DocRefAuthor a = (DocRefAuthor)j.next();
+            List<DocRefAuthor> auths = new ArrayList(dr.getAuthorList());
+            List<DocRefAuthor> editors = new ArrayList<DocRefAuthor>(auths);
+            for (final Iterator<DocRefAuthor> j = editors.iterator(); j.hasNext(); ) {
+                DocRefAuthor a = j.next();
                 if (!a.isEditor())
                     j.remove();
                 else
@@ -851,8 +851,8 @@ public class UniProtXMLFormat extends RichSequenceFormat.BasicFormat {
             }
             if (!editors.isEmpty()) {
                 xml.openTag(EDITOR_LIST_TAG);
-                for (Iterator j = editors.iterator(); j.hasNext(); ) {
-                    DocRefAuthor a = (DocRefAuthor)j.next();
+                for (Iterator<DocRefAuthor> j = editors.iterator(); j.hasNext(); ) {
+                    DocRefAuthor a = j.next();
                     if (a.isEditor()) {
                         if (a.isConsortium()) {
                             xml.openTag(CONSORTIUM_TAG);
@@ -984,10 +984,10 @@ public class UniProtXMLFormat extends RichSequenceFormat.BasicFormat {
         }
         
         // comments
-        for (Iterator i = rs.getComments().iterator(); i.hasNext(); ) {
+        for (Iterator<Comment> i = rs.getComments().iterator(); i.hasNext(); ) {
             // use UniProtCommentParser to convert each text comment from string to object
             // do not print unconvertible ones (eg. no -!- on text)
-            Comment c = (Comment)i.next();
+            Comment c = i.next();
             if (UniProtCommentParser.isParseable(c)) {
                 // otherwise parse and display appropriately
                 UniProtCommentParser ucp = new UniProtCommentParser();
@@ -1167,8 +1167,8 @@ public class UniProtXMLFormat extends RichSequenceFormat.BasicFormat {
         }
         
         // xrefs
-        for (Iterator i = rs.getRankedCrossRefs().iterator(); i.hasNext(); ) {
-            RankedCrossRef rcr = (RankedCrossRef)i.next();
+        for (Iterator<RankedCrossRef> i = rs.getRankedCrossRefs().iterator(); i.hasNext(); ) {
+            RankedCrossRef rcr = i.next();
             CrossRef cr = rcr.getCrossRef();
             
             xml.openTag(DBXREF_TAG);

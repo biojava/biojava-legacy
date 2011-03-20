@@ -18,8 +18,10 @@ import junit.framework.TestSuite;
 import org.biojava.utils.ChangeEvent;
 import org.biojava.utils.ChangeListener.ChangeEventRecorder;
 import org.biojavax.Comment;
+import org.biojavax.CrossRef;
 import org.biojavax.DocRefAuthor;
 import org.biojavax.Namespace;
+import org.biojavax.Note;
 import org.biojavax.RankedCrossRef;
 import org.biojavax.RankedDocRef;
 import org.biojavax.RichObjectFactory;
@@ -85,8 +87,11 @@ public class SimpleBioEntryTest extends TestCase {
         assertNotNull(be.getRankedCrossRefs());
         assertEquals(0, be.getRankedCrossRefs().size());
         //hibernate needs it to be writable
+
+        CrossRef cr = new SimpleCrossRef("local","1",1);
+        RankedCrossRef ref = new SimpleRankedCrossRef(cr,0);
         try{
-            be.getRankedCrossRefs().add(new Object());
+            be.getRankedCrossRefs().add(ref);
         }catch(Exception ex){
             fail("Not expecting "+ex.getClass().getName());
         }
@@ -140,8 +145,10 @@ public class SimpleBioEntryTest extends TestCase {
         //should not be null;
         assertNotNull(be.getNoteSet());
         //hibernate needs it to be writable
+        ComparableTerm t = RichObjectFactory.getDefaultOntology().getOrCreateTerm("test");
+        Note n = new SimpleNote(t,"test",0);
         try{
-            be.getNoteSet().add(new Object());
+            be.getNoteSet().add(n);
         }catch(Exception ex){
             fail("Not expecting "+ex.getClass().getName());
         }

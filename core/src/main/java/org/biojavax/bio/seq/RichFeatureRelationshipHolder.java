@@ -49,13 +49,13 @@ public interface RichFeatureRelationshipHolder {
      * Returns the set of relationships held in this feature holder.
      * @return a set of RichFeatureRelationship objects.
      */
-    public Set getFeatureRelationshipSet();
+    public Set<RichFeatureRelationship> getFeatureRelationshipSet();
     
     /**
-     * Clears the relations from this feautre holder and replaces them with a new set.
+     * Clears the relations from this feature holder and replaces them with a new set.
      * @param relationships the new set of features this holder should have. The set must 
      * contain only RichFeatureRelationship objects.
      * @throws ChangeVetoException if the new set could not be installed.
      */
-    public void setFeatureRelationshipSet(Set relationships) throws ChangeVetoException;
+    public void setFeatureRelationshipSet(Set<RichFeatureRelationship> relationships) throws ChangeVetoException;
 }

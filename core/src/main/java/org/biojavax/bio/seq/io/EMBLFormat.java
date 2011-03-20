@@ -483,7 +483,7 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
                 }
                 // create the docref object
                 try {
-                    List authSet = DocRefAuthor.Tools.parseAuthorString(authors);
+                    List<DocRefAuthor> authSet = DocRefAuthor.Tools.parseAuthorString(authors);
                     if (consortium!=null) authSet.add(new SimpleDocRefAuthor(consortium, true, false));
                     DocRef dr = (DocRef)RichObjectFactory.getObject(SimpleDocRef.class,new Object[]{authSet,locator,title});
                     // assign either the pubmed or medline to the docref - medline gets priority, then pubmed, then doi
@@ -955,8 +955,8 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
         }
         
         // references - rank (bases x to y)
-        for (Iterator r = rs.getRankedDocRefs().iterator(); r.hasNext(); ) {
-            RankedDocRef rdr = (RankedDocRef)r.next();
+        for (Iterator<RankedDocRef> r = rs.getRankedDocRefs().iterator(); r.hasNext(); ) {
+            RankedDocRef rdr = r.next();
             DocRef d = rdr.getDocumentReference();
             // RN, RC, RP, RX, RG, RA, RT, RL
             StringTools.writeKeyValueLine(REFERENCE_TAG, "["+rdr.getRank()+"]", 5, this.getLineWidth(), null, REFERENCE_TAG, this.getPrintStream());
@@ -968,9 +968,9 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
             StringTools.writeKeyValueLine(REFERENCE_POSITION_TAG, rstart+"-"+rend, 5, this.getLineWidth(), null, REFERENCE_POSITION_TAG, this.getPrintStream());
             CrossRef c = d.getCrossref();
             if (c!=null) StringTools.writeKeyValueLine(REFERENCE_XREF_TAG, c.getDbname()+"; "+c.getAccession()+".", 5, this.getLineWidth(), null, REFERENCE_XREF_TAG, this.getPrintStream());
-            List auths = d.getAuthorList();
-            for (Iterator j = auths.iterator(); j.hasNext(); ) {
-                DocRefAuthor a = (DocRefAuthor)j.next();
+            List<DocRefAuthor> auths = d.getAuthorList();
+            for (Iterator<DocRefAuthor> j = auths.iterator(); j.hasNext(); ) {
+                DocRefAuthor a = j.next();
                 if (a.isConsortium()) {
                     StringTools.writeKeyValueLine(CONSORTIUM_TAG, a+";", 5, this.getLineWidth(), null, CONSORTIUM_TAG, this.getPrintStream());
                     j.remove();
@@ -985,8 +985,8 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
         }
         
         // db references - ranked
-        for (Iterator r = rs.getRankedCrossRefs().iterator(); r.hasNext(); ) {
-            RankedCrossRef rcr = (RankedCrossRef)r.next();
+        for (Iterator<RankedCrossRef> r = rs.getRankedCrossRefs().iterator(); r.hasNext(); ) {
+            RankedCrossRef rcr = r.next();
             CrossRef c = rcr.getCrossRef();
             Set<Note> noteset = c.getNoteSet();
             StringBuffer sb = new StringBuffer();
@@ -1014,8 +1014,8 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
         // comments - if any
         if (!rs.getComments().isEmpty()) {
             StringBuffer sb = new StringBuffer();
-            for (Iterator i = rs.getComments().iterator(); i.hasNext(); ) {
-                Comment c = (SimpleComment)i.next();
+            for (Iterator<Comment> i = rs.getComments().iterator(); i.hasNext(); ) {
+                Comment c = i.next();
                 sb.append(c.getComment());
                 if (i.hasNext()) sb.append("\n");
             }
@@ -1043,8 +1043,8 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
                 StringTools.writeKeyValueLine(FEATURE_TAG, "/db_xref=\"taxon:"+tax.getNCBITaxID()+"\"", 21, this.getLineWidth(), null, FEATURE_TAG, this.getPrintStream());
             }
             // add-in other dbxrefs where present
-            for (Iterator j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
-                RankedCrossRef rcr = (RankedCrossRef)j.next();
+            for (Iterator<RankedCrossRef> j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
+                RankedCrossRef rcr = j.next();
                 CrossRef cr = rcr.getCrossRef();
                 StringTools.writeKeyValueLine(FEATURE_TAG, "/db_xref=\""+cr.getDbname()+":"+cr.getAccession()+"\"", 21, this.getLineWidth(), null, FEATURE_TAG, this.getPrintStream());
             }

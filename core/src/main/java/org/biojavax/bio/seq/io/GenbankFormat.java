@@ -761,8 +761,8 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         }
         
         // references - rank (bases x to y)
-        for (Iterator r = rs.getRankedDocRefs().iterator(); r.hasNext(); ) {
-            RankedDocRef rdr = (RankedDocRef)r.next();
+        for (Iterator<RankedDocRef> r = rs.getRankedDocRefs().iterator(); r.hasNext(); ) {
+            RankedDocRef rdr = r.next();
             DocRef d = rdr.getDocumentReference();
             StringTools.writeKeyValueLine(REFERENCE_TAG, rdr.getRank()+((rdr.getLocation()==null || rdr.getLocation() ==RichLocation.EMPTY_LOCATION)?"": (moltype==null? "  (residues ":"  (bases ")+makeBaseRange(rdr)+")"), 12, this.getLineWidth(), this.getPrintStream());
             // Any authors that were in the input as CONSRTM tags will
@@ -776,11 +776,11 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         }
         
         // comments - if any
-        Set comments = rs.getComments();
+        Set<Comment> comments = rs.getComments();
         if (!comments.isEmpty()) {
             StringBuffer sb = new StringBuffer();
-            for (Iterator i = comments.iterator(); i.hasNext(); ) {
-                Comment c = (SimpleComment)i.next();
+            for (Iterator<Comment> i = comments.iterator(); i.hasNext(); ) {
+                Comment c = i.next();
                 sb.append(c.getComment());
                 if (i.hasNext()) sb.append("\n");
             }
@@ -809,16 +809,16 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
                 String displayName = tax.getDisplayName();
                 if (displayName.indexOf('(')>-1) displayName = displayName.substring(0, displayName.indexOf('(')).trim();
                 StringTools.writeKeyValueLine("", "/organism=\""+displayName+"\"", 21, this.getLineWidth()-1, this.getPrintStream());// AF252370 fits in exactly 80 - but is wrapped
-                for (Iterator j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
-                    RankedCrossRef rcr = (RankedCrossRef)j.next();
+                for (Iterator<RankedCrossRef> j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
+                    RankedCrossRef rcr = j.next();
                     CrossRef cr = rcr.getCrossRef();
                     StringTools.writeKeyValueLine("", "/db_xref=\""+cr.getDbname()+":"+cr.getAccession()+"\"", 21, this.getLineWidth(), this.getPrintStream());
                 }
                 StringTools.writeKeyValueLine("", "/db_xref=\"taxon:"+tax.getNCBITaxID()+"\"", 21, this.getLineWidth(), this.getPrintStream());
             } else {
                 // add-in other dbxrefs where present
-                for (Iterator j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
-                    RankedCrossRef rcr = (RankedCrossRef)j.next();
+                for (Iterator<RankedCrossRef> j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
+                    RankedCrossRef rcr = j.next();
                     CrossRef cr = rcr.getCrossRef();
                     StringTools.writeKeyValueLine("", "/db_xref=\""+cr.getDbname()+":"+cr.getAccession()+"\"", 21, this.getLineWidth(), this.getPrintStream());
                 }

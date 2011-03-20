@@ -178,7 +178,7 @@ public interface BioEntry extends RichAnnotatable,RankedCrossRefable,Comparable,
      * @return a set of RankedDocRef objects.
      * @see RankedDocRef
      */
-    public Set getRankedDocRefs();
+    public Set<RankedDocRef> getRankedDocRefs();
     
     /**
      * Returns a set of all comments associated with this bioentry. This
@@ -187,7 +187,7 @@ public interface BioEntry extends RichAnnotatable,RankedCrossRefable,Comparable,
      * @return a set of Comment objects.
      * @see Comment
      */
-    public Set getComments();
+    public Set<Comment> getComments();
     
     /**
      * Returns a set of all relationships associated with this bioentry. This
@@ -196,7 +196,7 @@ public interface BioEntry extends RichAnnotatable,RankedCrossRefable,Comparable,
      * @return a set of BioEntryRelationship objects.
      * @see BioEntryRelationship
      */
-    public Set getRelationships();
+    public Set<BioEntryRelationship> getRelationships();
     
     /**
      * Adds a ranked docref instance to this bioentry. Must not be null.

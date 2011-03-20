@@ -505,10 +505,10 @@ public class EMBLxmlFormat extends RichSequenceFormat.BasicFormat {
                 xml.closeTag(DBREFERENCE_TAG);
             }
             
-            List auths = dr.getAuthorList();
+            List<DocRefAuthor> auths = dr.getAuthorList();
             
-            for (Iterator j = auths.iterator(); j.hasNext(); ) {
-                DocRefAuthor a = (DocRefAuthor)j.next();
+            for (Iterator<DocRefAuthor> j = auths.iterator(); j.hasNext(); ) {
+                DocRefAuthor a = j.next();
                 if (a.isConsortium()) {
                     xml.openTag(CONSORTIUM_TAG);
                     xml.print(a.getName());
@@ -523,8 +523,8 @@ public class EMBLxmlFormat extends RichSequenceFormat.BasicFormat {
                 xml.closeTag(TITLE_TAG);
             }
             
-            for (Iterator j = auths.iterator(); j.hasNext(); ) {
-                DocRefAuthor a = (DocRefAuthor)j.next();
+            for (Iterator<DocRefAuthor> j = auths.iterator(); j.hasNext(); ) {
+                DocRefAuthor a = j.next();
                 if (a.isEditor()) {
                     xml.openTag(EDITOR_TAG);
                     xml.print(a.getName());
@@ -558,8 +558,8 @@ public class EMBLxmlFormat extends RichSequenceFormat.BasicFormat {
             xml.closeTag(REFERENCE_TAG);
         }
         
-        for (Iterator i = rs.getRankedCrossRefs().iterator(); i.hasNext(); ) {
-            RankedCrossRef rcr = (RankedCrossRef)i.next();
+        for (Iterator<RankedCrossRef> i = rs.getRankedCrossRefs().iterator(); i.hasNext(); ) {
+            RankedCrossRef rcr = i.next();
             CrossRef cr = rcr.getCrossRef();
             
             xml.openTag(DBREFERENCE_TAG);
@@ -579,9 +579,9 @@ public class EMBLxmlFormat extends RichSequenceFormat.BasicFormat {
             xml.closeTag(DBREFERENCE_TAG);
         }
         
-        for (Iterator i = rs.getComments().iterator(); i.hasNext(); ) {
+        for (Iterator<Comment> i = rs.getComments().iterator(); i.hasNext(); ) {
             xml.openTag(COMMENT_TAG);
-            xml.println(((Comment)i.next()).getComment());
+            xml.println(i.next().getComment());
             xml.closeTag(COMMENT_TAG);
         }
         
@@ -632,8 +632,8 @@ public class EMBLxmlFormat extends RichSequenceFormat.BasicFormat {
                 xml.closeTag(ORGANISM_TAG);
             }
             
-            for (Iterator j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
-                RankedCrossRef rcr = (RankedCrossRef)j.next();
+            for (Iterator<RankedCrossRef> j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
+                RankedCrossRef rcr = j.next();
                 CrossRef cr = rcr.getCrossRef();
                 
                 xml.openTag(DBREFERENCE_TAG);

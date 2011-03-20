@@ -30,6 +30,7 @@ import org.biojava.utils.ChangeSupport;
 import org.biojava.utils.ChangeVetoException;
 import org.biojavax.Comment;
 import org.biojavax.Namespace;
+import org.biojavax.Note;
 import org.biojavax.RankedCrossRef;
 import org.biojavax.RankedDocRef;
 import org.biojavax.RichAnnotation;
@@ -46,10 +47,10 @@ import org.biojavax.bio.taxa.NCBITaxon;
  */
 public class SimpleBioEntry extends AbstractChangeable implements BioEntry {
     
-    private Set comments = new TreeSet();
-    private Set rankedcrossrefs = new TreeSet();
-    private Set rankeddocrefs = new TreeSet();
-    private Set relationships = new TreeSet();
+    private Set<Comment> comments = new TreeSet<Comment>();
+    private Set<RankedCrossRef> rankedcrossrefs = new TreeSet<RankedCrossRef>();
+    private Set<RankedDocRef> rankeddocrefs = new TreeSet<RankedDocRef>();
+    private Set<BioEntryRelationship> relationships = new TreeSet<BioEntryRelationship>();
     private String description;
     private String division;
     private String identifier;
@@ -92,7 +93,7 @@ public class SimpleBioEntry extends AbstractChangeable implements BioEntry {
      * Collection not a copy. This is required by Hibernate. If you
      * modify the object directly the behaviour may be unpredictable.
      */
-    public Set getRankedCrossRefs() { return this.rankedcrossrefs; } // original for Hibernate
+    public Set<RankedCrossRef> getRankedCrossRefs() { return this.rankedcrossrefs; } // original for Hibernate
     
     /**
      * {@inheritDoc}
@@ -132,7 +133,7 @@ public class SimpleBioEntry extends AbstractChangeable implements BioEntry {
      * Collection not a copy. This is required by Hibernate. If you
      * modify the object directly the behaviour may be unpredictable.
      */
-    public Set getNoteSet() { return this.notes.getNoteSet(); }
+    public Set<Note> getNoteSet() { return this.notes.getNoteSet(); }
     
     /**
      * {@inheritDoc}
@@ -140,7 +141,7 @@ public class SimpleBioEntry extends AbstractChangeable implements BioEntry {
      * Collection not a copy. This is required by Hibernate. If you
      * modify the object directly the behaviour may be unpredictable.
      */
-    public void setNoteSet(Set notes) throws ChangeVetoException { this.notes.setNoteSet(notes); }
+    public void setNoteSet(Set<Note> notes) throws ChangeVetoException { this.notes.setNoteSet(notes); }
     
     /**
      * {@inheritDoc}
@@ -148,7 +149,7 @@ public class SimpleBioEntry extends AbstractChangeable implements BioEntry {
      * Collection not a copy. This is required by Hibernate. If you
      * modify the object directly the behaviour may be unpredictable.
      */
-    public Set getComments() { return this.comments; } // must be original for Hibernate
+    public Set<Comment> getComments() { return this.comments; } // must be original for Hibernate
     
     /**
      * {@inheritDoc}
@@ -156,7 +157,7 @@ public class SimpleBioEntry extends AbstractChangeable implements BioEntry {
      * Collection not a copy. This is required by Hibernate. If you
      * modify the object directly the behaviour may be unpredictable.
      */
-    public Set getRankedDocRefs() { return this.rankeddocrefs; } // must be original for Hibernate
+    public Set<RankedDocRef>  getRankedDocRefs() { return this.rankeddocrefs; } // must be original for Hibernate
     
     /**
      * {@inheritDoc}
@@ -164,7 +165,7 @@ public class SimpleBioEntry extends AbstractChangeable implements BioEntry {
      * Collection not a copy. This is required by Hibernate. If you
      * modify the object directly the behaviour may be unpredictable.
      */
-    public Set getRelationships() { return this.relationships; }  // must be original for Hibernate
+    public Set<BioEntryRelationship> getRelationships() { return this.relationships; }  // must be original for Hibernate
     
     /**
      * {@inheritDoc}
@@ -515,7 +516,7 @@ public class SimpleBioEntry extends AbstractChangeable implements BioEntry {
     }
     
     // Hibernate requirement - not for public use.
-    void setRelationships(Set relationships) { this.relationships = relationships; }  // must be original for Hibernate
+    void setRelationships(Set<BioEntryRelationship> relationships) { this.relationships = relationships; }  // must be original for Hibernate
     
     // Hibernate requirement - not for public use.
     void setNamespace(Namespace ns) { this.ns = ns; }
@@ -530,13 +531,13 @@ public class SimpleBioEntry extends AbstractChangeable implements BioEntry {
     void setVersion(int v) { this.version = v; }
     
     // Hibernate requirement - not for public use.
-    void setRankedDocRefs(Set docrefs) { this.rankeddocrefs = docrefs; } // must be original for Hibernate
+    void setRankedDocRefs(Set<RankedDocRef> docrefs) { this.rankeddocrefs = docrefs; } // must be original for Hibernate
     
     // Hibernate requirement - not for public use.
-    void setComments(Set comments) { this.comments = comments; }  // must be original for Hibernate
+    void setComments(Set<Comment> comments) { this.comments = comments; }  // must be original for Hibernate
     
     // Hibernate requirement - not for public use.
-    public void setRankedCrossRefs(Set rankedcrossrefs) { this.rankedcrossrefs = rankedcrossrefs; } // original for Hibernate
+    public void setRankedCrossRefs(Set<RankedCrossRef> rankedcrossrefs) { this.rankedcrossrefs = rankedcrossrefs; } // original for Hibernate
     
     // Hibernate requirement - not for public use.
     private Integer id;

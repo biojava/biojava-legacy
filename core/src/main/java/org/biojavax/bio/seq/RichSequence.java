@@ -602,124 +602,118 @@ public interface RichSequence extends BioEntry, Sequence {
 			return rs;
 		}
 
-		/**
-		 * <p>
-		 * Creates a new sequence from a subregion of another sequence. The
-		 * sequence is not a view. The sequence can be given a new Namespace,
-		 * Accession, Name, Identifier etc. or you can copy over the old values.
-		 * For unique identification in databases we recommend you change at
-		 * least the name and identifier.
-		 * </p>
-		 * <p>
-		 * The new sequence will retain all features that are fully contained by
-		 * the new subsequence, the note set (annotation), Taxon, and
-		 * description, modified to reflect the subsequence as follows:
-		 * 
-		 * <pre>
-		 * seq.setDescription(&quot;subsequence (&quot; + from + &quot;:&quot; + to + &quot;) of &quot;
-		 * 		+ s.getDescription());
-		 * </pre>
-		 * 
-		 * No other properties are copied.
-		 * 
-		 * @param newVersion
-		 *            the new version number
-		 * @param seqVersion
-		 *            the new sequence version
-		 * @param s
-		 *            the original <code>RichSequence</code>.
-		 * @param from
-		 *            the 1st subsequence coordinate (inclusive)
-		 * @param to
-		 *            the last subsequence coordinate (inclusive)
-		 * @param newNamespace
-		 *            the new <code>Namespace</code>
-		 * @param newName
-		 *            the new name
-		 * @param newAccession
-		 *            the new accession number
-		 * @param newIdentifier
-		 *            the new identifier
-		 * @throws java.lang.IndexOutOfBoundsException
-		 *             if <CODE>from</CODE> or <CODE>to</CODE> lie outside of
-		 *             the bounds of <CODE>s</CODE>.
-		 * @return A new <CODE>RichSequence</CODE>
-		 */
-		public static RichSequence subSequence(RichSequence s, int from,
-				int to, Namespace newNamespace, String newName,
-				String newAccession, String newIdentifier, int newVersion,
-				Double seqVersion) throws IndexOutOfBoundsException {
-			SymbolList symList = s.subList(from, to);
-			SimpleRichSequence seq = new SimpleRichSequence(newNamespace,
-					newName, newAccession, newVersion, symList, seqVersion);
-			RichLocation subLoc = new SimpleRichLocation(new SimplePosition(
-					from), new SimplePosition(to), 0);
-			RichLocation subLocComplement = new SimpleRichLocation(
-					new SimplePosition(from), new SimplePosition(to), 0,
-					RichLocation.Strand.NEGATIVE_STRAND);
-			try {
-				// copy features if appropriate
-				for (Iterator<Feature> i = s.features(); i.hasNext();) {
-					RichFeature f = (RichFeature) i.next();
+        /**
+         * <p>
+         * Creates a new sequence from a subregion of another sequence. The
+         * sequence is not a view. The sequence can be given a new Namespace,
+         * Accession, Name, Identifier etc. or you can copy over the old values.
+         * For unique identification in databases we recommend you change at
+         * least the name and identifier.
+         * </p>
+         * <p>
+         * The new sequence will retain all features that are fully contained by
+         * the new subsequence, the note set (annotation), Taxon, and
+         * description, modified to reflect the subsequence as follows:
+         *
+         * <pre>
+         * seq.setDescription(&quot;subsequence (&quot; + from + &quot;:&quot; + to + &quot;) of &quot;
+         * 		+ s.getDescription());
+         * </pre>
+         *
+         * No other properties are copied.
+         *
+         * @param newVersion
+         *            the new version number
+         * @param seqVersion
+         *            the new sequence version
+         * @param s
+         *            the original <code>RichSequence</code>.
+         * @param from
+         *            the 1st subsequence coordinate (inclusive)
+         * @param to
+         *            the last subsequence coordinate (inclusive)
+         * @param newNamespace
+         *            the new <code>Namespace</code>
+         * @param newName
+         *            the new name
+         * @param newAccession
+         *            the new accession number
+         * @param newIdentifier
+         *            the new identifier
+         * @throws java.lang.IndexOutOfBoundsException
+         *             if <CODE>from</CODE> or <CODE>to</CODE> lie outside of
+         *             the bounds of <CODE>s</CODE>.
+         * @return A new <CODE>RichSequence</CODE>
+         */
+        public static RichSequence subSequence(RichSequence s, int from,
+                int to, Namespace newNamespace, String newName,
+                String newAccession, String newIdentifier, int newVersion,
+                Double seqVersion) throws IndexOutOfBoundsException {
+            SymbolList symList = s.subList(from, to);
+            SimpleRichSequence seq = new SimpleRichSequence(newNamespace,
+                    newName, newAccession, newVersion, symList, seqVersion);
+            RichLocation subLoc = new SimpleRichLocation(new SimplePosition(
+                    from), new SimplePosition(to), 0);
+            RichLocation subLocComplement = new SimpleRichLocation(
+                    new SimplePosition(from), new SimplePosition(to), 0,
+                    RichLocation.Strand.NEGATIVE_STRAND);
+            try {
+                // copy features if appropriate
+                for (Iterator<Feature> i = s.features(); i.hasNext();) {
+                    RichFeature f = (RichFeature) i.next();
 
-					if (f.getStrand().equals(StrandedFeature.POSITIVE)) {
-						if (subLoc.contains(f.getLocation())) {
-							RichFeature.Template templ = (RichFeature.Template) f
-									.makeTemplate();
+                    if (f.getStrand().equals(StrandedFeature.POSITIVE)) {
+                        if (subLoc.contains(f.getLocation())) {
+                            RichFeature.Template templ = (RichFeature.Template) f.makeTemplate();
 
-							// change the location
-							Position min = new SimplePosition(templ.location
-									.getMin()
-									- from + 1);
+                            // change the location
+                            Position min = new SimplePosition(templ.location.getMin()
+                                    - from + 1);
 
-							// System.out.println("getMin " +
-							// templ.location.getMin());
+                            // System.out.println("getMin " +
+                            // templ.location.getMin());
 
-							Position max = new SimplePosition(templ.location
-									.getMax()
-									- from + 1);
+                            Position max = new SimplePosition(templ.location.getMax()
+                                    - from + 1);
 
-							// System.out.println("getMax " +
-							// templ.location.getMax());
+                            // System.out.println("getMax " +
+                            // templ.location.getMax());
 
-							templ.location = new SimpleRichLocation(min, max, 0);
-							seq.createFeature(templ);
-						}
-					} else {
-						if (subLocComplement.contains(f.getLocation())) {
-							RichFeature.Template templ = (RichFeature.Template) f
-									.makeTemplate();
+                            templ.location = new SimpleRichLocation(min, max, 0);
+                            seq.createFeature(templ);
+                        }
+                    } else {
+                        if (subLocComplement.contains(f.getLocation())) {
+                            RichFeature.Template templ = (RichFeature.Template) f.makeTemplate();
 
-							// change the location
-							Position min = new SimplePosition(templ.location
-									.getMin()
-									- from + 1);
+                            // change the location
+                            Position min = new SimplePosition(templ.location.getMin()
+                                    - from + 1);
 
-							// System.out.println("getMin " +
-							// templ.location.getMin());
+                            // System.out.println("getMin " +
+                            // templ.location.getMin());
 
-							Position max = new SimplePosition(templ.location
-									.getMax()
-									- from + 1);
+                            Position max = new SimplePosition(templ.location.getMax()
+                                    - from + 1);
 
-							// System.out.println("getMax " +
-							// templ.location.getMax());
+                            // System.out.println("getMax " +
+                            // templ.location.getMax());
 
-							templ.location = new SimpleRichLocation(min, max,
-									0, RichLocation.Strand.NEGATIVE_STRAND);
-							seq.createFeature(templ);
-						}
-					}
+                            templ.location = new SimpleRichLocation(min, max,
+                                    0, RichLocation.Strand.NEGATIVE_STRAND);
+                            seq.createFeature(templ);
+                        }
+                    }
 
-				}
+                }
 
                 // clone Notes
-				if (s.getNoteSet() != null) {
-                    Set notes = s.getNoteSet();
-                    Iterator it = notes.iterator();
+                if (s.getNoteSet() != null) {
+                    Set<Note> notes = s.getNoteSet();
+                    Iterator<Note> it = notes.iterator();
                     Set ns = new TreeSet();
                     while (it.hasNext()) {
-                        Note note = (Note) it.next();
+                        Note note = it.next();
                         ns.add(new SimpleNote(
                                 note.getTerm(),
                                 note.getValue(),
@@ -728,24 +722,25 @@ public interface RichSequence extends BioEntry, Sequence {
                     seq.setNoteSet(ns);
                 }
 
-				// copy other cruft
-				if (s.getTaxon() != null)
-					seq.setTaxon(s.getTaxon());
-				if (s.getDescription() != null) {
-					seq.setDescription("subsequence (" + from + ":" + to
-							+ ") of " + s.getDescription());
-				}
-				if (s.getDivision() != null) {
-					seq.setDivision(s.getDivision());
-				}
-			} catch (ChangeVetoException ex) {
-				throw new BioError(ex); // something is rotten in Denmark!
-			} catch (BioException ex) {
-				throw new BioError(ex); // something is rotten in Denmark!
-			}
-			return seq;
-		}
-	}
+                // copy other cruft
+                if (s.getTaxon() != null) {
+                    seq.setTaxon(s.getTaxon());
+                }
+                if (s.getDescription() != null) {
+                    seq.setDescription("subsequence (" + from + ":" + to
+                            + ") of " + s.getDescription());
+                }
+                if (s.getDivision() != null) {
+                    seq.setDivision(s.getDivision());
+                }
+            } catch (ChangeVetoException ex) {
+                throw new BioError(ex); // something is rotten in Denmark!
+            } catch (BioException ex) {
+                throw new BioError(ex); // something is rotten in Denmark!
+            }
+            return seq;
+        }
+    }
 
 	/**
 	 * A set of convenience methods for handling common file formats.

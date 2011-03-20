@@ -401,7 +401,7 @@ public class EMBLxmlFormat extends RichSequenceFormat.BasicFormat {
             throw e2;
         }
                 
-        Set notes = rs.getNoteSet();
+        Set<Note> notes = rs.getNoteSet();
         List accessions = new ArrayList();
         List projAccessions = new ArrayList();
         List kws = new ArrayList();
@@ -417,8 +417,8 @@ public class EMBLxmlFormat extends RichSequenceFormat.BasicFormat {
         String subVer = null;
         String status = null;
         String statusDate = null;
-        for (Iterator i = notes.iterator(); i.hasNext();) {
-            Note n = (Note)i.next();
+        for (Iterator<Note> i = notes.iterator(); i.hasNext();) {
+            Note n = i.next();
             if (n.getTerm().equals(Terms.getDateCreatedTerm())) cdat=n.getValue();
             else if (n.getTerm().equals(Terms.getDateUpdatedTerm())) udat=n.getValue();
             else if (n.getTerm().equals(Terms.getRelCreatedTerm())) crel=n.getValue();
@@ -494,8 +494,8 @@ public class EMBLxmlFormat extends RichSequenceFormat.BasicFormat {
                 xml.attribute(DBREF_DB_ATTR,cr.getDbname());
                 xml.attribute(DBREF_PRIMARY_ATTR,cr.getAccession());
                 if (!cr.getNoteSet().isEmpty()) {
-                    for (Iterator j = cr.getNoteSet().iterator(); j.hasNext(); ) {
-                        Note n = (Note)j.next();
+                    for (Iterator<Note> j = cr.getNoteSet().iterator(); j.hasNext(); ) {
+                        Note n = j.next();
                         if (n.getTerm().equals(Terms.getAdditionalAccessionTerm())) {
                             xml.attribute(DBREF_SEC_ATTR,n.getValue());
                             break;
@@ -567,8 +567,8 @@ public class EMBLxmlFormat extends RichSequenceFormat.BasicFormat {
             xml.attribute(DBREF_PRIMARY_ATTR,cr.getAccession());
             
             if (!cr.getNoteSet().isEmpty()) {
-                for (Iterator j = cr.getNoteSet().iterator(); j.hasNext(); ) {
-                    Note n = (Note)j.next();
+                for (Iterator<Note> j = cr.getNoteSet().iterator(); j.hasNext(); ) {
+                    Note n = j.next();
                     if (n.getTerm().equals(Terms.getAdditionalAccessionTerm())) {
                         xml.attribute(DBREF_SEC_ATTR,n.getValue());
                         break;
@@ -641,8 +641,8 @@ public class EMBLxmlFormat extends RichSequenceFormat.BasicFormat {
                 xml.attribute(DBREF_PRIMARY_ATTR,cr.getAccession());
                 
                 if (!cr.getNoteSet().isEmpty()) {
-                    for (Iterator k = cr.getNoteSet().iterator(); k.hasNext(); ) {
-                        Note n = (Note)k.next();
+                    for (Iterator<Note> k = cr.getNoteSet().iterator(); k.hasNext(); ) {
+                        Note n = k.next();
                         if (n.getTerm().equals(Terms.getAdditionalAccessionTerm())) {
                             xml.attribute(DBREF_SEC_ATTR,n.getValue());
                             break;
@@ -653,8 +653,8 @@ public class EMBLxmlFormat extends RichSequenceFormat.BasicFormat {
                 xml.closeTag(DBREFERENCE_TAG);
             }
             
-            for (Iterator j = f.getNoteSet().iterator(); j.hasNext();) {
-                Note n = (Note)j.next();
+            for (Iterator<Note> j = f.getNoteSet().iterator(); j.hasNext();) {
+                Note n = j.next();
                 xml.openTag(QUALIFIER_TAG);
                 xml.attribute(QUALIFIER_NAME_ATTR,n.getTerm().getName());
                 if (n.getValue()!=null && !n.getValue().equals("")) {

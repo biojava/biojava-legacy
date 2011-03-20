@@ -683,7 +683,7 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         } catch (Exception e) {
             throw new RuntimeException("Unable to get alphabet tokenizer",e);
         }
-        Set notes = rs.getNoteSet();
+        Set<Note> notes = rs.getNoteSet();
         String accession = rs.getAccession();
         StringBuffer accessions = new StringBuffer();
         accessions.append(accession);
@@ -692,8 +692,8 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         String moltype = rs.getAlphabet().getName();
         if ("PROTEIN-TERM".equals(moltype) || "PROTEIN".equals(moltype)) moltype = null; //a genpept curiosity
         StringBuffer keywords = new StringBuffer();
-        for (Iterator i = notes.iterator(); i.hasNext(); ) {
-            Note n = (Note)i.next();
+        for (Iterator<Note> i = notes.iterator(); i.hasNext(); ) {
+            Note n = i.next();
             if (n.getTerm().equals(Terms.getStrandedTerm())) {
                 String value = n.getValue();
                 if(value != null && value.equals("single"))
@@ -792,8 +792,8 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         for (Iterator i = rs.getFeatureSet().iterator(); i.hasNext(); ) {
             RichFeature f = (RichFeature)i.next();
             StringTools.writeKeyValueLine("     "+f.getTypeTerm().getName(), GenbankLocationParser.writeLocation((RichLocation)f.getLocation()), 21, this.getLineWidth()-1, ",", this.getPrintStream());
-            for (Iterator j = f.getNoteSet().iterator(); j.hasNext(); ) {
-                Note n = (Note)j.next();
+            for (Iterator<Note> j = f.getNoteSet().iterator(); j.hasNext(); ) {
+                Note n = j.next();
                 // /key="val" or just /key if val==""
                 if (n.getValue()==null || n.getValue().length()==0) StringTools.writeKeyValueLine("", "/"+n.getTerm().getName(), 21, this.getLineWidth(), this.getPrintStream());
                 else if (isNotQuoted(n)) {// doesn't have the value enclosed in quotes
@@ -905,9 +905,9 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
             final RichFeature feature = (RichFeature) i.next();
             if (feature.getType().equals("source")) {
                 final Set noteSet = feature.getNoteSet();
-                final Iterator n = noteSet.iterator();
+                final Iterator<Note> n = noteSet.iterator();
                 while(n.hasNext()) {
-                    final Note note = (Note) n.next();
+                    final Note note = n.next();
                     if (note.getTerm().getName().equals("organelle")) return note.getValue().equals("mitochondrion");
                 }
             }

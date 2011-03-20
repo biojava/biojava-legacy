@@ -899,7 +899,7 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
             throw new RuntimeException("Unable to get alphabet tokenizer",e);
         }
         
-        Set notes = rs.getNoteSet();
+        Set<Note> notes = rs.getNoteSet();
         String accession = rs.getAccession();
         StringBuffer accessions = new StringBuffer();
         accessions.append(accession);
@@ -922,8 +922,8 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
         Map genesynonyms = new TreeMap();
         Map orfnames = new TreeMap();
         Map ordlocnames = new TreeMap();
-        for (Iterator i = notes.iterator(); i.hasNext(); ) {
-            Note n = (Note)i.next();
+        for (Iterator<Note> i = notes.iterator(); i.hasNext(); ) {
+            Note n = i.next();
             if (n.getTerm().equals(Terms.getDateCreatedTerm())) cdat=n.getValue();
             else if (n.getTerm().equals(Terms.getDateUpdatedTerm())) udat=n.getValue();
             else if (n.getTerm().equals(Terms.getDateAnnotatedTerm())) adat=n.getValue();
@@ -1187,14 +1187,14 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
         for (Iterator r = rs.getRankedCrossRefs().iterator(); r.hasNext(); ) {
             RankedCrossRef rcr = (RankedCrossRef)r.next();
             CrossRef c = rcr.getCrossRef();
-            Set noteset = c.getNoteSet();
+            Set<Note> noteset = c.getNoteSet();
             StringBuffer sb = new StringBuffer();
             sb.append(c.getDbname());
             sb.append("; ");
             sb.append(c.getAccession());
             boolean hasSecondary = false;
-            for (Iterator i = noteset.iterator(); i.hasNext(); ) {
-                Note n = (Note)i.next();
+            for (Iterator<Note> i = noteset.iterator(); i.hasNext(); ) {
+                Note n = i.next();
                 if (n.getTerm().equals(Terms.getAdditionalAccessionTerm())) {
                     sb.append("; ");
                     sb.append(n.getValue());
@@ -1213,8 +1213,8 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
         
         // keywords line
         String keywords = null;
-        for (Iterator n = notes.iterator(); n.hasNext(); ) {
-            Note nt = (Note)n.next();
+        for (Iterator<Note> n = notes.iterator(); n.hasNext(); ) {
+            Note nt = n.next();
             if (nt.getTerm().equals(Terms.getKeywordTerm())) {
                 if (keywords==null) keywords = nt.getValue();
                 else keywords = keywords+"; "+nt.getValue();
@@ -1229,8 +1229,8 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
             RichFeature f = (RichFeature)i.next();
             String desc = "";
             String ftid = null;
-            for (Iterator j = f.getNoteSet().iterator(); j.hasNext(); ) {
-                Note n = (Note)j.next();
+            for (Iterator<Note> j = f.getNoteSet().iterator(); j.hasNext(); ) {
+                Note n = j.next();
                 if (n.getTerm().equals(Terms.getFTIdTerm())) ftid = n.getValue();
                 else if (n.getTerm().equals(Terms.getFeatureDescTerm())) desc = n.getValue();
             }

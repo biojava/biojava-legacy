@@ -839,7 +839,7 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
             throw new RuntimeException("Unable to get alphabet tokenizer",e);
         }
         
-        Set notes = rs.getNoteSet();
+        Set<Note> notes = rs.getNoteSet();
         String accession = rs.getAccession();
         StringBuffer accessions = new StringBuffer();
         accessions.append(accession);
@@ -854,8 +854,8 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
         String dataClass = "STD";
         boolean genomic = false;
         String moltype = rs.getAlphabet().getName();
-        for (Iterator i = notes.iterator(); i.hasNext(); ) {
-            Note n = (Note)i.next();
+        for (Iterator<Note> i = notes.iterator(); i.hasNext(); ) {
+            Note n = i.next();
             if (n.getTerm().equals(Terms.getDateCreatedTerm())) cdat=n.getValue();
             else if (n.getTerm().equals(Terms.getDateUpdatedTerm())) udat=n.getValue();
             else if (n.getTerm().equals(Terms.getRelCreatedTerm())) crel=n.getValue();
@@ -928,8 +928,8 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
         
         // keywords line
         StringBuffer keywords = new StringBuffer();
-        for (Iterator n = notes.iterator(); n.hasNext(); ) {
-            Note nt = (Note)n.next();
+        for (Iterator<Note> n = notes.iterator(); n.hasNext(); ) {
+            Note nt = n.next();
             if (nt.getTerm().equals(Terms.getKeywordTerm())) {
                 if (keywords.length()>0) keywords.append("; ");
                 keywords.append(nt.getValue());
@@ -988,14 +988,14 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
         for (Iterator r = rs.getRankedCrossRefs().iterator(); r.hasNext(); ) {
             RankedCrossRef rcr = (RankedCrossRef)r.next();
             CrossRef c = rcr.getCrossRef();
-            Set noteset = c.getNoteSet();
+            Set<Note> noteset = c.getNoteSet();
             StringBuffer sb = new StringBuffer();
             sb.append(c.getDbname());
             sb.append("; ");
             sb.append(c.getAccession());
             boolean hasSecondary = false;
-            for (Iterator i = noteset.iterator(); i.hasNext(); ) {
-                Note n = (Note)i.next();
+            for (Iterator<Note> i = noteset.iterator(); i.hasNext(); ) {
+                Note n = i.next();
                 if (n.getTerm().equals(Terms.getAdditionalAccessionTerm())) {
                     sb.append("; ");
                     sb.append(n.getValue());
@@ -1029,8 +1029,8 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
         for (Iterator i = rs.getFeatureSet().iterator(); i.hasNext(); ) {
             RichFeature f = (RichFeature)i.next();
             StringTools.writeKeyValueLine(FEATURE_TAG+"   "+f.getTypeTerm().getName(), GenbankLocationParser.writeLocation((RichLocation)f.getLocation()), 21, this.getLineWidth(), ",", FEATURE_TAG, this.getPrintStream());
-            for (Iterator j = f.getNoteSet().iterator(); j.hasNext(); ) {
-                Note n = (Note)j.next();
+            for (Iterator<Note> j = f.getNoteSet().iterator(); j.hasNext(); ) {
+                Note n = j.next();
                 // /key="val" or just /key if val==""
                 if (n.getValue()==null || n.getValue().length()==0) StringTools.writeKeyValueLine(FEATURE_TAG, "/"+n.getTerm().getName(), 21, this.getLineWidth(), null, FEATURE_TAG, this.getPrintStream());
                 else StringTools.writeKeyValueLine(FEATURE_TAG, "/"+n.getTerm().getName()+"=\""+n.getValue()+"\"", 21, this.getLineWidth(), null, FEATURE_TAG, this.getPrintStream());

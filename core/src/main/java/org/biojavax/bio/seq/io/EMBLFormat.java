@@ -873,6 +873,11 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
         }
         
         StringBuffer locusLine = new StringBuffer();
+        // Division cannot be null
+        String div = rs.getDivision();
+        if(div==null || div.length()==0 || div.length()>3)
+            div = "UNC"; //Unclassified
+            
         if (format.equals(EMBL_FORMAT)) {
             // accession; SV version; circular/linear; moltype; dataclass; division; length BP.
             locusLine.append(rs.getAccession());
@@ -885,7 +890,7 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
             locusLine.append("; ");
             locusLine.append(dataClass);
             locusLine.append("; ");
-            locusLine.append(rs.getDivision());
+            locusLine.append(div);
             locusLine.append("; ");
             locusLine.append(rs.length());
             locusLine.append(" BP.");
@@ -898,7 +903,7 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
             if (genomic==true) locusLine.append("genomic ");
             locusLine.append(moltype);
             locusLine.append("; ");
-            locusLine.append(rs.getDivision()==null?"":rs.getDivision());
+            locusLine.append(div);
             locusLine.append("; ");
             locusLine.append(rs.length());
             locusLine.append(" BP.");

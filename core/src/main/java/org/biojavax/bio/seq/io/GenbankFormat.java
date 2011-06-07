@@ -732,7 +732,9 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         locusLine.append("  ");//54->55
         locusLine.append(StringTools.rightPad(rs.getCircular()?"circular":"linear",8));//56->63=7+1=8
         locusLine.append(" ");//64->64
-        locusLine.append(StringTools.rightPad(rs.getDivision()==null?"":rs.getDivision(),3));//65->67=2+1=3
+        String div = rs.getDivision()==null?"":rs.getDivision();
+        if(div.length()>3) div = ""; // Not a GenBank division, maybe UniProt, etc.
+        locusLine.append(StringTools.rightPad(div,3));//65->67=2+1=3
         locusLine.append(" ");//68->68
         locusLine.append(StringTools.rightPad(udat,11));//69->79=10+1=11
         StringTools.writeKeyValueLine(LOCUS_TAG, locusLine.toString(), 12, this.getLineWidth(), this.getPrintStream());

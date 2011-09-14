@@ -28,6 +28,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -215,7 +216,7 @@ public class InteractionDasSource extends Das1Source{
         //xw.attribute("description",getDescription());
         xw.attribute("status",""+isActive);
         xw.attribute("registered",""+registered);
-        DateFormat df = new SimpleDateFormat("dd.MM.yyyy"); 
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH); 
         //DateFormat df = DateFormat.getDateInstance();
         String rds = df.format(getRegisterDate());
         String lds = df.format(getLeaseDate());

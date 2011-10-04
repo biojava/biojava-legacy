@@ -64,6 +64,13 @@ class RestrictionSiteFinder implements Runnable
         this.findAll = findAll;
         this.target  = target;
     }
+    
+    /** Getter for the restrictionEnzyme involved in this site finder.
+     * 
+     */
+    public RestrictionEnzyme getEnzyme() {
+        return enzyme;
+    }
 
     /**
      * <code>run</code> searches for restriction sites.

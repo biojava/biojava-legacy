@@ -84,10 +84,12 @@ public class GenpeptRichSequenceDB extends AbstractRichSequenceDB implements Ric
      * The default value of the return format of the sequence object is text.
      **/
     protected URL getAddress(String id) throws MalformedURLException {
-        FetchURL seqURL = new FetchURL("Genbank", "text");
+        FetchURL seqURL = new FetchURL("Genpept", "text");
         String baseurl = seqURL.getbaseURL();
         String db = seqURL.getDB();
-        String url = baseurl+db+"&id="+id+"&rettype=gb";
+        String type = seqURL.getRetrievalType();
+        String mode = seqURL.getRetrievalMode();
+        String url = baseurl+db+"&id="+id+"&rettype="+type+"&retmode="+mode;
         return new URL(url);
     }
     

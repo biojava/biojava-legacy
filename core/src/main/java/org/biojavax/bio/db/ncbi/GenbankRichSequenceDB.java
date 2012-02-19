@@ -90,7 +90,9 @@ public class GenbankRichSequenceDB extends AbstractRichSequenceDB implements Ric
         FetchURL seqURL = new FetchURL("Genbank", "text");
         String baseurl = seqURL.getbaseURL();
         String db = seqURL.getDB();
-        String url = baseurl+db+"&id="+id+"&rettype=gb&tool="+getTool()+"&email="+getEmail();
+        String type = seqURL.getRetrievalType();
+        String mode = seqURL.getRetrievalMode();
+        String url = baseurl+db+"&id="+id+"&rettype="+type+"&retmode="+mode+"&tool="+getTool()+"&email="+getEmail();
         return new URL(url);
     }
     

@@ -39,6 +39,7 @@ import org.biojava.bio.symbol.Alphabet;
  * @author Lei Lai
  * @author Matthew Pocock
  * @author Shuvankar Mukherjee
+ * @George Waldon
  */
 public class GenpeptSequenceDB {
   private static SequenceFormat format = new GenbankFormat();
@@ -55,29 +56,20 @@ public class GenpeptSequenceDB {
   }
 
   protected URL getAddress(String id) throws MalformedURLException {
-    String defaultReturnFormat = "text";
-    FetchURL seqURL = new FetchURL(DBName, defaultReturnFormat);
-    String baseurl = seqURL.getbaseURL();
-    String db = seqURL.getDB();
-
-    String url = baseurl + db + "&id=" + id + "&rettype=gb";
-
-    return new URL(url);
+      String defaultReturnFormat = "text";
+      return getAddress(id, defaultReturnFormat);
   }
 
-  //ask user to input id and return format
-  protected URL getAddress(String id, String format) throws
-      MalformedURLException {
-    FetchURL seqURL = new FetchURL(DBName, format);
-    String baseurl = seqURL.getbaseURL();
-    if (! (baseurl.equalsIgnoreCase("")))
-      baseurl = seqURL.getbaseURL();
-    String db = seqURL.getDB();
-//	String returnFormat = seqURL.getReturnFormat();
-
-    String url = baseurl + db + "&id=" + id + "&rettype=gb";
-
-    return new URL(url);
+    //ask user to input id and return format
+   protected URL getAddress(String id, String format) throws
+          MalformedURLException {
+      FetchURL seqURL = new FetchURL(DBName, format);
+      String baseurl = seqURL.getbaseURL();
+      String db = seqURL.getDB();
+      String type = seqURL.getRetrievalType();
+      String mode = seqURL.getRetrievalMode();
+      String url = baseurl + db + "&id=" + id + "&rettype=" + type + "&retmode=" + mode;
+      return new URL(url);
   }
 
   public String getName() {

@@ -180,12 +180,11 @@ public final class FastqToolsTest extends TestCase
 
     public void testQualityScores()
     {
-        Iterator<Integer> qualityScores = FastqTools.qualityScores(builder.build());
+        Iterable<Integer> qualityScores = FastqTools.qualityScores(builder.build());
         assertNotNull(qualityScores);
         int count = 0;
-        for (; qualityScores.hasNext(); )
+        for (Integer qualityScore : qualityScores)
         {
-            Integer qualityScore = qualityScores.next();
             assertNotNull(qualityScore);
             count++;
         }
@@ -269,12 +268,11 @@ public final class FastqToolsTest extends TestCase
 
     public void testErrorProbabilities()
     {
-        Iterator<Double> errorProbabilities = FastqTools.errorProbabilities(builder.build());
+        Iterable<Double> errorProbabilities = FastqTools.errorProbabilities(builder.build());
         assertNotNull(errorProbabilities);
         int count = 0;
-        for (; errorProbabilities.hasNext(); )
+        for (Double errorProbability : errorProbabilities)
         {
-            Double errorProbability = errorProbabilities.next();
             assertNotNull(errorProbability);
             count++;
         }

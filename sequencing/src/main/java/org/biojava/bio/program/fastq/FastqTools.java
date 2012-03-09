@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Iterators;
+import com.google.common.collect.ImmutableList;
 
 import org.biojava.bio.Annotation;
 
@@ -166,12 +166,12 @@ public final class FastqTools
     }
 
     /**
-     * Return an iterator over the quality scores from the specified FASTQ formatted sequence.
+     * Return the quality scores from the specified FASTQ formatted sequence.
      *
      * @param fastq FASTQ formatted sequence, must not be null
-     * @return an iterator over the quality scores from the specified FASTQ formatted sequence
+     * @return the quality scores from the specified FASTQ formatted sequence
      */
-    public static Iterator<Integer> qualityScores(final Fastq fastq)
+    public static Iterable<Integer> qualityScores(final Fastq fastq)
     {
         if (fastq == null)
         {
@@ -185,7 +185,7 @@ public final class FastqTools
             char c = fastq.getQuality().charAt(i);
             qualityScores.add(variant.qualityScore(c));
         }
-        return Iterators.unmodifiableIterator(qualityScores.iterator());
+        return ImmutableList.copyOf(qualityScores);
     }
 
     /**
@@ -221,12 +221,12 @@ public final class FastqTools
     }
 
     /**
-     * Return an iterator over the error probabilities from the specified FASTQ formatted sequence.
+     * Return the error probabilities from the specified FASTQ formatted sequence.
      *
      * @param fastq FASTQ formatted sequence, must not be null
-     * @return an iterator over the error probabilities from the specified FASTQ formatted sequence
+     * @return the error probabilities from the specified FASTQ formatted sequence
      */
-    public static Iterator<Double> errorProbabilities(final Fastq fastq)
+    public static Iterable<Double> errorProbabilities(final Fastq fastq)
     {
         if (fastq == null)
         {
@@ -240,7 +240,7 @@ public final class FastqTools
             char c = fastq.getQuality().charAt(i);
             errorProbabilities.add(variant.errorProbability(c));
         }
-        return Iterators.unmodifiableIterator(errorProbabilities.iterator());
+        return ImmutableList.copyOf(errorProbabilities);
     }
 
     /**

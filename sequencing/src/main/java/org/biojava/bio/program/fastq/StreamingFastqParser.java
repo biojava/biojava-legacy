@@ -28,7 +28,7 @@ import com.google.common.io.InputSupplier;
 /**
  * Event based parser for FASTQ formatted sequences.
  *
- * @since 1.9
+ * @since 1.8.2
  */
 final class StreamingFastqParser
 {

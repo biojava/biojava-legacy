@@ -20,7 +20,7 @@
  */
 
 /**
- * FASTQ and variants sequence format IO.
+ * FASTQ and variants sequence format I/O.
  *
  * <p>
  * To read from an Illumina variant FASTQ sequence file:

@@ -46,7 +46,7 @@ import org.biojava.bio.symbol.SimpleSymbolList;
 /**
  * Utility methods for FASTQ formatted sequences.
  *
- * @since 1.9
+ * @since 1.8.2
  */
 public final class FastqTools
 {

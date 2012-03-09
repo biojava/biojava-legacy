@@ -25,7 +25,7 @@ import java.io.IOException;
 /**
  * Low-level event based parser callback.
  *
- * @since 1.9
+ * @since 1.8.2
  */
 public interface ParseListener
 {

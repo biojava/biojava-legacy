@@ -61,7 +61,7 @@ abstract class AbstractFastqReader
     /**
      * Parse the specified input supplier.
      *
-     * @since 1.9
+     * @since 1.8.2
      * @param supplier input supplier, must not be null
      * @param listener low-level event based parser callback, must not be null
      * @param IOException if an I/O error occurs
@@ -76,7 +76,7 @@ abstract class AbstractFastqReader
     /**
      * Stream the specified input supplier.
      *
-     * @since 1.9
+     * @since 1.8.2
      * @param supplier input supplier, must not be null
      * @param listener event based reader callback, must not be null
      * @throws IOException if an I/O error occurs

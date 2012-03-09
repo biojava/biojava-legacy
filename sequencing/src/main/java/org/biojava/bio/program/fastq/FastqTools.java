@@ -118,8 +118,9 @@ public final class FastqTools
 
     /**
      * Create and return a new {@link PhredSequence} from the specified FASTQ formatted sequence.
+     * Only Sanger variant FASTQ formatted sequences are supported.
      *
-     * @param fastq FASTQ formatted sequence, must not be null
+     * @param fastq FASTQ formatted sequence, must not be null, and must be Sanger variant
      * @return a new {@link PhredSequence} from the specified FASTQ formatted sequence
      * @throws IllegalAlphabetException if an illegal alphabet is used
      * @throws IllegalSymbolException if an illegal symbol is found
@@ -130,26 +131,36 @@ public final class FastqTools
         {
             throw new IllegalArgumentException("fastq must not be null");
         }
+        if (!fastq.getVariant().isSanger())
+        {
+            throw new IllegalArgumentException("fastq must be sanger variant, was " + fastq.getVariant());
+        }
         SymbolList dnaSymbols = createDNA(fastq);
-        SymbolList qualitySymbols = createQuality(fastq);
+
+        // 0-99 subinteger alphabet required by PhredSequence, thus only Sanger variant is supported
+        SubIntegerAlphabet alphabet = IntegerAlphabet.getSubAlphabet(0, 99);
+        SimpleSymbolList qualitySymbols = new SimpleSymbolList(alphabet);
+        for (int i = 0, size = fastq.getQuality().length(); i < size; i++)
+        {
+            char c = fastq.getQuality().charAt(i);
+            qualitySymbols.addSymbol(alphabet.getSymbol(FastqVariant.FASTQ_SANGER.qualityScore(c)));
+        }
+
         SymbolList phredSymbols = PhredTools.createPhred(dnaSymbols, qualitySymbols);
         return new PhredSequence(phredSymbols, fastq.getDescription(), null, Annotation.EMPTY_ANNOTATION);
     }
 
     /**
      * Create and return a new array of symbol {@link Distribution}s from the specified FASTQ formatted sequence.
+     * Only Sanger variant FASTQ formatted sequences are supported.
      *
-     * @param fastq FASTQ formatted sequence, must not be null
+     * @param fastq FASTQ formatted sequence, must not be null and must be Sanger variant
      * @return a new array of symbol {@link Distribution}s from the specified FASTQ formatted sequence
      * @throws IllegalAlphabetException if an illegal alphabet is used
      * @throws IllegalSymbolException if an illegal symbol is found
      */
     public static Distribution[] createSymbolDistribution(final Fastq fastq) throws IllegalAlphabetException, IllegalSymbolException
     {
-        if (fastq == null)
-        {
-            throw new IllegalArgumentException("fastq must not be null");
-        }
         PhredSequence phredSequence = createPhredSequence(fastq);
         return PhredTools.phredToDistArray(phredSequence);
     }

@@ -39,7 +39,7 @@ public interface FastqWriter
      * @param appendable appendable to append the specified FASTQ formatted sequences to, must not be null
      * @param fastq variable number of FASTQ formatted sequences to append, must not be null
      * @return the specified appendable with the specified FASTQ formatted sequences appended
-     * @throws IOException if an IO error occurs
+     * @throws IOException if an I/O error occurs
      */
     <T extends Appendable> T append(T appendable, Fastq... fastq) throws IOException;
 
@@ -50,7 +50,7 @@ public interface FastqWriter
      * @param appendable appendable to append the specified FASTQ formatted sequences to, must not be null
      * @param fastq zero or more FASTQ formatted sequences to append, must not be null
      * @return the specified appendable with the specified FASTQ formatted sequences appended
-     * @throws IOException if an IO error occurs
+     * @throws IOException if an I/O error occurs
      */
     <T extends Appendable> T append(T appendable, Iterable<Fastq> fastq) throws IOException;
 
@@ -59,7 +59,7 @@ public interface FastqWriter
      *
      * @param file file to write to, must not be null
      * @param fastq variable number of FASTQ formatted sequences to write, must not be null
-     * @throws IOException if an IO error occurs
+     * @throws IOException if an I/O error occurs
      */
     void write(File file, Fastq... fastq) throws IOException;
 
@@ -68,7 +68,7 @@ public interface FastqWriter
      *
      * @param file file to write to, must not be null
      * @param fastq zero or more FASTQ formatted sequences to write, must not be null
-     * @throws IOException if an IO error occurs
+     * @throws IOException if an I/O error occurs
      */
     void write(File file, Iterable<Fastq> fastq) throws IOException;
 
@@ -77,7 +77,7 @@ public interface FastqWriter
      *
      * @param outputStream output stream to write to, must not be null
      * @param fastq variable number of FASTQ formatted sequences to write, must not be null
-     * @throws IOException if an IO error occurs
+     * @throws IOException if an I/O error occurs
      */
     void write(OutputStream outputStream, Fastq... fastq) throws IOException;
 
@@ -86,7 +86,7 @@ public interface FastqWriter
      *
      * @param outputStream output stream to write to, must not be null
      * @param fastq zero or more FASTQ formatted sequences to write, must not be null
-     * @throws IOException if an IO error occurs
+     * @throws IOException if an I/O error occurs
      */
     void write(OutputStream outputStream, Iterable<Fastq> fastq) throws IOException;
 }

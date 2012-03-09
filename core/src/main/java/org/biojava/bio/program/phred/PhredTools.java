@@ -310,8 +310,8 @@ public final class PhredTools {
       DistributionTrainerContext dtc = new SimpleDistributionTrainerContext();
 
       for (int i = 0; i < s.length(); i++) {// for each symbol in the phred sequence
-        Symbol qual = s.getQualityAt(i);
-        Symbol base = s.getDNAAt(i);
+        Symbol qual = s.getQualityAt(i + 1);
+        Symbol base = s.getDNAAt(i + 1);
         double pBase = pFromQuality((IntegerAlphabet.IntegerSymbol)qual);
         double pOthers = (1.0 - pBase)/3;
 

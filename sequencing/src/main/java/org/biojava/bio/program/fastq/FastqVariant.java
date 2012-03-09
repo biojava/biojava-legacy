@@ -31,13 +31,89 @@ import java.util.Map;
 public enum FastqVariant
 {
     /** Sanger FASTQ sequence format variant. */
-    FASTQ_SANGER("Original or Sanger format"),
+    FASTQ_SANGER("Original or Sanger format")
+    {
+        @Override
+        public int minimumQualityScore()
+        {
+            return 0;
+        }
+
+        @Override
+        public int maximumQualityScore()
+        {
+            return 93;
+        }
+
+        @Override
+        public int qualityScore(final char c)
+        {
+            return ((int) c) - 33;
+        }
+
+        @Override
+        public double errorProbability(final int qualityScore)
+        {
+            return Math.pow(10.0d, ((double) qualityScore) / -10.0d);
+        }
+    },
 
     /** Solexa FASTQ sequence format variant. */
-    FASTQ_SOLEXA("Solexa and early Illumina format"),
+    FASTQ_SOLEXA("Solexa and early Illumina format")
+    {
+        @Override
+        public int minimumQualityScore()
+        {
+            return -5;
+        }
+
+        @Override
+        public int maximumQualityScore()
+        {
+            return 62;
+        }
+
+        @Override
+        public int qualityScore(final char c)
+        {
+            return ((int) c) - 64;
+        }
+
+        @Override
+        public double errorProbability(final int qualityScore)
+        {
+            double q = Math.pow(10.0d, ((double) qualityScore) / -10.0d);
+            return q / (1 + q);
+        }
+    },
 
     /** Illumina FASTQ sequence format variant. */
-    FASTQ_ILLUMINA("Illumina 1.3+ format");
+    FASTQ_ILLUMINA("Illumina 1.3+ format")
+    {
+        @Override
+        public int minimumQualityScore()
+        {
+            return 0;
+        }
+
+        @Override
+        public int maximumQualityScore()
+        {
+            return 62;
+        }
+
+        @Override
+        public int qualityScore(final char c)
+        {
+            return ((int) c) - 64;
+        }
+
+        @Override
+        public double errorProbability(final int qualityScore)
+        {
+            return Math.pow(10.0d, ((double) qualityScore) / -10.0d);
+        }
+    };
 
 
     /** Map of FASTQ sequence format variants keyed by name and lowercase-with-dashes name. */
@@ -111,6 +187,52 @@ public enum FastqVariant
     {
         return (this == FASTQ_ILLUMINA);
     }
+
+    /**
+     * Return the minimum quality score for this FASTQ sequence format variant.
+     *
+     * @since 1.9
+     * @return the minimum quality score for this FASTQ sequence format variant.
+     */
+    public abstract int minimumQualityScore();
+
+    /**
+     * Return the maximum quality score for this FASTQ sequence format variant.
+     *
+     * @since 1.9
+     * @return the maximum quality score for this FASTQ sequence format variant.
+     */
+    public abstract int maximumQualityScore();
+
+    /**
+     * Convert the specified quality in ASCII format to a quality score.
+     *
+     * @since 1.9
+     * @param c quality in ASCII format
+     * @return the specified quality in ASCII format converted to a quality score
+     */
+    public abstract int qualityScore(char c);
+
+    /**
+     * Convert the specified quality in ASCII format to an error probability.
+     *
+     * @since 1.9
+     * @param c quality in ASCII format
+     * @return the specified quality in ASCII format converted to an error probability
+     */
+    public double errorProbability(char c)
+    {
+        return errorProbability(qualityScore(c));
+    }
+
+    /**
+     * Calculate the error probability given the specified quality score.
+     *
+     * @since 1.9
+     * @param qualityScore quality score
+     * @return the error probability given the specified quality score
+     */
+    public abstract double errorProbability(int qualityScore);
 
     /**
      * Return the name of this FASTQ sequence format variant in <code>lowercase-with-dashes</code> style.

@@ -23,14 +23,24 @@ package org.biojava.bio.program.fastq;
 import java.net.URL;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
+import java.nio.charset.Charset;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
+import com.google.common.io.InputSupplier;
+import com.google.common.io.Files;
+import com.google.common.io.Resources;
 
 /**
  * Abstract reader implementation for FASTQ formatted sequences.
@@ -41,25 +51,6 @@ abstract class AbstractFastqReader
     implements FastqReader
 {
 
-    /** Parser state. */
-    private static enum State
-    {
-        /** Description parser state. */
-        DESCRIPTION,
-
-        /** Sequence parser state. */
-        SEQUENCE,
-
-        /** Repeat description parser state. */
-        REPEAT_DESCRIPTION,
-
-        /** Quality score parser state. */
-        QUALITY,
-
-        /** Complete parser state. */
-        COMPLETE;
-    };
-
     /**
      * Return the FASTQ sequence format variant for this reader.
      *
@@ -68,49 +59,34 @@ abstract class AbstractFastqReader
     protected abstract FastqVariant getVariant();
 
     /**
-     * Validate the specified description.
+     * Parse the specified input supplier.
      *
-     * @param builder FASTQ formatted sequence builder, will not be null
-     * @param description description to validate, will not be null
-     * @param lineNumber current line number in input stream
-     * @throws IOException if the specified description is not valid
+     * @since 1.9
+     * @param supplier input supplier, must not be null
+     * @param listener low-level event based parser callback, must not be null
+     * @param IOException if an I/O error occurs
      */
-    protected abstract void validateDescription(FastqBuilder builder, String description, int lineNumber)
-        throws IOException;
+    public final <R extends Readable & Closeable> void parse(final InputSupplier<R> supplier,
+                                                             final ParseListener listener)
+        throws IOException
+    {
+        FastqParser.parse(supplier, listener);
+    }
 
     /**
-     * Validate the specified sequence.
+     * Stream the specified input supplier.
      *
-     * @param builder FASTQ formatted sequence builder, will not be null
-     * @param sequence sequence to validate, will not be null
-     * @param lineNumber current line number in input stream
-     * @throws IOException if the specified sequence is not valid
+     * @since 1.9
+     * @param supplier input supplier, must not be null
+     * @param listener event based reader callback, must not be null
+     * @throws IOException if an I/O error occurs
      */
-    protected abstract void validateSequence(FastqBuilder builder, String sequence, int lineNumber)
-        throws IOException;
-
-    /**
-     * Validate the specified repeat description.
-     *
-     * @param builder FASTQ formatted sequence builder, will not be null
-     * @param repeatDescription repeat description to validate, will not be null
-     * @param lineNumber current line number in input stream
-     * @throws IOException if the specified repeat description is not valid
-     */
-    protected abstract void validateRepeatDescription(FastqBuilder builder, String repeatDescription, int lineNumber)
-        throws IOException;
-
-    /**
-     * Validate the specified quality scores.
-     *
-     * @param builder FASTQ formatted sequence builder, will not be null
-     * @param quality quality scores to validate, will not be null
-     * @param lineNumber current line number in input stream
-     * @throws IOException if the specified quality scores are not valid
-     */
-    protected abstract void validateQuality(FastqBuilder builder, String quality, int lineNumber)
-        throws IOException;
-
+    public final <R extends Readable & Closeable> void stream(final InputSupplier<R> supplier,
+                                                              final StreamListener listener)
+        throws IOException
+    {
+        StreamingFastqParser.stream(supplier, getVariant(), listener);
+    }
 
     /** {@inheritDoc} */
     public final Iterable<Fastq> read(final File file) throws IOException
@@ -119,30 +95,9 @@ abstract class AbstractFastqReader
         {
             throw new IllegalArgumentException("file must not be null");
         }
-        InputStream inputStream = null;
-        try
-        {
-            inputStream = new FileInputStream(file);
-            return read(inputStream);
-        }
-        catch (IOException e)
-        {
-            throw e;
-        }
-        finally
-        {
-            if (inputStream != null)
-            {
-                try
-                {
-                    inputStream.close();
-                }
-                catch (IOException e)
-                {
-                    // ignore
-                }
-            }
-        }
+        Collect collect = new Collect();
+        stream(Files.newReaderSupplier(file, Charset.forName("US-ASCII")), collect);
+        return collect.getResult();
     }
 
     /** {@inheritDoc} */
@@ -152,30 +107,9 @@ abstract class AbstractFastqReader
         {
             throw new IllegalArgumentException("url must not be null");
         }
-        InputStream inputStream = null;
-        try
-        {
-            inputStream = url.openStream();
-            return read(inputStream);
-        }
-        catch (IOException e)
-        {
-            throw e;
-        }
-        finally
-        {
-            if (inputStream != null)
-            {
-                try
-                {
-                    inputStream.close();
-                }
-                catch (IOException e)
-                {
-                    // ignore
-                }
-            }
-        }
+        Collect collect = new Collect();
+        stream(Resources.newReaderSupplier(url, Charset.forName("US-ASCII")), collect);
+        return collect.getResult();
     }
 
     /** {@inheritDoc} */
@@ -183,87 +117,42 @@ abstract class AbstractFastqReader
     {
         if (inputStream == null)
         {
-            throw new IllegalArgumentException ("inputStream must not be null");
+            throw new IllegalArgumentException("inputStream must not be null");
         }
-        int lineNumber = 0;
-        State state = State.DESCRIPTION;
-        List<Fastq> result = new ArrayList<Fastq>();
-        FastqBuilder builder = new FastqBuilder().withVariant(getVariant());
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        while (reader.ready())
+        Collect collect = new Collect();
+        stream(new InputSupplier<InputStreamReader>()
+               {
+                   @Override
+                   public InputStreamReader getInput() throws IOException
+                   {
+                       return new InputStreamReader(inputStream);
+                   }
+               }, collect);
+        return collect.getResult();
+    }
+
+    /**
+     * Collect FASTQ formatted sequences in a list.
+     */
+    private static final class Collect implements StreamListener
+    {
+        /** List of FASTQ formatted sequences. */
+        private final List<Fastq> result = Lists.newLinkedList();
+
+        @Override
+        public void fastq(final Fastq fastq)
         {
-            String line = reader.readLine();
-            switch (state)
-            {
-            case DESCRIPTION:
-                validateDescription(builder, line, lineNumber);
-                builder.withDescription(line.substring(1).trim());
-                state = State.SEQUENCE;
-                break;
-            case SEQUENCE:
-                validateSequence(builder, line, lineNumber);
-                builder.withSequence(line.trim());
-                state = State.REPEAT_DESCRIPTION;
-                break;
-            case REPEAT_DESCRIPTION:
-                if (!line.startsWith("+"))
-                {
-                    builder.appendSequence(line.trim());
-                }
-                else
-                {
-                    validateRepeatDescription(builder, line, lineNumber);
-                    state = State.QUALITY;
-                }
-                break;
-            case QUALITY:
-                validateQuality(builder, line, lineNumber);
-                builder.withQuality(line.trim());
-                state = State.COMPLETE;
-                break;
-            case COMPLETE:
-                if (!builder.sequenceAndQualityLengthsMatch())
-                {
-                    builder.appendQuality(line.trim());
-                }
-                else
-                {
-                    try
-                    {
-                        result.add(builder.build());
-                    }
-                    catch (IllegalStateException e)
-                    {
-                        throw new IOException("caught an IllegalStateException at line " + lineNumber + " " + e.getMessage());
-                        //throw new IOException("caught an IllegalStateException at line " + lineNumber, e);  jdk 1.6+
-                    }
-                    validateDescription(builder, line, lineNumber);
-                    builder.withDescription(line.substring(1).trim());
-                    state = State.SEQUENCE;
-                }
-                break;
-            default:
-                break;
-            }
-            lineNumber++;
+            result.add(fastq);
         }
-        if (state == State.COMPLETE)
+
+        /**
+         * Return an unmodifiable iterable over the FASTQ formatted sequences collected by this stream listener.
+         *
+         * @return an unmodifiable iterable over the FASTQ formatted sequences collected by this stream listener
+         */
+        public Iterable<Fastq> getResult()
         {
-            try
-            {
-                result.add(builder.build());
-                state = State.DESCRIPTION;
-            }
-            catch (IllegalStateException e)
-            {
-                throw new IOException("caught an IllegalStateException at line " + lineNumber + " " + e.getMessage());
-                //throw new IOException("caught an IllegalStateException at line " + lineNumber, e);  jdk 1.6+
-            }
+            return Iterables.unmodifiableIterable(result);
         }
-        if (state != State.DESCRIPTION)
-        {
-            throw new IOException("truncated sequence at line " + lineNumber);
-        }
-        return result;
     }
 }

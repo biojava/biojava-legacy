@@ -60,27 +60,27 @@ final class StreamingFastqParser
         }
 
         final FastqBuilder builder = new FastqBuilder().withVariant(variant);
-        new FastqParser().parse(supplier, new ParseListener()
+        FastqParser.parse(supplier, new ParseListener()
             {
-                @Override
+                /** {@inheritDoc} */
                 public void description(final String description) throws IOException
                 {
                     builder.withDescription(description);
                 }
 
-                @Override
+                /** {@inheritDoc} */
                 public void sequence(final String sequence) throws IOException
                 {
                     builder.withSequence(sequence);
                 }
 
-                @Override
+                /** {@inheritDoc} */
                 public void appendSequence(final String sequence) throws IOException
                 {
                     builder.appendSequence(sequence);
                 }
 
-                @Override
+                /** {@inheritDoc} */
                 public void repeatDescription(final String repeatDescription) throws IOException
                 {
                     String description = builder.getDescription();
@@ -93,6 +93,12 @@ final class StreamingFastqParser
                     }
                 }
 
+                /**
+                 * Validate the specified quality line.
+                 *
+                 * @param quality quality line to validate
+                 * @throws IOException if an I/O error occurs
+                 */
                 private void validateQuality(final String quality) throws IOException
                 {
                     for (int i = 0, size = quality.length(); i < size; i++)
@@ -108,21 +114,21 @@ final class StreamingFastqParser
                     }
                 }
 
-                @Override
+                /** {@inheritDoc} */
                 public void quality(final String quality) throws IOException
                 {
                     validateQuality(quality);
                     builder.withQuality(quality);
                 }
 
-                @Override
+                /** {@inheritDoc} */
                 public void appendQuality(final String quality) throws IOException
                 {
                     validateQuality(quality);
                     builder.appendQuality(quality);
                 }
 
-                @Override
+                /** {@inheritDoc} */
                 public void complete() throws IOException
                 {
                     try

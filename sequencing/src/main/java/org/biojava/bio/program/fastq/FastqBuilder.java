@@ -210,10 +210,6 @@ public final class FastqBuilder
         {
             throw new IllegalStateException("quality must not be null");
         }
-        if (variant == null)
-        {
-            throw new IllegalStateException("variant must not be null");
-        }
         if (!sequenceAndQualityLengthsMatch())
         {
             throw new IllegalStateException("sequence and quality scores must be the same length");

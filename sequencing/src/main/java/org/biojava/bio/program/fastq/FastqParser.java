@@ -45,6 +45,10 @@ final class FastqParser
     static <R extends Readable & Closeable> void parse(final InputSupplier<R> supplier, final ParseListener listener)
         throws IOException
     {
+        if (supplier == null)
+        {
+            throw new IllegalArgumentException("supplier must not be null");
+        }
         FastqParserLineProcessor lineProcessor = new FastqParserLineProcessor(listener);
         CharStreams.readLines(supplier, lineProcessor);
         if (lineProcessor.getState() == State.COMPLETE)
@@ -111,13 +115,13 @@ final class FastqParser
             this.state = state;
         }
 
-        @Override
+        /** {@inheritDoc} */
         public Object getResult()
         {
             return null;
         }
 
-        @Override
+        /** {@inheritDoc} */
         public boolean processLine(final String line) throws IOException
         {
             String sequence = null;

@@ -22,17 +22,14 @@ package org.biojava.bio.program.fastq;
 
 import java.net.URL;
 
-import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
 import java.nio.charset.Charset;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Iterables;
@@ -122,7 +119,7 @@ abstract class AbstractFastqReader
         Collect collect = new Collect();
         stream(new InputSupplier<InputStreamReader>()
                {
-                   @Override
+                   /** {@inheritDoc} */
                    public InputStreamReader getInput() throws IOException
                    {
                        return new InputStreamReader(inputStream);
@@ -139,7 +136,7 @@ abstract class AbstractFastqReader
         /** List of FASTQ formatted sequences. */
         private final List<Fastq> result = Lists.newLinkedList();
 
-        @Override
+        /** {@inheritDoc} */
         public void fastq(final Fastq fastq)
         {
             result.add(fastq);

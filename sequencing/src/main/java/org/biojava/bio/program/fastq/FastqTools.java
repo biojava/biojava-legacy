@@ -20,7 +20,6 @@
  */
 package org.biojava.bio.program.fastq;
 
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -120,7 +119,7 @@ public final class FastqTools
      * Create and return a new {@link PhredSequence} from the specified FASTQ formatted sequence.
      * Only Sanger variant FASTQ formatted sequences are supported.
      *
-     * @param fastq FASTQ formatted sequence, must not be null, and must be Sanger variant
+     * @param fastq FASTQ formatted sequence, must not be null and must be Sanger variant
      * @return a new {@link PhredSequence} from the specified FASTQ formatted sequence
      * @throws IllegalAlphabetException if an illegal alphabet is used
      * @throws IllegalSymbolException if an illegal symbol is found

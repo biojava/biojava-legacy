@@ -20,30 +20,14 @@
  */
 package org.biojava.bio.program.fastq;
 
-import java.util.Iterator;
-import java.util.List;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Iterators;
-
 import junit.framework.TestCase;
-
-import org.biojava.bio.Annotation;
 
 import org.biojava.bio.dist.Distribution;
 
 import org.biojava.bio.program.phred.PhredSequence;
-import org.biojava.bio.program.phred.PhredTools;
-
-import org.biojava.bio.seq.DNATools;
 import org.biojava.bio.seq.Sequence;
 
-import org.biojava.bio.symbol.IllegalAlphabetException;
-import org.biojava.bio.symbol.IllegalSymbolException;
-import org.biojava.bio.symbol.IntegerAlphabet;
-import org.biojava.bio.symbol.IntegerAlphabet.SubIntegerAlphabet;
 import org.biojava.bio.symbol.SymbolList;
-import org.biojava.bio.symbol.SimpleSymbolList;
 
 /**
  * Unit test for FastqTools.

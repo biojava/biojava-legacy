@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * Abstract unit test for implementations of FastqWriter.
  */
-abstract class AbstractFastqWriterTest
+public abstract class AbstractFastqWriterTest
     extends TestCase
 {
 

@@ -82,7 +82,7 @@ public final class FastqTools
      * @return a new {@link SymbolList} of quality scores from the specified FASTQ formatted sequence
      * @throws IllegalSymbolException if an illegal symbol is found
      */
-    public static SymbolList createQuality(final Fastq fastq) throws IllegalSymbolException
+    public static SymbolList createQualityScores(final Fastq fastq) throws IllegalSymbolException
     {
         if (fastq == null)
         {

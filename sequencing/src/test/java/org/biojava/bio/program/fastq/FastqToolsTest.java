@@ -25,6 +25,7 @@ import junit.framework.TestCase;
 import org.biojava.bio.dist.Distribution;
 
 import org.biojava.bio.program.phred.PhredSequence;
+
 import org.biojava.bio.seq.Sequence;
 
 import org.biojava.bio.symbol.SymbolList;
@@ -56,19 +57,19 @@ public final class FastqToolsTest extends TestCase
         }
     }
 
-    public void testCreateQuality() throws Exception
+    public void testCreateQualityScores() throws Exception
     {
-        SymbolList quality = FastqTools.createQuality(builder.build());
-        assertNotNull(quality);
-        assertEquals(4, quality.length());
+        SymbolList qualityScores = FastqTools.createQualityScores(builder.build());
+        assertNotNull(qualityScores);
+        assertEquals(4, qualityScores.length());
     }
 
-    public void testCreateQualityNullFastq() throws Exception
+    public void testCreateQualityScoresNullFastq() throws Exception
     {
         try
         {
-            FastqTools.createQuality(null);
-            fail("createQuality(null) expected IllegalArgumentException");
+            FastqTools.createQualityScores(null);
+            fail("createQualityScores(null) expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e)
         {

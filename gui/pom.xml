@@ -4,11 +4,11 @@
   <parent>
     <artifactId>biojava-legacy</artifactId>
     <groupId>org.biojava</groupId>
-    <version>1.8.2</version>
+    <version>1.8.3-SNAPSHOT</version>
   </parent>
   <groupId>org.biojava</groupId>
   <artifactId>gui</artifactId>
-  <version>1.8.2</version>
+  <version>1.8.3-SNAPSHOT</version>
   <name>gui</name>
   <distributionManagement>
 		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>

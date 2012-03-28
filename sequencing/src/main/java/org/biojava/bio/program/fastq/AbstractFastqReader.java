@@ -61,7 +61,7 @@ abstract class AbstractFastqReader
      * @since 1.8.2
      * @param supplier input supplier, must not be null
      * @param listener low-level event based parser callback, must not be null
-     * @param IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     public final <R extends Readable & Closeable> void parse(final InputSupplier<R> supplier,
                                                              final ParseListener listener)

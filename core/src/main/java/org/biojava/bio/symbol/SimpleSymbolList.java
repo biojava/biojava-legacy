@@ -346,16 +346,12 @@ public class SimpleSymbolList extends AbstractSymbolList implements ChangeListen
             int posRightFragInDestArray5 = posRightFragInSourceArray5 + edit.replacement.length() - edit.length;
             int posReplaceFragInDestArray5 = edit.pos - 1;
             int replaceFragLength = edit.replacement.length();
+            int totalLength = length + replaceFragLength - edit.length + INCREMENT; // What is this increment for?
 
-            if ((length + replaceFragLength - edit.length) > symbols.length){
-                // extend the array
-                dest = new Symbol[(length + replaceFragLength - edit.length + INCREMENT)];
-
-                // copy symbols before the edit no need to do this if we didn't have to build a new array
-                System.arraycopy(symbols,0,dest,0,(edit.pos -1));
-            }else{
-                dest = symbols;  // array copy works when copying from an array to itself
-            }
+            // extend the array
+            dest = new Symbol[totalLength];
+            // copy symbols before the edit and make sure we are not editing the edit at the same time (hoops!)
+            System.arraycopy(symbols,0,dest,0,(edit.pos -1));
 
             // copy the symbols after the edit
             if (rightFragLength > 0){
@@ -368,7 +364,7 @@ public class SimpleSymbolList extends AbstractSymbolList implements ChangeListen
 
             // if there was a net deletion we have to get rid of the remaining symbols
             newLength = length + replaceFragLength - edit.length;
-            for (int j = newLength; j < length; j++){
+            for (int j = newLength; j < totalLength; j++){
                 dest[j] = null;
             }
             length = newLength;

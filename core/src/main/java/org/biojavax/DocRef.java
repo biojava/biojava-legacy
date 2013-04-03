@@ -90,7 +90,7 @@ public interface DocRef extends Comparable,Changeable {
      * the constructor of the implementing class.
      * @return The set of authors.
      */
-    public List getAuthorList();
+    public List<DocRefAuthor> getAuthorList();
     
     /**
      * Returns a CRC64 checksum of this document reference, allowing for easy

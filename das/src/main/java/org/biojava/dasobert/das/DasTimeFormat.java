@@ -26,6 +26,7 @@ package org.biojava.dasobert.das;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
 /** a simple class that converts a java.util.Date into the DAS
@@ -41,7 +42,7 @@ public class DasTimeFormat {
 	
 	public static String toDASString(Date date){
 		
-		SimpleDateFormat format = new SimpleDateFormat(DASFORMAT);
+		SimpleDateFormat format = new SimpleDateFormat(DASFORMAT, Locale.ENGLISH);
 		
 		return format.format(date);
 		
@@ -49,7 +50,7 @@ public class DasTimeFormat {
 	
 	public static Date fromDASString(String dasTimeFormat) throws ParseException{
 		
-		SimpleDateFormat format = new SimpleDateFormat(DASFORMAT);
+		SimpleDateFormat format = new SimpleDateFormat(DASFORMAT, Locale.ENGLISH);
 		
 		Date d = new Date(0);
 				

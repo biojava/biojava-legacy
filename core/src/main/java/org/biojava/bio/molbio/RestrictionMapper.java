@@ -22,12 +22,20 @@
 package org.biojava.bio.molbio;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.biojava.bio.seq.Sequence;
 import org.biojava.bio.seq.SequenceAnnotator;
 import org.biojava.bio.seq.impl.ViewSequence;
 import org.biojava.utils.ThreadPool;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 /**
  * <p><code>RestrictionMapper</code> is a class for annotating
@@ -82,6 +90,7 @@ public class RestrictionMapper implements SequenceAnnotator
     private List restrictionEnzymes;
     private boolean mapAll;
     private ThreadPool threadPool;
+    private ExecutorService tserv;
 
     /**
      * <p>Creates a new <code>RestrictionMapper</code> which will use
@@ -94,11 +103,27 @@ public class RestrictionMapper implements SequenceAnnotator
      *
      * @param threadPool a <code>ThreadPool</code>.
      */
-    public RestrictionMapper(ThreadPool threadPool)
-    {
+    public RestrictionMapper(ThreadPool threadPool) {
+        this();
+        this.threadPool = threadPool;
+    } 
+    
+    /**
+     * <p>Creates a new <code>RestrictionMapper</code> which will use
+     * the specified <code>ExecutorService</code>.
+     *
+     * @param xser a <code>ExecutorService</code>, e.g. ExecutorService.newCachedThreadPool() 
+     * @since 1.8.1
+     * @author George Waldon
+     */
+    public RestrictionMapper(ExecutorService xser) {
+        this();
+        tserv = xser;
+    }
+    
+    private RestrictionMapper() {
         restrictionEnzymes = new ArrayList();
         mapAll = false;
-        this.threadPool = threadPool;
     }
 
     /**
@@ -114,17 +139,48 @@ public class RestrictionMapper implements SequenceAnnotator
     {
         Sequence mapped = new ViewSequence(sequence);
 
-        for (int i = 0; i < restrictionEnzymes.size(); i++)
-        {
-            RestrictionEnzyme enzyme =
-                (RestrictionEnzyme) restrictionEnzymes.get(i);
-            threadPool.addRequest(new RestrictionSiteFinder(enzyme,
-                                                            mapAll,
-                                                            mapped));
-        }
+        if (tserv == null) {
+            for (int i = 0; i < restrictionEnzymes.size(); i++) {
+                RestrictionEnzyme enzyme =
+                        (RestrictionEnzyme) restrictionEnzymes.get(i);
+                threadPool.addRequest(new RestrictionSiteFinder(enzyme,
+                        mapAll,
+                        mapped));
+            }
 
-        // Threads will finish work and become idle
-        threadPool.waitForThreads();
+            // Threads will finish work and become idle
+            threadPool.waitForThreads();
+        } else {
+            Collection<CallableSiteFinder> taskPool = new HashSet<CallableSiteFinder>();
+            for (int i = 0; i < restrictionEnzymes.size(); i++) {
+                RestrictionEnzyme enzyme =
+                        (RestrictionEnzyme) restrictionEnzymes.get(i);
+                taskPool.add(new CallableSiteFinder(new RestrictionSiteFinder(enzyme,
+                        mapAll,
+                        mapped)));
+            }
+            List<Future<RestrictionEnzyme>> lFut;
+            try {
+                lFut = tserv.invokeAll(taskPool);
+                for (Future<RestrictionEnzyme> finder : lFut) {
+                    RestrictionEnzyme re = null;
+                    try {
+                        re = finder.get();
+                    } catch (ExecutionException ex) {
+                        Logger.getLogger(RestrictionMapper.class.getName()).log(Level.SEVERE, 
+                                "An error occurred during the mapping with the enzyme: " 
+                                + re!=null? re.toString():"unknown" 
+                                + " of the sequence: "
+                                + sequence.getName(), ex);
+                    }
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(RestrictionMapper.class.getName()).log(
+                        Level.SEVERE, 
+                        "Restriction mapping interrupted for sequence: "+sequence.getName(), 
+                        ex);
+            }
+        }
 
         return mapped;
     }
@@ -193,5 +249,21 @@ public class RestrictionMapper implements SequenceAnnotator
     public void clearEnzymes()
     {
         restrictionEnzymes.clear();
+    }
+    
+    private class CallableSiteFinder implements Callable<RestrictionEnzyme> {
+        
+        RestrictionSiteFinder finder;
+        
+        CallableSiteFinder(RestrictionSiteFinder finder) {
+            this.finder = finder;
+        }
+        
+
+        public RestrictionEnzyme call() throws Exception {
+            finder.run();
+            return finder.getEnzyme();
+        }
+        
     }
 }

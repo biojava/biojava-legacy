@@ -134,10 +134,10 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
     //sections start at a line and continue till the first line afterwards with a
     //non-whitespace first character
     //we want to match any of the following as a new section within a section
-    //  \s{0,8} word \s{1,7} value
+    //  \s{0,8} word \s{0,7} value
     //  \s{21} /word = value
     //  \s{21} /word
-    protected static final Pattern sectp = Pattern.compile("^(\\s{0,8}(\\S+)\\s{1,7}(.*)|\\s{21}(/\\S+?)=(.*)|\\s{21}(/\\S+))$");
+    protected static final Pattern sectp = Pattern.compile("^(\\s{0,8}(\\S+)\\s{0,7}(.*)|\\s{21}(/\\S+?)=(.*)|\\s{21}(/\\S+))$");
     
     protected static final Pattern readableFiles = Pattern.compile(".*(g[bp]k*$|\\u002eg[bp].*)");
     protected static final Pattern headerLine = Pattern.compile("^LOCUS.*");
@@ -571,7 +571,7 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
     // reads an indented section, combining split lines and creating a list of key->value tuples
     private List readSection(BufferedReader br) throws ParseException {
         List section = new ArrayList();
-        String line;
+        String line = "";
         String currKey = null;
         StringBuffer currVal = new StringBuffer();
         boolean done = false;
@@ -581,7 +581,7 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
             while (!done) {
                 br.mark(320);
                 line = br.readLine();
-                String firstSecKey = section.size() == 0 ? "" : ((String[])section.get(0))[0];
+                String firstSecKey = section.isEmpty() ? "" : ((String[])section.get(0))[0];
                 if (line != null && line.matches("\\p{Space}*")) {
 		   // regular expression \p{Space}* will match line 
                    // having only white space characters
@@ -616,7 +616,7 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
             String message = ParseException.newMessage(this.getClass(), accession, identifier, "", sectionToString(section));
             throw new ParseException(e, message);
         } catch (RuntimeException e){
-            String message = ParseException.newMessage(this.getClass(), accession, identifier, "Bad section", sectionToString(section));
+            String message = ParseException.newMessage(this.getClass(), accession, identifier, "Bad line", line);
             throw new ParseException(e, message);
         }
         return section;
@@ -683,7 +683,7 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         } catch (Exception e) {
             throw new RuntimeException("Unable to get alphabet tokenizer",e);
         }
-        Set notes = rs.getNoteSet();
+        Set<Note> notes = rs.getNoteSet();
         String accession = rs.getAccession();
         StringBuffer accessions = new StringBuffer();
         accessions.append(accession);
@@ -692,8 +692,8 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         String moltype = rs.getAlphabet().getName();
         if ("PROTEIN-TERM".equals(moltype) || "PROTEIN".equals(moltype)) moltype = null; //a genpept curiosity
         StringBuffer keywords = new StringBuffer();
-        for (Iterator i = notes.iterator(); i.hasNext(); ) {
-            Note n = (Note)i.next();
+        for (Iterator<Note> i = notes.iterator(); i.hasNext(); ) {
+            Note n = i.next();
             if (n.getTerm().equals(Terms.getStrandedTerm())) {
                 String value = n.getValue();
                 if(value != null && value.equals("single"))
@@ -732,7 +732,9 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         locusLine.append("  ");//54->55
         locusLine.append(StringTools.rightPad(rs.getCircular()?"circular":"linear",8));//56->63=7+1=8
         locusLine.append(" ");//64->64
-        locusLine.append(StringTools.rightPad(rs.getDivision()==null?"":rs.getDivision(),3));//65->67=2+1=3
+        String div = rs.getDivision()==null?"":rs.getDivision();
+        if(div.length()>3) div = ""; // Not a GenBank division, maybe UniProt, etc.
+        locusLine.append(StringTools.rightPad(div,3));//65->67=2+1=3
         locusLine.append(" ");//68->68
         locusLine.append(StringTools.rightPad(udat,11));//69->79=10+1=11
         StringTools.writeKeyValueLine(LOCUS_TAG, locusLine.toString(), 12, this.getLineWidth(), this.getPrintStream());
@@ -761,8 +763,8 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         }
         
         // references - rank (bases x to y)
-        for (Iterator r = rs.getRankedDocRefs().iterator(); r.hasNext(); ) {
-            RankedDocRef rdr = (RankedDocRef)r.next();
+        for (Iterator<RankedDocRef> r = rs.getRankedDocRefs().iterator(); r.hasNext(); ) {
+            RankedDocRef rdr = r.next();
             DocRef d = rdr.getDocumentReference();
             StringTools.writeKeyValueLine(REFERENCE_TAG, rdr.getRank()+((rdr.getLocation()==null || rdr.getLocation() ==RichLocation.EMPTY_LOCATION)?"": (moltype==null? "  (residues ":"  (bases ")+makeBaseRange(rdr)+")"), 12, this.getLineWidth(), this.getPrintStream());
             // Any authors that were in the input as CONSRTM tags will
@@ -776,11 +778,11 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         }
         
         // comments - if any
-        Set comments = rs.getComments();
+        Set<Comment> comments = rs.getComments();
         if (!comments.isEmpty()) {
             StringBuffer sb = new StringBuffer();
-            for (Iterator i = comments.iterator(); i.hasNext(); ) {
-                Comment c = (SimpleComment)i.next();
+            for (Iterator<Comment> i = comments.iterator(); i.hasNext(); ) {
+                Comment c = i.next();
                 sb.append(c.getComment());
                 if (i.hasNext()) sb.append("\n");
             }
@@ -792,8 +794,8 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         for (Iterator i = rs.getFeatureSet().iterator(); i.hasNext(); ) {
             RichFeature f = (RichFeature)i.next();
             StringTools.writeKeyValueLine("     "+f.getTypeTerm().getName(), GenbankLocationParser.writeLocation((RichLocation)f.getLocation()), 21, this.getLineWidth()-1, ",", this.getPrintStream());
-            for (Iterator j = f.getNoteSet().iterator(); j.hasNext(); ) {
-                Note n = (Note)j.next();
+            for (Iterator<Note> j = f.getNoteSet().iterator(); j.hasNext(); ) {
+                Note n = j.next();
                 // /key="val" or just /key if val==""
                 if (n.getValue()==null || n.getValue().length()==0) StringTools.writeKeyValueLine("", "/"+n.getTerm().getName(), 21, this.getLineWidth(), this.getPrintStream());
                 else if (isNotQuoted(n)) {// doesn't have the value enclosed in quotes
@@ -809,16 +811,16 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
                 String displayName = tax.getDisplayName();
                 if (displayName.indexOf('(')>-1) displayName = displayName.substring(0, displayName.indexOf('(')).trim();
                 StringTools.writeKeyValueLine("", "/organism=\""+displayName+"\"", 21, this.getLineWidth()-1, this.getPrintStream());// AF252370 fits in exactly 80 - but is wrapped
-                for (Iterator j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
-                    RankedCrossRef rcr = (RankedCrossRef)j.next();
+                for (Iterator<RankedCrossRef> j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
+                    RankedCrossRef rcr = j.next();
                     CrossRef cr = rcr.getCrossRef();
                     StringTools.writeKeyValueLine("", "/db_xref=\""+cr.getDbname()+":"+cr.getAccession()+"\"", 21, this.getLineWidth(), this.getPrintStream());
                 }
                 StringTools.writeKeyValueLine("", "/db_xref=\"taxon:"+tax.getNCBITaxID()+"\"", 21, this.getLineWidth(), this.getPrintStream());
             } else {
                 // add-in other dbxrefs where present
-                for (Iterator j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
-                    RankedCrossRef rcr = (RankedCrossRef)j.next();
+                for (Iterator<RankedCrossRef> j = f.getRankedCrossRefs().iterator(); j.hasNext(); ) {
+                    RankedCrossRef rcr = j.next();
                     CrossRef cr = rcr.getCrossRef();
                     StringTools.writeKeyValueLine("", "/db_xref=\""+cr.getDbname()+":"+cr.getAccession()+"\"", 21, this.getLineWidth(), this.getPrintStream());
                 }
@@ -905,9 +907,9 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
             final RichFeature feature = (RichFeature) i.next();
             if (feature.getType().equals("source")) {
                 final Set noteSet = feature.getNoteSet();
-                final Iterator n = noteSet.iterator();
+                final Iterator<Note> n = noteSet.iterator();
                 while(n.hasNext()) {
-                    final Note note = (Note) n.next();
+                    final Note note = n.next();
                     if (note.getTerm().getName().equals("organelle")) return note.getValue().equals("mitochondrion");
                 }
             }

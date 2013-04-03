@@ -899,7 +899,7 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
             throw new RuntimeException("Unable to get alphabet tokenizer",e);
         }
         
-        Set notes = rs.getNoteSet();
+        Set<Note> notes = rs.getNoteSet();
         String accession = rs.getAccession();
         StringBuffer accessions = new StringBuffer();
         accessions.append(accession);
@@ -922,8 +922,8 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
         Map genesynonyms = new TreeMap();
         Map orfnames = new TreeMap();
         Map ordlocnames = new TreeMap();
-        for (Iterator i = notes.iterator(); i.hasNext(); ) {
-            Note n = (Note)i.next();
+        for (Iterator<Note> i = notes.iterator(); i.hasNext(); ) {
+            Note n = i.next();
             if (n.getTerm().equals(Terms.getDateCreatedTerm())) cdat=n.getValue();
             else if (n.getTerm().equals(Terms.getDateUpdatedTerm())) udat=n.getValue();
             else if (n.getTerm().equals(Terms.getDateAnnotatedTerm())) adat=n.getValue();
@@ -1094,8 +1094,8 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
         }
         
         // references - rank (bases x to y)
-        for (Iterator r = rs.getRankedDocRefs().iterator(); r.hasNext(); ) {
-            RankedDocRef rdr = (RankedDocRef)r.next();
+        for (Iterator<RankedDocRef> r = rs.getRankedDocRefs().iterator(); r.hasNext(); ) {
+            RankedDocRef rdr = r.next();
             DocRef d = rdr.getDocumentReference();
             // RN, RP, RC, RX, RG, RA, RT, RL
             StringTools.writeKeyValueLine(REFERENCE_TAG, "["+rdr.getRank()+"]", 5, this.getLineWidth(), null, REFERENCE_TAG, this.getPrintStream());
@@ -1156,9 +1156,9 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
             // Deal with RX and rest
             CrossRef c = d.getCrossref();
             if (c!=null) StringTools.writeKeyValueLine(REFERENCE_XREF_TAG, c.getDbname()+"="+c.getAccession()+";", 5, this.getLineWidth(), null, REFERENCE_XREF_TAG, this.getPrintStream());
-            List auths = d.getAuthorList();
-            for (Iterator j = auths.iterator(); j.hasNext(); ) {
-                DocRefAuthor a = (DocRefAuthor)j.next();
+            List<DocRefAuthor> auths = d.getAuthorList();
+            for (Iterator<DocRefAuthor> j = auths.iterator(); j.hasNext(); ) {
+                DocRefAuthor a = j.next();
                 if (a.isConsortium()) {
                     StringTools.writeKeyValueLine(CONSORTIUM_TAG, a.getName()+";", 5, this.getLineWidth(), null, CONSORTIUM_TAG, this.getPrintStream());
                     j.remove();
@@ -1171,8 +1171,8 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
         
         // comments - if any
         if (!rs.getComments().isEmpty()) {
-            for (Iterator i = rs.getComments().iterator(); i.hasNext(); ) {
-                Comment c = (SimpleComment)i.next();
+            for (Iterator<Comment> i = rs.getComments().iterator(); i.hasNext(); ) {
+                Comment c = i.next();
                 String text = c.getComment().trim();
                 if (text.length()>3 && text.substring(0,3).equals("-!-")) StringTools.writeKeyValueLine(COMMENT_TAG, text, 5, this.getLineWidth(), null, COMMENT_TAG, this.getPrintStream());
                 else StringTools.writeKeyValueLine(COMMENT_TAG, text, 5, this.getLineWidth(), null, COMMENT_TAG, this.getPrintStream());
@@ -1184,17 +1184,17 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
             StringTools.writeKeyValueLine(COMMENT_TAG, copyright, 5, this.getLineWidth(), null, COMMENT_TAG, this.getPrintStream());
         
         // db references - ranked
-        for (Iterator r = rs.getRankedCrossRefs().iterator(); r.hasNext(); ) {
-            RankedCrossRef rcr = (RankedCrossRef)r.next();
+        for (Iterator<RankedCrossRef> r = rs.getRankedCrossRefs().iterator(); r.hasNext(); ) {
+            RankedCrossRef rcr = r.next();
             CrossRef c = rcr.getCrossRef();
-            Set noteset = c.getNoteSet();
+            Set<Note> noteset = c.getNoteSet();
             StringBuffer sb = new StringBuffer();
             sb.append(c.getDbname());
             sb.append("; ");
             sb.append(c.getAccession());
             boolean hasSecondary = false;
-            for (Iterator i = noteset.iterator(); i.hasNext(); ) {
-                Note n = (Note)i.next();
+            for (Iterator<Note> i = noteset.iterator(); i.hasNext(); ) {
+                Note n = i.next();
                 if (n.getTerm().equals(Terms.getAdditionalAccessionTerm())) {
                     sb.append("; ");
                     sb.append(n.getValue());
@@ -1213,8 +1213,8 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
         
         // keywords line
         String keywords = null;
-        for (Iterator n = notes.iterator(); n.hasNext(); ) {
-            Note nt = (Note)n.next();
+        for (Iterator<Note> n = notes.iterator(); n.hasNext(); ) {
+            Note nt = n.next();
             if (nt.getTerm().equals(Terms.getKeywordTerm())) {
                 if (keywords==null) keywords = nt.getValue();
                 else keywords = keywords+"; "+nt.getValue();
@@ -1229,8 +1229,8 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
             RichFeature f = (RichFeature)i.next();
             String desc = "";
             String ftid = null;
-            for (Iterator j = f.getNoteSet().iterator(); j.hasNext(); ) {
-                Note n = (Note)j.next();
+            for (Iterator<Note> j = f.getNoteSet().iterator(); j.hasNext(); ) {
+                Note n = j.next();
                 if (n.getTerm().equals(Terms.getFTIdTerm())) ftid = n.getValue();
                 else if (n.getTerm().equals(Terms.getFeatureDescTerm())) desc = n.getValue();
             }

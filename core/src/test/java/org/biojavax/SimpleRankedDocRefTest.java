@@ -39,7 +39,7 @@ public class SimpleRankedDocRefTest extends TestCase {
         super(testName);
         start = new Integer(1);
         end = new Integer(25);
-        dr = new SimpleDocRef(Collections.singletonList(
+        dr = new SimpleDocRef(Collections.<DocRefAuthor>singletonList(
                 new SimpleDocRefAuthor("Hubert Hubertson", false, false)), "Journal of Voodoo Virology", "Viruses, what are they good for?");
     }
 
@@ -180,7 +180,7 @@ public class SimpleRankedDocRefTest extends TestCase {
         assertFalse(ref2.equals(ref));
         
         ref2 = new SimpleRankedDocRef(new SimpleDocRef(
-                Collections.singletonList(new SimpleDocRefAuthor("Rev. Falliwell", false, false)), 
+                Collections.<DocRefAuthor>singletonList(new SimpleDocRefAuthor("Rev. Falliwell", false, false)),
                 "Kansas Journal of Creationism", "Un-intelligent design"), start, end, 1); //not equal
         assertFalse(ref.equals(ref2));
         assertFalse(ref2.equals(ref));
@@ -209,7 +209,7 @@ public class SimpleRankedDocRefTest extends TestCase {
         assertTrue(ref2.compareTo(ref) > 0);
         
         ref2 = new SimpleRankedDocRef(new SimpleDocRef(
-                Collections.singletonList(new SimpleDocRefAuthor("Rev. Falliwell", false, false)), 
+                Collections.<DocRefAuthor>singletonList(new SimpleDocRefAuthor("Rev. Falliwell", false, false)),
                 "Kansas Journal of Creationism", "Evidence for the giant spaghetti monster"), start, end, 1); //not equal
         assertTrue(ref.compareTo(ref2) == ref.getDocumentReference().compareTo(ref2.getDocumentReference())); //everything else is the same
         assertTrue(ref2.compareTo(ref) == ref2.getDocumentReference().compareTo(ref.getDocumentReference())); //everything else is the same

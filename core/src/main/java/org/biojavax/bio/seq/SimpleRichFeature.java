@@ -65,8 +65,8 @@ public class SimpleRichFeature extends AbstractChangeable implements RichFeature
     private ComparableTerm sourceTerm;
     private FeatureHolder parent;
     private RichLocation location = RichLocation.EMPTY_LOCATION;
-    private Set crossrefs = new TreeSet();
-    private Set relations = new TreeSet();
+    private Set<RankedCrossRef> crossrefs = new TreeSet<RankedCrossRef>();
+    private Set<RichFeatureRelationship> relations = new TreeSet<RichFeatureRelationship>();
     private String name;
     private int rank = SimpleRichFeature.nextRank++; // Auto-rank!
     
@@ -423,7 +423,7 @@ public class SimpleRichFeature extends AbstractChangeable implements RichFeature
      * Collection not a copy. This is required by Hibernate. If you
      * modify the object directly the behaviour may be unpredictable.
      */
-    public Set getRankedCrossRefs() { return this.crossrefs; }
+    public Set<RankedCrossRef> getRankedCrossRefs() { return this.crossrefs; }
     
     /**
      * {@inheritDoc} 
@@ -487,7 +487,7 @@ public class SimpleRichFeature extends AbstractChangeable implements RichFeature
      * Collection not a copy. This is required by Hibernate. If you
      * modify the object directly the behaviour may be unpredictable.
      */
-    public Set getFeatureRelationshipSet() { return this.relations; } // must be original for Hibernate
+    public Set<RichFeatureRelationship> getFeatureRelationshipSet() { return this.relations; } // must be original for Hibernate
     
     /**
      * {@inheritDoc} 
@@ -495,7 +495,7 @@ public class SimpleRichFeature extends AbstractChangeable implements RichFeature
      * Collection not a copy. This is required by Hibernate. If you
      * modify the object directly the behaviour may be unpredictable.
      */
-    public void setFeatureRelationshipSet(Set relationships) throws ChangeVetoException {
+    public void setFeatureRelationshipSet(Set<RichFeatureRelationship> relationships) throws ChangeVetoException {
         this.relations = relationships;  // must be original for Hibernate
     }
     

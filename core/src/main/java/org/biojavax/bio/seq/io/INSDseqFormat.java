@@ -347,12 +347,10 @@ public class INSDseqFormat extends RichSequenceFormat.BasicFormat {
             if (seq instanceof RichSequence) rs = (RichSequence)seq;
             else rs = RichSequence.Tools.enrich(seq);
         } catch (ChangeVetoException e) {
-            IOException e2 = new IOException("Unable to enrich sequence");
-            e2.initCause(e);
-            throw e2;
+            throw new IOException("Unable to enrich sequence", e);
         }
         
-        Set notes = rs.getNoteSet();
+        Set<Note> notes = rs.getNoteSet();
         List accessions = new ArrayList();
         List otherSeqIDs = new ArrayList();
         List kws = new ArrayList();
@@ -362,8 +360,8 @@ public class INSDseqFormat extends RichSequenceFormat.BasicFormat {
         String urel = null;
         String crel = null;
         String moltype = rs.getAlphabet().getName();
-        for (Iterator i = notes.iterator(); i.hasNext();) {
-            Note n = (Note)i.next();
+        for (Iterator<Note> i = notes.iterator(); i.hasNext();) {
+            Note n = i.next();
             if (n.getTerm().equals(Terms.getStrandedTerm())) stranded=n.getValue();
             else if (n.getTerm().equals(Terms.getDateUpdatedTerm())) udat=n.getValue();
             else if (n.getTerm().equals(Terms.getDateCreatedTerm())) cdat=n.getValue();
@@ -494,10 +492,10 @@ public class INSDseqFormat extends RichSequenceFormat.BasicFormat {
         // references - rank (bases x to y)
         if (!rs.getRankedDocRefs().isEmpty()) {
             xml.openTag(REFERENCES_GROUP_TAG);
-            for (Iterator r = rs.getRankedDocRefs().iterator(); r.hasNext();) {
+            for (Iterator<RankedDocRef> r = rs.getRankedDocRefs().iterator(); r.hasNext();) {
                 xml.openTag(REFERENCE_TAG);
                 
-                RankedDocRef rdr = (RankedDocRef)r.next();
+                RankedDocRef rdr = r.next();
                 DocRef d = rdr.getDocumentReference();
                 
                 xml.openTag(REFERENCE_LOCATION_TAG);
@@ -516,9 +514,9 @@ public class INSDseqFormat extends RichSequenceFormat.BasicFormat {
                 }
                 
                 xml.openTag(AUTHORS_GROUP_TAG);
-                List auths = d.getAuthorList();
-                for (Iterator i = auths.iterator(); i.hasNext(); ) {
-                    DocRefAuthor a = (DocRefAuthor)i.next();
+                List<DocRefAuthor> auths = d.getAuthorList();
+                for (Iterator<DocRefAuthor> i = auths.iterator(); i.hasNext(); ) {
+                    DocRefAuthor a = i.next();
                     if (!a.isConsortium()) {
                         xml.openTag(AUTHOR_TAG);
                         xml.print(a.getName());
@@ -528,7 +526,7 @@ public class INSDseqFormat extends RichSequenceFormat.BasicFormat {
                 }
                 xml.closeTag(AUTHORS_GROUP_TAG);
                 if (!auths.isEmpty()) { // only consortia left in the set now
-                    DocRefAuthor a = (DocRefAuthor)auths.iterator().next(); // take the first one only
+                    DocRefAuthor a = auths.iterator().next(); // take the first one only
                     xml.openTag(CONSORTIUM_TAG);
                     xml.print(a.getName());
                     xml.closeTag(CONSORTIUM_TAG);
@@ -575,24 +573,24 @@ public class INSDseqFormat extends RichSequenceFormat.BasicFormat {
         
         if (!rs.getComments().isEmpty()) {
             xml.openTag(COMMENT_TAG);
-            for (Iterator i = rs.getComments().iterator(); i.hasNext(); ) xml.println(((Comment)i.next()).getComment());
+            for (Iterator<Comment> i = rs.getComments().iterator(); i.hasNext(); ) xml.println(((Comment)i.next()).getComment());
             xml.closeTag(COMMENT_TAG);
         }
         
         
         // db references - only first one is output
         if (!rs.getRankedCrossRefs().isEmpty()) {
-            Iterator r = rs.getRankedCrossRefs().iterator();
-            RankedCrossRef rcr = (RankedCrossRef)r.next();
+            Iterator<RankedCrossRef> r = rs.getRankedCrossRefs().iterator();
+            RankedCrossRef rcr = r.next();
             CrossRef c = rcr.getCrossRef();
-            Set noteset = c.getNoteSet();
+            Set<Note> noteset = c.getNoteSet();
             StringBuffer sb = new StringBuffer();
             sb.append(c.getDbname().toUpperCase());
             sb.append("; ");
             sb.append(c.getAccession());
             boolean hasSecondary = false;
-            for (Iterator i = noteset.iterator(); i.hasNext(); ) {
-                Note n = (Note)i.next();
+            for (Iterator<Note> i = noteset.iterator(); i.hasNext(); ) {
+                Note n = i.next();
                 if (n.getTerm().equals(Terms.getAdditionalAccessionTerm())) {
                     sb.append("; ");
                     sb.append(n.getValue());
@@ -687,8 +685,8 @@ public class INSDseqFormat extends RichSequenceFormat.BasicFormat {
                 
                 xml.openTag(FEATUREQUALS_GROUP_TAG);
                 
-                for (Iterator j = f.getNoteSet().iterator(); j.hasNext();) {
-                    Note n = (Note)j.next();
+                for (Iterator<Note> j = f.getNoteSet().iterator(); j.hasNext();) {
+                    Note n = j.next();
                     xml.openTag(FEATUREQUAL_TAG);
                     
                     xml.openTag(FEATUREQUAL_NAME_TAG);
@@ -738,8 +736,8 @@ public class INSDseqFormat extends RichSequenceFormat.BasicFormat {
                     xml.closeTag(FEATUREQUAL_TAG);
                 }
                 // add-in other dbxrefs where present
-                for (Iterator j = f.getRankedCrossRefs().iterator(); j.hasNext();) {
-                    RankedCrossRef rcr = (RankedCrossRef)j.next();
+                for (Iterator<RankedCrossRef> j = f.getRankedCrossRefs().iterator(); j.hasNext();) {
+                    RankedCrossRef rcr = j.next();
                     CrossRef cr = rcr.getCrossRef();
                     xml.openTag(FEATUREQUAL_TAG);
                     

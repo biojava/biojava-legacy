@@ -42,7 +42,7 @@ public class DummyRichSequenceHandler implements RichSequenceHandler {
     /**
      * {@inheritDoc}
      */
-    public List toList(RichSequence seq) { return seq.getInternalSymbolList().toList();}
+    public List<Symbol> toList(RichSequence seq) { return seq.getInternalSymbolList().toList();}
     
     /**
      * {@inheritDoc}
@@ -117,5 +117,5 @@ public class DummyRichSequenceHandler implements RichSequenceHandler {
     /**
      * {@inheritDoc}
      */
-    public Iterator iterator(RichSequence seq) {return seq.getInternalSymbolList().iterator(); }
+    public Iterator<Symbol> iterator(RichSequence seq) {return seq.getInternalSymbolList().iterator(); }
 }

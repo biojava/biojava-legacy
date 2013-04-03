@@ -53,7 +53,7 @@ import org.biojavax.ontology.ComparableTerm;
  */
 public class SimpleRichAnnotation extends AbstractChangeable implements RichAnnotation {
     
-    private Set notes = new TreeSet(); // Keeps them ordered by rank then term
+    private Set<Note> notes = new TreeSet<Note>(); // Keeps them ordered by rank then term
     
     /** Creates a new, empty instance of SimpleRichAnnotation */
     public SimpleRichAnnotation() {}
@@ -64,8 +64,8 @@ public class SimpleRichAnnotation extends AbstractChangeable implements RichAnno
     public void clear() throws ChangeVetoException{ 
     	// Use copy of list in order to prevent concurrent modifications.
     	// Fix for bug #2258.
-        for(Iterator i = (new ArrayList(this.notes)).iterator(); i.hasNext(); ){
-            this.removeNote((Note)i.next());
+        for(Iterator<Note> i = (new ArrayList(this.notes)).iterator(); i.hasNext(); ){
+            this.removeNote(i.next());
         }
     }
     
@@ -77,8 +77,8 @@ public class SimpleRichAnnotation extends AbstractChangeable implements RichAnno
      */
     public Map asMap() {
         Map m = new TreeMap();
-        for (Iterator i = this.notes.iterator(); i.hasNext(); ) {
-            Note n = (Note)i.next();
+        for (Iterator<Note> i = this.notes.iterator(); i.hasNext(); ) {
+            Note n = i.next();
             m.put(n.getTerm(), n.getValue());
         }
         return m;
@@ -106,9 +106,9 @@ public class SimpleRichAnnotation extends AbstractChangeable implements RichAnno
                 boolean change = this.notes.add(note);
                 if(!change) {
                     Note current = null;
-                    Iterator it = notes.iterator();
+                    Iterator<Note> it = notes.iterator();
                     while(it.hasNext()) {
-                        current = (Note)it.next();
+                        current = it.next();
                         if(note.equals(current))
                             break;
                     }
@@ -138,8 +138,8 @@ public class SimpleRichAnnotation extends AbstractChangeable implements RichAnno
     public boolean containsProperty(Object key) { 
         if (key instanceof Term) key = RichObjectFactory.getDefaultOntology().getOrImportTerm((Term)key);
         else key = RichObjectFactory.getDefaultOntology().getOrCreateTerm(key.toString());
-        for(Iterator i = notes.iterator(); i.hasNext();){
-            Note n = (Note)i.next();
+        for(Iterator<Note> i = notes.iterator(); i.hasNext();){
+            Note n = i.next();
             if(n.getTerm().equals(key)) return true;
         }
     	return false; 
@@ -150,8 +150,8 @@ public class SimpleRichAnnotation extends AbstractChangeable implements RichAnno
      */
     public Note getNote(Note note) throws NoSuchElementException {
         if (note==null) throw new IllegalArgumentException("Note cannot be null");
-        for (Iterator i = this.notes.iterator(); i.hasNext(); ) {
-            Note n = (Note)i.next();
+        for (Iterator<Note> i = this.notes.iterator(); i.hasNext(); ) {
+            Note n = i.next();
             if (note.equals(n)) return n;
         }
         throw new NoSuchElementException("No such property: "+note.getTerm()+", rank "+note.getRank());
@@ -167,8 +167,8 @@ public class SimpleRichAnnotation extends AbstractChangeable implements RichAnno
     public Object getProperty(Object key) throws NoSuchElementException { 
         if (key instanceof Term) key = RichObjectFactory.getDefaultOntology().getOrImportTerm((Term)key);
         else key = RichObjectFactory.getDefaultOntology().getOrCreateTerm(key.toString());
-        for(Iterator i = notes.iterator(); i.hasNext();){
-            Note n = (Note)i.next();
+        for(Iterator<Note> i = notes.iterator(); i.hasNext();){
+            Note n = i.next();
             if (n.getTerm().equals(key)) return n.getValue();
         }
         throw new NoSuchElementException("No such property: "+key); 
@@ -184,8 +184,8 @@ public class SimpleRichAnnotation extends AbstractChangeable implements RichAnno
         if (key instanceof Term) key = RichObjectFactory.getDefaultOntology().getOrImportTerm((Term)key);
         else key = RichObjectFactory.getDefaultOntology().getOrCreateTerm(key.toString());
         List l = new LinkedList();
-        for(Iterator i = notes.iterator(); i.hasNext();){
-            Note n = (Note)i.next();
+        for(Iterator<Note> i = notes.iterator(); i.hasNext();){
+            Note n = i.next();
             if (n.getTerm().equals(key)) l.add(n);
         }
         Collections.sort(l);
@@ -240,8 +240,8 @@ public class SimpleRichAnnotation extends AbstractChangeable implements RichAnno
     public void removeProperty(Object key) throws NoSuchElementException, ChangeVetoException { 
         if (key instanceof Term) key = RichObjectFactory.getDefaultOntology().getOrImportTerm((Term)key);
         else key = RichObjectFactory.getDefaultOntology().getOrCreateTerm(key.toString());
-        for(Iterator i = notes.iterator(); i.hasNext();){
-            Note n = (Note)i.next();
+        for(Iterator<Note> i = notes.iterator(); i.hasNext();){
+            Note n = i.next();
             if (n.getTerm().equals(key)) {
             	this.removeNote(n); 
             	return;
@@ -267,7 +267,7 @@ public class SimpleRichAnnotation extends AbstractChangeable implements RichAnno
      * Collection not a copy. This is required by Hibernate. If you
      * modify the object directly the behaviour may be unpredictable.
      */
-    public Set getNoteSet() {  return this.notes; } // original for Hibernate
+    public Set<Note> getNoteSet() {  return this.notes; } // original for Hibernate
     
     /**
      * {@inheritDoc}
@@ -275,7 +275,7 @@ public class SimpleRichAnnotation extends AbstractChangeable implements RichAnno
      * Collection not a copy. This is required by Hibernate. If you
      * modify the object directly the behaviour may be unpredictable.
      */
-    public void setNoteSet(Set notes) throws ChangeVetoException { this.notes = notes; } // original for Hibernate
+    public void setNoteSet(Set<Note> notes) throws ChangeVetoException { this.notes = notes; } // original for Hibernate
     
     /**
      * {@inheritDoc}

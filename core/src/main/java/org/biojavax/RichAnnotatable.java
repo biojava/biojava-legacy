@@ -49,7 +49,7 @@ public interface RichAnnotatable extends Annotatable {
      * @return set a set of Note objects.
      * @see Note
      */
-    public Set getNoteSet();
+    public Set<Note> getNoteSet();
     
     /**
      * Clears the notes associated with this object and replaces them with
@@ -60,6 +60,6 @@ public interface RichAnnotatable extends Annotatable {
      * that are not Note objects.
      * @see Note
      */
-    public void setNoteSet(Set notes) throws ChangeVetoException;
+    public void setNoteSet(Set<Note> notes) throws ChangeVetoException;
     
 }

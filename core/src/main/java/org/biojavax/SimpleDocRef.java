@@ -40,7 +40,7 @@ import org.biojavax.utils.CRC64Checksum;
 public class SimpleDocRef extends AbstractChangeable implements DocRef {
     
     private CrossRef crossref;
-    private List authors;
+    private List<DocRefAuthor> authors;
     private String title;
     private String location;
     private String remark;
@@ -50,9 +50,9 @@ public class SimpleDocRef extends AbstractChangeable implements DocRef {
      * location and title. Will throw exceptions if either authors or
      * location are null, but a null title is allowable.
      * @param authors The authors of the referenced document, as a set of DocRefAuthor instances.
-     * @param location The location of the document, eg. the journal name and page range.
+     * @param location The location of the document, e.g. the journal name and page range.
      */
-    public SimpleDocRef(List authors, String location) {
+    public SimpleDocRef(List<DocRefAuthor> authors, String location) {
     	this(authors, location, null);
     }
     
@@ -89,11 +89,11 @@ public class SimpleDocRef extends AbstractChangeable implements DocRef {
      * @param location The location of the document, e.g. the journal name and page range.
      * @param title The title of the document.
      */
-    public SimpleDocRef(List authors, String location, String title) {
+    public SimpleDocRef(List<DocRefAuthor> authors, String location, String title) {
         if (authors==null) throw new IllegalArgumentException("Authors cannot be null");
         if (location==null) throw new IllegalArgumentException("Location cannot be null");
         this.crossref = null;
-        this.authors = new ArrayList();
+        this.authors = new ArrayList<DocRefAuthor>();
         this.authors.addAll(authors);
         this.title = title;
         this.location = location;
@@ -200,7 +200,7 @@ public class SimpleDocRef extends AbstractChangeable implements DocRef {
     /**
      * {@inheritDoc}
      */
-    public List getAuthorList() { return new ArrayList(this.authors); }
+    public List<DocRefAuthor> getAuthorList() { return new ArrayList(this.authors); }
     
     /**
      * {@inheritDoc}

@@ -39,7 +39,7 @@ public interface FastqReader
      *
      * @param file file to read from, must not be null
      * @return zero or more FASTQ formatted sequences read from the specified file
-     * @throws IOException if an IO error occurs
+     * @throws IOException if an I/O error occurs
      */
     Iterable<Fastq> read(File file) throws IOException;
 
@@ -48,7 +48,7 @@ public interface FastqReader
      *
      * @param url URL to read from, must not be null
      * @return zero or more FASTQ formatted sequences read from the specified url
-     * @throws IOException if an IO error occurs
+     * @throws IOException if an I/O error occurs
      */
     Iterable<Fastq> read(URL url) throws IOException;
 
@@ -57,7 +57,7 @@ public interface FastqReader
      *
      * @param inputStream input stream to read from, must not be null
      * @return zero or more FASTQ formatted sequences read from the specified input stream
-     * @throws IOException if an IO error occurs
+     * @throws IOException if an I/O error occurs
      */
     Iterable<Fastq> read(InputStream inputStream) throws IOException;
 }

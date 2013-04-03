@@ -4,7 +4,7 @@
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava-legacy</artifactId>
 	<packaging>pom</packaging>
-	<version>1.8.1</version>
+	<version>1.8.2</version>
 	<name>biojava-legacy</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
 	<url>http://www.biojava.org</url>
@@ -13,9 +13,9 @@
 		<url>http://www.biojava.org</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-legacy/tags/biojava-legacy-1.8.1</connection>
-		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-legacy/tags/biojava-legacy-1.8.1</developerConnection>
-		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-legacy/tags/biojava-legacy-1.8.1</url>
+		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-legacy/tags/biojava-legacy-1.8.2</connection>
+		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-legacy/tags/biojava-legacy-1.8.2</developerConnection>
+		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-legacy/tags/biojava-legacy-1.8.2</url>
 	</scm>
 	<repositories>
 		<repository>
@@ -68,6 +68,7 @@
 		<jdk.version>1.5</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+		<maxmem>512m</maxmem>
 	</properties>
 	<build>
 		<pluginManagement>
@@ -128,7 +129,7 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>2.7</version>
 					<configuration>
-					<footer>&lt;script src="http://www.google-analytics.com/urchin.js" type="text/javascript"&gt;&lt;/script&gt;&lt;script type="text/javascript"&gt;_uacct = "UA-460553-1";urchinTracker();&lt;/script&gt;</footer>
+					<footer>&lt;script src="http://www.google-analytics.com/urchin.js" type="text/javascript"&gt;&lt;/script&gt;&lt;script type="text/javascript"&gt;_uacct = "UA-1326640-1";urchinTracker();&lt;/script&gt;</footer>
 					</configuration>
 				</plugin>
 			</plugins>

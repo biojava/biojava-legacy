@@ -73,10 +73,10 @@ public interface DocRefAuthor extends Comparable,Changeable {
          * @param authors a comma-separated list of authors
          * @return set of DocRefAuthor objects.
          */
-        public static List parseAuthorString(String authors) {
+        public static List<DocRefAuthor> parseAuthorString(String authors) {
             if (authors==null) throw new IllegalArgumentException("Authors string cannot be null");
             String[] parts = authors.split("(,|\\sand)\\s+");
-            List authSet = new ArrayList();
+            List<DocRefAuthor> authSet = new ArrayList<DocRefAuthor>();
             for (int i = 0; i < parts.length; i++) 
                 if(parts[i].length()>0) authSet.add(new SimpleDocRefAuthor(parts[i]));
             return authSet;
@@ -91,11 +91,11 @@ public interface DocRefAuthor extends Comparable,Changeable {
          * @return a comma-separated string with the word "and" in 
          * place of the final comma.
          */
-        public static String generateAuthorString(List authors, boolean useAnd) {
+        public static String generateAuthorString(List<DocRefAuthor> authors, boolean useAnd) {
             StringBuffer sb = new StringBuffer();
             int authCount = 1;
-            for (Iterator i = authors.iterator(); i.hasNext(); ) {
-                DocRefAuthor a = (DocRefAuthor)i.next();
+            for (Iterator<DocRefAuthor> i = authors.iterator(); i.hasNext(); ) {
+                DocRefAuthor a = i.next();
                 sb.append(a.getExtendedName());
                 if (i.hasNext()) {
                     if (authCount++==authors.size()-1 && useAnd) sb.append(" and ");

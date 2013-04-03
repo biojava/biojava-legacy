@@ -130,6 +130,8 @@ public class MotifTools
                 if (i == 1)
                 {
                     stack.push(result);
+                    if(motifLen == 1) // Close now
+                        regex = extendRegex(stack, regex);
                 }
                 else if (i < motifLen)
                 {
@@ -173,7 +175,7 @@ public class MotifTools
 
     private static StringBuffer extendRegex(Stack stack, StringBuffer regex)
     {
-        String component = (String) stack.peek();
+        String component = stack.isEmpty()? "":(String) stack.peek();
 
         if (component.length() == 1)
         {

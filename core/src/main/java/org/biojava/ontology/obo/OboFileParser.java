@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -62,7 +63,7 @@ public class OboFileParser {
 	protected int totalSize = 0;
 	protected int bytesRead = 0;
 	protected StringBuffer tempBuffer = new StringBuffer();
-	protected SimpleDateFormat dateFormat = new SimpleDateFormat("dd:MM:yyyy HH:mm");
+	protected SimpleDateFormat dateFormat = new SimpleDateFormat("dd:MM:yyyy HH:mm", Locale.US);
 
 
 	protected static final Map<Character, Character> escapeChars =

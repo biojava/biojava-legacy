@@ -207,7 +207,7 @@ public class SimpleDocRefTest extends TestCase {
         DocRef before = new SimpleDocRef(authors, "A", title);
         assertTrue(before.compareTo(ref) < 0);
         assertTrue(ref.compareTo(before) > 0);
-        before = new SimpleDocRef(Collections.singletonList(
+        before = new SimpleDocRef(Collections.<DocRefAuthor>singletonList(
                 new SimpleDocRefAuthor("A", false, false)), location, title);
         assertTrue(before.compareTo(ref) < 0);
         assertTrue(ref.compareTo(before) > 0);

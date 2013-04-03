@@ -53,6 +53,7 @@ import org.biojava.utils.ChangeVetoException;
  * @author Shuvankar Mukherjee
  * @author Mark Schreiber
  * @author Richard Holland
+ * @George Waldon
  */
 public class GenbankSequenceDB
 {
@@ -83,14 +84,7 @@ public class GenbankSequenceDB
   protected URL getAddress (String id) throws MalformedURLException
   {
         String defaultReturnFormat="text";
-        FetchURL seqURL = new FetchURL(DBName, defaultReturnFormat);
-        String baseurl = seqURL.getbaseURL();
-        String db = seqURL.getDB();
-        //String returnFormat = seqURL.getReturnFormat();
-
-        String url = baseurl+db+"&id="+id+"&rettype=gb";
-
-    return new URL (url);
+        return getAddress(id,defaultReturnFormat);
   }
 
   /**
@@ -101,14 +95,11 @@ public class GenbankSequenceDB
   {
         FetchURL seqURL = new FetchURL(DBName, format);
         String baseurl = seqURL.getbaseURL();
-        if (!(baseurl.equalsIgnoreCase("")))
-                baseurl = seqURL.getbaseURL();
         String db = seqURL.getDB();
-//	String returnFormat = seqURL.getReturnFormat();
-//	String url = baseurl+db+"&"+returnFormat+"&id="+id;
-        String url = baseurl+db+"&id="+id+"&rettype=gb";
-
-    return new URL (url);
+        String type = seqURL.getRetrievalType();
+        String mode = seqURL.getRetrievalMode();
+        String url = baseurl+db+"&id="+id+"&rettype="+type+"&retmode="+mode;
+        return new URL(url);
   }
 
   public String getName()

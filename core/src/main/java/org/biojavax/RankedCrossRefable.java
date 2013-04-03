@@ -39,7 +39,7 @@ public interface RankedCrossRefable extends Changeable {
      * Returns the set of all ranked cross references associated with an object.
      * @return a set of RankedCrossRef objects.
      */
-    public Set getRankedCrossRefs();
+    public Set<RankedCrossRef> getRankedCrossRefs();
     
     /** 
      * Sets the ranked cross references associated with an object. Null will 
@@ -48,7 +48,7 @@ public interface RankedCrossRefable extends Changeable {
      * @throws ChangeVetoException if the set was null or any of its contents
      * were not RankedCrossRef objects.
      */
-    public void setRankedCrossRefs(Set crossrefs) throws ChangeVetoException;
+    public void setRankedCrossRefs(Set<RankedCrossRef> crossrefs) throws ChangeVetoException;
     
     /**
      * Adds a ranked cross reference to the existing set. If already present, this

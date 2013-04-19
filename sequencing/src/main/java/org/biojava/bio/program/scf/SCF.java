@@ -361,8 +361,12 @@ public class SCF extends AbstractChromatogram {
             TreeMap sectionOrder = new TreeMap();
             sectionOrder.put(new Long(header.samples_offset),  SAMPLES);
             sectionOrder.put(new Long(header.bases_offset),    BASES);
-            sectionOrder.put(new Long(header.comments_offset), COMMENTS);
-            sectionOrder.put(new Long(header.private_offset),  PRIVATE);
+            if (header.comments_size > 0) {
+                sectionOrder.put(new Long(header.comments_offset), COMMENTS);
+            }
+            if (header.private_size > 0) {
+                sectionOrder.put(new Long(header.private_offset), PRIVATE);
+            }
             
             for (Iterator it = sectionOrder.keySet().iterator() ;
             it.hasNext() ;) {

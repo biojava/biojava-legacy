@@ -52,6 +52,20 @@ public enum FastqVariant
         }
 
         @Override
+        public char quality(final int qualityScore)
+        {
+            if (qualityScore < minimumQualityScore())
+            {
+                throw new IllegalArgumentException("qualityScore must be greater than or equal to minimumQualityScore()");
+            }
+            if (qualityScore > maximumQualityScore())
+            {
+                throw new IllegalArgumentException("qualityScore must be less than or equal to maximumQualityScore()");
+            }
+            return (char) (qualityScore + 33);
+        }
+
+        @Override
         public double errorProbability(final int qualityScore)
         {
             return Math.pow(10.0d, ((double) qualityScore) / -10.0d);
@@ -77,6 +91,20 @@ public enum FastqVariant
         public int qualityScore(final char c)
         {
             return ((int) c) - 64;
+        }
+
+        @Override
+        public char quality(final int qualityScore)
+        {
+            if (qualityScore < minimumQualityScore())
+            {
+                throw new IllegalArgumentException("qualityScore must be greater than or equal to minimumQualityScore()");
+            }
+            if (qualityScore > maximumQualityScore())
+            {
+                throw new IllegalArgumentException("qualityScore must be less than or equal to maximumQualityScore()");
+            }
+            return (char) (qualityScore + 64);
         }
 
         @Override
@@ -106,6 +134,20 @@ public enum FastqVariant
         public int qualityScore(final char c)
         {
             return ((int) c) - 64;
+        }
+
+        @Override
+        public char quality(final int qualityScore)
+        {
+            if (qualityScore < minimumQualityScore())
+            {
+                throw new IllegalArgumentException("qualityScore must be greater than or equal to minimumQualityScore()");
+            }
+            if (qualityScore > maximumQualityScore())
+            {
+                throw new IllegalArgumentException("qualityScore must be less than or equal to maximumQualityScore()");
+            }
+            return (char) (qualityScore + 64);
         }
 
         @Override
@@ -214,6 +256,16 @@ public enum FastqVariant
     public abstract int qualityScore(char c);
 
     /**
+     * Convert the specified quality score to a quality in ASCII format.
+     *
+     * @since 1.8.3
+     * @param qualityScore quality score, must be <code>&gt;= minimumQualityScore()</code>
+     *    and <code>&lt;= maximumQualityScore()</code>
+     * @return the quality in ASCII format converted from the specified quality score
+     */
+    public abstract char quality(int qualityScore);
+
+    /**
      * Convert the specified quality in ASCII format to an error probability.
      *
      * @since 1.8.2
@@ -233,6 +285,8 @@ public enum FastqVariant
      * @return the error probability given the specified quality score
      */
     public abstract double errorProbability(int qualityScore);
+
+    //public abstract char quality(double errorProbability); ?
 
     /**
      * Return the name of this FASTQ sequence format variant in <code>lowercase-with-dashes</code> style.

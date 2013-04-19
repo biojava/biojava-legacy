@@ -410,7 +410,6 @@ public class SCF extends AbstractChromatogram {
         }
         
         protected void parsePrivate() throws IOException {
-            if (header.private_size == 0) return;
             skipTo(header.private_offset);
             out.privateData = new byte[(int)header.private_size];
             int privRead = 0;

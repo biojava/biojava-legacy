@@ -75,11 +75,11 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.4</version>
+					<version>2.5</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.0.2</version>
+					<version>3.1</version>
 					<configuration>
 						<source>${jdk.version}</source>
 						<target>${jdk.version}</target>
@@ -87,20 +87,27 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.0</version>
+					<version>2.7</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.7</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.3</version>
+					<version>2.4</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-scm-plugin</artifactId>
-					<version>1.0</version>
+					<version>1.8.1</version>
 				</plugin>
-
+				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.2.1</version>
+				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.5</version>
+					<version>2.14</version>
 				</plugin>
 				<plugin>
 					<groupId>net.sf</groupId>
@@ -110,12 +117,12 @@
 				<plugin>
 					<groupId>org.jvnet.jaxb2.maven2</groupId>
 					<artifactId>maven-jaxb2-plugin</artifactId>
-					<version>0.7.2</version>
+					<version>0.8.3</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.1</version>
+					<version>2.3.2</version>
 					<configuration>
 						<tagBase>svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-legacy/tags</tagBase>
 						<remoteTagging>true</remoteTagging>
@@ -127,7 +134,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.7</version>
+					<version>2.9</version>
 					<configuration>
 					<footer>&lt;script src="http://www.google-analytics.com/urchin.js" type="text/javascript"&gt;&lt;/script&gt;&lt;script type="text/javascript"&gt;_uacct = "UA-1326640-1";urchinTracker();&lt;/script&gt;</footer>
 					</configuration>
@@ -139,10 +146,9 @@
                         <extension>
                                 <groupId>org.apache.maven.wagon</groupId>
                                 <artifactId>wagon-ssh</artifactId>
-                                <version>2.3</version>
+                                <version>2.4</version>
                         </extension>
                 </extensions>
-
 
 	</build>
 	<dependencyManagement>
@@ -185,11 +191,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.1.2</version>
+				<version>2.4</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.7</version>
+				<version>2.9</version>
 				<configuration>
 					<aggregate>true</aggregate>
 					<minmemory>140m</minmemory>

@@ -286,8 +286,6 @@ public enum FastqVariant
      */
     public abstract double errorProbability(int qualityScore);
 
-    //public abstract char quality(double errorProbability); ?
-
     /**
      * Return the name of this FASTQ sequence format variant in <code>lowercase-with-dashes</code> style.
      *

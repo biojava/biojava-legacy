@@ -256,41 +256,56 @@ public class SCF extends AbstractChromatogram {
         public Symbol decode(byte call) throws IllegalSymbolException {
             char c = (char) call;
             switch (c) {
-                case 'a': case 'A':
-                    return DNATools.a();
-                case 'c': case 'C':
-                    return DNATools.c();
-                case 'g': case 'G':
-                    return DNATools.g();
-                case 't': case 'T':
-                    return DNATools.t();
-                case 'n': case 'N':
-                    return DNATools.n();
-                case 'm': case 'M':
-                    return DNATools.m();
-                case 'r': case 'R':
-                    return DNATools.r();
-                case 'w': case 'W':
-                    return DNATools.w();
-                case 's': case 'S':
-                    return DNATools.s();
-                case 'y': case 'Y':
-                    return DNATools.y();
-                case 'k': case 'K':
-                    return DNATools.k();
-                case 'v': case 'V':
-                    return DNATools.v();
-                case 'h': case 'H':
-                    return DNATools.h();
-                case 'd': case 'D':
-                    return DNATools.d();
-                case 'b': case 'B':
-                    return DNATools.b();
-                case '-':
-                    return DNATools.getDNA().getGapSymbol();
-                default:
-                    throw new IllegalSymbolException("No Symbol for " +
-                            c);
+            case 'a':
+            case 'A':
+                return DNATools.a();
+            case 'c':
+            case 'C':
+                return DNATools.c();
+            case 'g':
+            case 'G':
+                return DNATools.g();
+            case 't':
+            case 'T':
+                return DNATools.t();
+            case 'n':
+            case 'N':
+                return DNATools.n();
+            case 'm':
+            case 'M':
+                return DNATools.m();
+            case 'r':
+            case 'R':
+                return DNATools.r();
+            case 'w':
+            case 'W':
+                return DNATools.w();
+            case 's':
+            case 'S':
+                return DNATools.s();
+            case 'y':
+            case 'Y':
+                return DNATools.y();
+            case 'k':
+            case 'K':
+                return DNATools.k();
+            case 'v':
+            case 'V':
+                return DNATools.v();
+            case 'h':
+            case 'H':
+                return DNATools.h();
+            case 'd':
+            case 'D':
+                return DNATools.d();
+            case 'b':
+            case 'B':
+                return DNATools.b();
+            case '-':
+            case '.':
+                return DNATools.getDNA().getGapSymbol();
+            default:
+                throw new IllegalSymbolException("No Symbol for " + c);
             }
         }
     }
@@ -339,7 +354,7 @@ public class SCF extends AbstractChromatogram {
          */
         private static BaseCallUncertaintyDecoder createDecoder(long
                 codeSet) {
-            if (codeSet != 0 && codeSet != 4)
+            if (codeSet != 0 && codeSet != 2 && codeSet != 4)
                 System.err.println("Warning: the code set (" + codeSet +
                         ") is not specifically supported.  (It may still work, though.)");
             return new DefaultUncertaintyDecoder();
@@ -358,7 +373,7 @@ public class SCF extends AbstractChromatogram {
                     BASES    = new Integer(1),
                     COMMENTS = new Integer(2),
                     PRIVATE  = new Integer(3);
-            TreeMap sectionOrder = new TreeMap();
+            TreeMap<Long, Integer> sectionOrder = new TreeMap<Long, Integer>();
             sectionOrder.put(new Long(header.samples_offset),  SAMPLES);
             sectionOrder.put(new Long(header.bases_offset),    BASES);
             if (header.comments_size > 0) {
@@ -368,9 +383,9 @@ public class SCF extends AbstractChromatogram {
                 sectionOrder.put(new Long(header.private_offset), PRIVATE);
             }
             
-            for (Iterator it = sectionOrder.keySet().iterator() ;
+            for (Iterator<Long> it = sectionOrder.keySet().iterator() ;
             it.hasNext() ;) {
-                Integer sect = (Integer) sectionOrder.get(it.next());
+                Integer sect = sectionOrder.get(it.next());
                 if      (sect == SAMPLES)  parseSamples();
                 else if (sect == BASES)    parseBases();
                 else if (sect == COMMENTS) parseComments();
@@ -387,7 +402,8 @@ public class SCF extends AbstractChromatogram {
         protected void parseComments() throws IOException {
             skipTo(header.comments_offset);
             byte[] raw = new byte[(int)header.comments_size - 1];
-            din.read(raw, 0, raw.length);
+            int read = din.read(raw, 0, raw.length);
+            offset += read;
             BufferedReader r = new BufferedReader(
                     new InputStreamReader(
                     new ByteArrayInputStream(raw),
@@ -441,7 +457,7 @@ public class SCF extends AbstractChromatogram {
         protected final void createAndSetBaseCallAlignment(List dna, List
                 offsets, List[] probs) {
             try {
-                Map baseCalls = new SmallMap(9);
+                Map<Object, SymbolList> baseCalls = new SmallMap(9);
                 baseCalls.put(Chromatogram.DNA,
                         out.createImmutableSymbolList(DNATools.getDNA(), dna));
                 baseCalls.put(Chromatogram.OFFSETS,
@@ -608,10 +624,12 @@ public class SCF extends AbstractChromatogram {
             skipTo(header.bases_offset);
             int count = (int) header.bases;
             
-            List[] probs = new ArrayList[7];
-            for (int i = 0 ; i < 7 ; i++) probs[i] = new ArrayList(count);
-            List offsets = new ArrayList(count);
-            List dna     = new ArrayList(count);
+            List<IntegerAlphabet.IntegerSymbol> offsets = new ArrayList<IntegerAlphabet.IntegerSymbol>(count);
+            @SuppressWarnings("unchecked")
+            List<IntegerAlphabet.IntegerSymbol>[] probs = new ArrayList[7];
+            for (int i = 0; i < 7; i++)
+                probs[i] = new ArrayList<IntegerAlphabet.IntegerSymbol>(count);
+            List<Symbol> dna = new ArrayList<Symbol>(count);
             
             long tmp;
             try {

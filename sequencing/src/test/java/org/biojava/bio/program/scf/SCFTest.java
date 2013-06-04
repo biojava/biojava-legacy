@@ -24,6 +24,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.biojava.bio.chromatogram.UnsupportedChromatogramFormatException;
+import org.junit.Assert;
 
 public class SCFTest extends TestCase {
 
@@ -35,6 +36,21 @@ public class SCFTest extends TestCase {
     public void testNormal() throws UnsupportedChromatogramFormatException, IOException {
         final URL resource = getClass().getResource("normal.scf");
         SCF.create(resource.openStream(), 0L);
+    }
+
+    public void testOffsetWrong() throws UnsupportedChromatogramFormatException, IOException {
+        final URL resource = getClass().getResource("offset.scf");
+        SCF scf = SCF.create(resource.openStream(), 0L);
+        String expected = "NNNNNNNNGNNNCNNNAGGNNGTCGTCTGCTGCTCGATGTCCTACACATGGACAGGCGCCTTGATNACACCATGCGCCGCGGA"
+                + "GGAGAGCAAGCTGCCCATCAATGCGCTGAGCAACTCTTTGCTGCGTAACCATAACATGGTCTATGCCACAACATCCCGCAGCGCAAGCCAACG"
+                + "GCAGAAGAAGGTTACCTTTGACAGACTGCAAGTCCTGGACGATCACTACCGGGACGTGCTTAAGGAGGTGAAGGCGAAGGCGTCCACAGTTAA"
+                + "GGCTAAACTTCTATCTGTAGAAGAAGCCTGTAAACTGACGCCCCCACATTCGGCCAGATCTAAATTTGGCTATGGGGCAAAGGACGTCCGGAA"
+                + "CCTATCCAGCAAGGCCGTTAACCACATCCGCTCCGTGTGGAAGGACTTGCTGGAAGACACTGAGACACCAATTGACACTACCATCATGGCAAA"
+                + "AAATGAGGTTTTCTGCGTCCAACCAGAGAAAGGAGGCCGCAAGCCAGCACGCCTTATCGTATTCCCAGATCTGGGAGTTCGTGTGTGCGAGAA"
+                + "AATGGCCCTTTATGACGTGGTCTCCACCCTTCCTCAGGCCGTGATGGGCTCCTCATACGGATTCCAGTACTCTCCTGGACAGCGGGTCGAGTT"
+                + "CCTGGTGAATGCCTGGAAATCAAAGANAAANCCCCATGGGGTTCTCATATGACACCCGCTGTTTTGACTCAACGGTCACCGAGAGTGATATCC"
+                + "GTGTTGAGGAGTCAATTTACCNATGTTGTGACTTGGCCCCCGAAGCCNGACAGGCNATAANN";
+        Assert.assertEquals(expected, scf.getBaseCalls().symbolListForLabel(SCF.DNA).seqString().toUpperCase());
     }
 
 }

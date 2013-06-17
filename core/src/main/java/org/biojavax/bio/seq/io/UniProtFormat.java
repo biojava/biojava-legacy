@@ -315,6 +315,9 @@ public class UniProtFormat extends RichSequenceFormat.HeaderlessFormat {
                     for (int i = 0; i < section.size(); i++) {
                         String tag = ((String[])section.get(i))[0];
                         String value = ((String[])section.get(i))[1].trim();
+                        value = value.replace("\n", " ");
+                        value = value.replace("\r\n", " ");
+                        
                         if (tag.equals(SOURCE_TAG)) {
                             if (value.endsWith(".")) value = value.substring(0,value.length()-1); // chomp trailing dot
                             String[] parts = value.split("\\(");

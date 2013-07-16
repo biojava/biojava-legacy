@@ -13,9 +13,9 @@
 		<url>http://www.biojava.org</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-legacy/trunk</connection>
-		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-legacy/trunk</developerConnection>
-		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-legacy/trunk</url>
+	  <connection>scm:git:git://github.com/biojava/biojava-legacy.git</connection>
+          <developerConnection>scm:git:git@github.com:biojava/biojava-legacy.git</developerConnection>
+          <url>https://github.com/biojava/biojava-legacy</url>
 	</scm>
 	<repositories>
 		<repository>

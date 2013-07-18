@@ -34,7 +34,7 @@
 			<id>maven-repository.dev.java.net</id>
 			<name>Java.net Maven 1 Repository (legacy)</name>
 			<url>http://download.java.net/maven/1</url>
-			<layout>legacy</layout>
+			<layout>default</layout>
 		</repository>
 		<repository>
 			<id>biojava-maven-repo</id>

@@ -24,7 +24,7 @@
             <key column="seqfeature_id" not-null="true"/>
             <composite-element class="org.biojavax.SimpleNote" node="note">
                 <many-to-one name="term" class="Term" column="term_id" not-null="true" cascade="persist,merge,save-update" node="@termId" embed-xml="false"/>
-                <property name="value"/>
+                <property name="value", type="text"/>
                 <property name="rank" node="@rank"/>
             </composite-element>
         </set>  

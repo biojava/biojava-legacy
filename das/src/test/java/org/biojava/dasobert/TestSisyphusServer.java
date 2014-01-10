@@ -43,7 +43,7 @@ public class TestSisyphusServer extends TestCase
       
       Das1Source dasSource = new Das1Source();
       
-      dasSource.setUrl("http://sisyphus.mrc-cpe.cam.ac.uk/sisyphus/das/alignments/");
+      dasSource.setUrl("http://www.spice-3d.org/sisyphus/das/alignments/");
       
       params.setDasSource(dasSource);
       params.setQuery("AL10057468");

@@ -484,7 +484,9 @@ public class SimpleRichLocation extends AbstractChangeable implements RichLocati
                     // Now we can select the minimum and maximum positions using the modded locations
                     Position startPos = (ourModStart<theirModStart)?this.min:rl.getMinPosition();
                     Position endPos = (ourModEnd>theirModEnd)?this.max:rl.getMaxPosition();
-                    return new SimpleRichLocation(startPos,endPos,0,this.strand,this.crossRef);
+                    RichLocation newloc = new SimpleRichLocation(startPos,endPos,0,this.strand,this.crossRef);
+                    newloc.setCircularLength(this.circularLength);
+                    return newloc;
                 } else {
                     // Union of Overlapping non-circular locations
                     return new SimpleRichLocation(this.posmin(this.min,rl.getMinPosition()),this.posmax(this.max,rl.getMaxPosition()),0,this.strand,this.crossRef);

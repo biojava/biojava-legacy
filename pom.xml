@@ -4,7 +4,7 @@
   <groupId>org.biojava</groupId>
   <artifactId>biojava-legacy</artifactId>
   <packaging>pom</packaging>
-  <version>1.8.5</version>
+  <version>1.8.6-SNAPSHOT</version>
   <name>biojava-legacy</name>
   <description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
   <url>http://www.biojava.org</url>
@@ -23,7 +23,7 @@
     <connection>scm:git:git://github.com/biojava/biojava-legacy.git</connection>
     <developerConnection>scm:git:git@github.com:biojava/biojava-legacy.git</developerConnection>
     <url>https://github.com/biojava/biojava-legacy</url>
-    <tag>biojava-legacy-1.8.5</tag>
+    <tag>HEAD</tag>
   </scm>
   <repositories>
     <repository>

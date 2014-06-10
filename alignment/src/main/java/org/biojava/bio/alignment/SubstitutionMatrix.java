@@ -28,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashMap;
@@ -37,6 +38,8 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 import org.biojava.bio.BioException;
+import org.biojava.bio.seq.DNATools;
+import org.biojava.bio.seq.ProteinTools;
 import org.biojava.bio.seq.io.SymbolTokenization;
 import org.biojava.bio.symbol.AlphabetManager;
 import org.biojava.bio.symbol.FiniteAlphabet;
@@ -229,6 +232,892 @@ public class SubstitutionMatrix {
 				"unknown");
 		return matrix;
 	}
+
+    /**
+     * Return a new substitution matrix with the specified alphabet.
+     *
+     * @param alphabet alphabet, must not be null
+     * @param reader reader, must not be null
+     * @return a new substitution matrix with the specified alphabet
+     * @throws BioException if an error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    public static SubstitutionMatrix getSubstitutionMatrix(final FiniteAlphabet alphabet, final BufferedReader reader) throws BioException, IOException {
+        if (alphabet == null) {
+            throw new NullPointerException("alphabet must not be null");
+        }
+        if (reader == null) {
+            throw new NullPointerException("reader must not be null");
+        }
+        return new SubstitutionMatrix(alphabet, toString(reader), "unknown");
+    }
+
+    private static String toString(final BufferedReader reader) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        try {
+            while (reader.ready()) {
+                String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                sb.append(line);
+                sb.append(newLine);
+            }
+            return sb.toString();
+        }
+        finally {
+            try {
+                reader.close();
+            }
+            catch (Exception e) {
+                // ignore
+            }
+        }
+    }
+
+    /**
+     * Return a new substitution matrix with the specified alphabet and name.
+     *
+     * @param alphabet alphabet, must not be null
+     * @param reader reader, must not be null
+     * @param name name, must not be null
+     * @return a new substitution matrix with the specified alphabet and name
+     * @throws BioException if an error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    public static SubstitutionMatrix getSubstitutionMatrix(final FiniteAlphabet alphabet, final BufferedReader reader, final String name) throws BioException, IOException {
+        if (alphabet == null) {
+            throw new NullPointerException("alphabet must not be null");
+        }
+        if (reader == null) {
+            throw new NullPointerException("reader must not be null");
+        }
+        if (name == null) {
+            throw new NullPointerException("name must not be null");
+        }
+        return new SubstitutionMatrix(alphabet, toString(reader), name);
+    }
+
+    private static BufferedReader readResource(final String name) {
+        return new BufferedReader(new InputStreamReader(SubstitutionMatrix.class.getResourceAsStream(name)));
+    }
+
+    private static SubstitutionMatrix getNucleotideMatrix(final String name) {
+        try {
+            return getSubstitutionMatrix(DNATools.getDNA(), readResource(name), name);
+        }
+        catch (BioException e) {
+            throw new RuntimeException("could not load substitution matrix " + name + " from classpath", e);
+        }
+        catch (IOException e) {
+            throw new RuntimeException("could not load substitution matrix " + name + " from classpath", e);
+        }
+    }
+
+    private static SubstitutionMatrix getAminoAcidMatrix(final String name) {
+        try {
+            return getSubstitutionMatrix(ProteinTools.getTAlphabet(), readResource(name), name);
+        }
+        catch (BioException e) {
+            throw new RuntimeException("could not load substitution matrix " + name + " from classpath", e);
+        }
+        catch (IOException e) {
+            throw new RuntimeException("could not load substitution matrix " + name + " from classpath", e);
+        }
+    }
+
+
+    /**
+     * Return the <code>BLOSUM100</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM100</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum100() {
+        return getAminoAcidMatrix("BLOSUM100");
+    }
+
+    /**
+     * Return the <code>BLOSUM100.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM100.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum100_50() {
+        return getAminoAcidMatrix("BLOSUM100.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM30</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM30</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum30() {
+        return getAminoAcidMatrix("BLOSUM30");
+    }
+
+    /**
+     * Return the <code>BLOSUM30.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM30.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum30_50() {
+        return getAminoAcidMatrix("BLOSUM30.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM35</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM35</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum35() {
+        return getAminoAcidMatrix("BLOSUM35");
+    }
+
+    /**
+     * Return the <code>BLOSUM35.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM35.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum35_50() {
+        return getAminoAcidMatrix("BLOSUM35.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM40</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM40</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum40() {
+        return getAminoAcidMatrix("BLOSUM40");
+    }
+
+    /**
+     * Return the <code>BLOSUM40.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM40.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum40_50() {
+        return getAminoAcidMatrix("BLOSUM40.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM45</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM45</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum45() {
+        return getAminoAcidMatrix("BLOSUM45");
+    }
+
+    /**
+     * Return the <code>BLOSUM45.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM45.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum45_50() {
+        return getAminoAcidMatrix("BLOSUM45.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum50() {
+        return getAminoAcidMatrix("BLOSUM50");
+    }
+
+    /**
+     * Return the <code>BLOSUM50.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM50.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum50_50() {
+        return getAminoAcidMatrix("BLOSUM50.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM55</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM55</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum55() {
+        return getAminoAcidMatrix("BLOSUM55");
+    }
+
+    /**
+     * Return the <code>BLOSUM55.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM55.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum55_50() {
+        return getAminoAcidMatrix("BLOSUM55.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM60</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM60</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum60() {
+        return getAminoAcidMatrix("BLOSUM60");
+    }
+
+    /**
+     * Return the <code>BLOSUM60.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM60.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum60_50() {
+        return getAminoAcidMatrix("BLOSUM60.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM62</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM62</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum62() {
+        return getAminoAcidMatrix("BLOSUM62");
+    }
+
+    /**
+     * Return the <code>BLOSUM62.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM62.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum62_50() {
+        return getAminoAcidMatrix("BLOSUM62.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM65</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM65</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum65() {
+        return getAminoAcidMatrix("BLOSUM65");
+    }
+
+    /**
+     * Return the <code>BLOSUM65.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM65.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum65_50() {
+        return getAminoAcidMatrix("BLOSUM65.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM70</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM70</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum70() {
+        return getAminoAcidMatrix("BLOSUM70");
+    }
+
+    /**
+     * Return the <code>BLOSUM70.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM70.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum70_50() {
+        return getAminoAcidMatrix("BLOSUM70.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM75</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM75</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum75() {
+        return getAminoAcidMatrix("BLOSUM75");
+    }
+
+    /**
+     * Return the <code>BLOSUM75.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM75.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum75_50() {
+        return getAminoAcidMatrix("BLOSUM75.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM80</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM80</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum80() {
+        return getAminoAcidMatrix("BLOSUM80");
+    }
+
+    /**
+     * Return the <code>BLOSUM80.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM80.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum80_50() {
+        return getAminoAcidMatrix("BLOSUM80.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM85</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM85</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum85() {
+        return getAminoAcidMatrix("BLOSUM85");
+    }
+
+    /**
+     * Return the <code>BLOSUM85.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM85.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum85_50() {
+        return getAminoAcidMatrix("BLOSUM85.50");
+    }
+
+    /**
+     * Return the <code>BLOSUM90</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM90</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum90() {
+        return getAminoAcidMatrix("BLOSUM90");
+    }
+
+    /**
+     * Return the <code>BLOSUM90.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUM90.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosum90_50() {
+        return getAminoAcidMatrix("BLOSUM90.50");
+    }
+
+    /**
+     * Return the <code>BLOSUMN</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUMN</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosumn() {
+        return getAminoAcidMatrix("BLOSUMN");
+    }
+
+    /**
+     * Return the <code>BLOSUMN.50</code> amino acid substitution matrix.
+     *
+     * @return the <code>BLOSUMN.50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getBlosumn_50() {
+        return getAminoAcidMatrix("BLOSUMN.50");
+    }
+
+    /**
+     * Return the <code>DAYHOFF</code> amino acid substitution matrix.
+     *
+     * @return the <code>DAYHOFF</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getDayhoff() {
+        return getAminoAcidMatrix("DAYHOFF");
+    }
+
+    /**
+     * Return the <code>GONNET</code> amino acid substitution matrix.
+     *
+     * @return the <code>GONNET</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getGonnet() {
+        return getAminoAcidMatrix("GONNET");
+    }
+
+    /**
+     * Return the <code>IDENTITY</code> amino acid substitution matrix.
+     *
+     * @return the <code>IDENTITY</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getIdentity() {
+        return getAminoAcidMatrix("IDENTITY");
+    }
+
+    /**
+     * Return the <code>MATCH</code> amino acid substitution matrix.
+     *
+     * @return the <code>MATCH</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getMatch() {
+        return getAminoAcidMatrix("MATCH");
+    }
+
+    /**
+     * Return the <code>NUC.4.2</code> nucleotide substitution matrix.
+     *
+     * @return the <code>NUC.4.2</code> nucleotide substitution matrix
+     */
+    public static SubstitutionMatrix getNuc4_2() {
+        return getNucleotideMatrix("NUC.4.2");
+    }
+
+    /**
+     * Return the <code>NUC.4.4</code> nucleotide substitution matrix.
+     *
+     * @return the <code>NUC.4.4</code> nucleotide substitution matrix
+     */
+    public static SubstitutionMatrix getNuc4_4() {
+        return getNucleotideMatrix("NUC.4.4");
+    }
+
+    /**
+     * Return the <code>PAM10</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM10</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam10() {
+        return getAminoAcidMatrix("PAM10");
+    }
+
+    /**
+     * Return the <code>PAM100</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM100</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam100() {
+        return getAminoAcidMatrix("PAM100");
+    }
+
+    /**
+     * Return the <code>PAM110</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM110</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam110() {
+        return getAminoAcidMatrix("PAM110");
+    }
+
+    /**
+     * Return the <code>PAM120</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM120</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam120() {
+        return getAminoAcidMatrix("PAM120");
+    }
+
+    /**
+     * Return the <code>PAM130</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM130</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam130() {
+        return getAminoAcidMatrix("PAM130");
+    }
+
+    /**
+     * Return the <code>PAM140</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM140</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam140() {
+        return getAminoAcidMatrix("PAM140");
+    }
+
+    /**
+     * Return the <code>PAM150</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM150</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam150() {
+        return getAminoAcidMatrix("PAM150");
+    }
+
+    /**
+     * Return the <code>PAM160</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM160</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam160() {
+        return getAminoAcidMatrix("PAM160");
+    }
+
+    /**
+     * Return the <code>PAM170</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM170</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam170() {
+        return getAminoAcidMatrix("PAM170");
+    }
+
+    /**
+     * Return the <code>PAM180</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM180</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam180() {
+        return getAminoAcidMatrix("PAM180");
+    }
+
+    /**
+     * Return the <code>PAM190</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM190</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam190() {
+        return getAminoAcidMatrix("PAM190");
+    }
+
+    /**
+     * Return the <code>PAM20</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM20</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam20() {
+        return getAminoAcidMatrix("PAM20");
+    }
+
+    /**
+     * Return the <code>PAM200</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM200</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam200() {
+        return getAminoAcidMatrix("PAM200");
+    }
+
+    /**
+     * Return the <code>PAM210</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM210</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam210() {
+        return getAminoAcidMatrix("PAM210");
+    }
+
+    /**
+     * Return the <code>PAM220</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM220</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam220() {
+        return getAminoAcidMatrix("PAM220");
+    }
+
+    /**
+     * Return the <code>PAM230</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM230</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam230() {
+        return getAminoAcidMatrix("PAM230");
+    }
+
+    /**
+     * Return the <code>PAM240</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM240</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam240() {
+        return getAminoAcidMatrix("PAM240");
+    }
+
+    /**
+     * Return the <code>PAM250</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM250</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam250() {
+        return getAminoAcidMatrix("PAM250");
+    }
+
+    /**
+     * Return the <code>PAM260</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM260</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam260() {
+        return getAminoAcidMatrix("PAM260");
+    }
+
+    /**
+     * Return the <code>PAM270</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM270</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam270() {
+        return getAminoAcidMatrix("PAM270");
+    }
+
+    /**
+     * Return the <code>PAM280</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM280</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam280() {
+        return getAminoAcidMatrix("PAM280");
+    }
+
+    /**
+     * Return the <code>PAM290</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM290</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam290() {
+        return getAminoAcidMatrix("PAM290");
+    }
+
+    /**
+     * Return the <code>PAM30</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM30</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam30() {
+        return getAminoAcidMatrix("PAM30");
+    }
+
+    /**
+     * Return the <code>PAM300</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM300</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam300() {
+        return getAminoAcidMatrix("PAM300");
+    }
+
+    /**
+     * Return the <code>PAM310</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM310</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam310() {
+        return getAminoAcidMatrix("PAM310");
+    }
+
+    /**
+     * Return the <code>PAM320</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM320</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam320() {
+        return getAminoAcidMatrix("PAM320");
+    }
+
+    /**
+     * Return the <code>PAM330</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM330</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam330() {
+        return getAminoAcidMatrix("PAM330");
+    }
+
+    /**
+     * Return the <code>PAM340</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM340</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam340() {
+        return getAminoAcidMatrix("PAM340");
+    }
+
+    /**
+     * Return the <code>PAM350</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM350</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam350() {
+        return getAminoAcidMatrix("PAM350");
+    }
+
+    /**
+     * Return the <code>PAM360</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM360</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam360() {
+        return getAminoAcidMatrix("PAM360");
+    }
+
+    /**
+     * Return the <code>PAM370</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM370</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam370() {
+        return getAminoAcidMatrix("PAM370");
+    }
+
+    /**
+     * Return the <code>PAM380</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM380</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam380() {
+        return getAminoAcidMatrix("PAM380");
+    }
+
+    /**
+     * Return the <code>PAM390</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM390</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam390() {
+        return getAminoAcidMatrix("PAM390");
+    }
+
+    /**
+     * Return the <code>PAM40</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM40</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam40() {
+        return getAminoAcidMatrix("PAM40");
+    }
+
+    /**
+     * Return the <code>PAM400</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM400</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam400() {
+        return getAminoAcidMatrix("PAM400");
+    }
+
+    /**
+     * Return the <code>PAM410</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM410</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam410() {
+        return getAminoAcidMatrix("PAM410");
+    }
+
+    /**
+     * Return the <code>PAM420</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM420</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam420() {
+        return getAminoAcidMatrix("PAM420");
+    }
+
+    /**
+     * Return the <code>PAM430</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM430</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam430() {
+        return getAminoAcidMatrix("PAM430");
+    }
+
+    /**
+     * Return the <code>PAM440</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM440</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam440() {
+        return getAminoAcidMatrix("PAM440");
+    }
+
+    /**
+     * Return the <code>PAM450</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM450</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam450() {
+        return getAminoAcidMatrix("PAM450");
+    }
+
+    /**
+     * Return the <code>PAM460</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM460</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam460() {
+        return getAminoAcidMatrix("PAM460");
+    }
+
+    /**
+     * Return the <code>PAM470</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM470</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam470() {
+        return getAminoAcidMatrix("PAM470");
+    }
+
+    /**
+     * Return the <code>PAM480</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM480</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam480() {
+        return getAminoAcidMatrix("PAM480");
+    }
+
+    /**
+     * Return the <code>PAM490</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM490</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam490() {
+        return getAminoAcidMatrix("PAM490");
+    }
+
+    /**
+     * Return the <code>PAM50</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM50</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam50() {
+        return getAminoAcidMatrix("PAM50");
+    }
+
+    /**
+     * Return the <code>PAM500</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM500</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam500() {
+        return getAminoAcidMatrix("PAM500");
+    }
+
+    /**
+     * Return the <code>PAM60</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM60</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam60() {
+        return getAminoAcidMatrix("PAM60");
+    }
+
+    /**
+     * Return the <code>PAM70</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM70</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam70() {
+        return getAminoAcidMatrix("PAM70");
+    }
+
+    /**
+     * Return the <code>PAM80</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM80</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam80() {
+        return getAminoAcidMatrix("PAM80");
+    }
+
+    /**
+     * Return the <code>PAM90</code> amino acid substitution matrix.
+     *
+     * @return the <code>PAM90</code> amino acid substitution matrix
+     */
+    public static SubstitutionMatrix getPam90() {
+        return getAminoAcidMatrix("PAM90");
+    }
 
 	/**
 	 * This method tries to identify the alphabet within a matrix file. This is

@@ -6,10 +6,11 @@
     <groupId>org.biojava</groupId>
     <version>1.8.6-SNAPSHOT</version>
   </parent>
-  <groupId>org.biojava</groupId>
   <artifactId>gui</artifactId>
+  <packaging>jar</packaging>
   <version>1.8.6-SNAPSHOT</version>
   <name>gui</name>
+  <description>BioJava gui module</description>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>

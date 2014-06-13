@@ -207,7 +207,6 @@
     <module>biosql</module>
     <module>blast</module>
     <module>bytecode</module>
-    <module>das</module>
     <module>gui</module>
     <module>sequencing</module>
     <module>phylo</module>

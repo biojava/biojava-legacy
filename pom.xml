@@ -26,7 +26,7 @@
   </licenses>
   <scm>
     <connection>scm:git:https://github.com/biojava/biojava-legacy</connection>
-    <developerConnection>scm:git:https://github.com:biojava/biojava-legacy</developerConnection>
+    <developerConnection>scm:git:https://github.com/biojava/biojava-legacy</developerConnection>
     <url>https://github.com/biojava/biojava-legacy</url>
     <tag>HEAD</tag>
   </scm>

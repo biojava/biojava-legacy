@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>9</version>
+  </parent>
   <groupId>org.biojava</groupId>
   <artifactId>biojava-legacy</artifactId>
   <packaging>pom</packaging>
-  <version>1.8.6-SNAPSHOT</version>
+  <version>1.9.1-SNAPSHOT</version>
   <name>biojava-legacy</name>
   <description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
   <url>http://www.biojava.org</url>
@@ -20,65 +25,37 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:git:git://github.com/biojava/biojava-legacy.git</connection>
-    <developerConnection>scm:git:git@github.com:biojava/biojava-legacy.git</developerConnection>
+    <connection>scm:git:https://github.com/biojava/biojava-legacy</connection>
+    <developerConnection>scm:git:https://github.com/biojava/biojava-legacy</developerConnection>
     <url>https://github.com/biojava/biojava-legacy</url>
     <tag>HEAD</tag>
   </scm>
-  <repositories>
-    <repository>
-      <id>maven2-repository.dev.java.net</id>
-      <name>Java.net Maven 2 Repository</name>
-      <url>http://download.java.net/maven/2</url>
-    </repository>
-    <repository>
-      <id>maven-repository.dev.java.net</id>
-      <name>Java.net Maven 1 Repository (legacy)</name>
-      <url>http://download.java.net/maven/1</url>
-      <layout>default</layout>
-    </repository>
-    <repository>
-      <id>biojava-maven-repo</id>
-      <name>BioJava repository</name>
-      <url>http://www.biojava.org/download/maven/</url>
-      <snapshots>
-	<enabled>true</enabled>
-      </snapshots>
-      <releases>
-	<enabled>true</enabled>
-      </releases>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>maven2-repository.dev.java.net</id>
-      <name>Java.net Maven 2 Repository</name>
-      <url>http://download.java.net/maven/2</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>maven-repository.dev.java.net</id>
-      <name>Java.net Maven 1 Repository (legacy)</name>
-      <url>http://download.java.net/maven/1</url>
-      <layout>default</layout>
-    </pluginRepository>
-  </pluginRepositories>
-  <distributionManagement>
-    <downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>biojava-maven-repo</id>
-      <name>BioJava Maven Repository</name>
-      <url>scp://cloudportal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
-      <layout>default</layout>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>biojava-maven-repo</id>
-      <name>BioJava Maven Repository</name>
-      <url>scp://cloudportal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
-      <layout>default</layout>
-    </snapshotRepository>
-  </distributionManagement>
+  <developers>
+    <developer>
+      <name>Amr AL-HOSSARY</name>
+    </developer>
+    <developer>
+      <name>Spencer Bliven</name>
+    </developer>
+    <developer>
+      <name>Hannes Brandstätter-Müller</name>
+    </developer>
+    <developer>
+      <name>Michael Heuer</name>
+    </developer>
+    <developer>
+      <name>Ryan Larson</name>
+    </developer>
+    <developer>
+      <name>Andreas Prlic</name>
+    </developer>
+    <developer>
+      <name>SFoote</name>
+    </developer>
+    <developer>
+      <name>George Waldon</name>
+    </developer>
+  </developers>
   <properties>
     <jdk.version>1.5</jdk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -108,14 +85,36 @@
 	  <artifactId>maven-deploy-plugin</artifactId>
 	  <version>2.8.1</version>
 	</plugin>
+        <plugin>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.5</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.1</version>
+        </plugin>
 	<plugin>
 	  <artifactId>maven-jar-plugin</artifactId>
 	  <version>2.4</version>
 	</plugin>
 	<plugin>
-	  <artifactId>maven-scm-plugin</artifactId>
-	  <version>1.9</version>
+	  <artifactId>maven-javadoc-plugin</artifactId>
+	  <version>2.9.1</version>
+	  <configuration>
+	    <footer>&lt;script src="http://www.google-analytics.com/urchin.js" type="text/javascript"&gt;&lt;/script&gt;&lt;script type="text/javascript"&gt;_uacct = "UA-1326640-1";urchinTracker();&lt;/script&gt;</footer>
+	  </configuration>
 	</plugin>
+	<plugin>
+	  <artifactId>maven-release-plugin</artifactId>
+	  <version>2.5</version>
+	  <configuration>
+	    <autoVersionSubmodules>true</autoVersionSubmodules>
+	  </configuration>
+	</plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
 	<plugin>
 	  <artifactId>maven-source-plugin</artifactId>
 	  <version>2.2.1</version>
@@ -125,40 +124,12 @@
 	  <version>2.17</version>
 	</plugin>
 	<plugin>
-	  <groupId>net.sf</groupId>
-	  <artifactId>stat-scm</artifactId>
-	  <version>1.2.0</version>
-	</plugin>
-	<plugin>
 	  <groupId>org.jvnet.jaxb2.maven2</groupId>
 	  <artifactId>maven-jaxb2-plugin</artifactId>
 	  <version>0.8.3</version>
 	</plugin>
-	<plugin>
-	  <groupId>org.apache.maven.plugins</groupId>
-	  <artifactId>maven-release-plugin</artifactId>
-	  <version>2.5</version>
-	  <configuration>
-	    <autoVersionSubmodules>true</autoVersionSubmodules>
-	  </configuration>
-	</plugin>
-	<plugin>
-	  <groupId>org.apache.maven.plugins</groupId>
-	  <artifactId>maven-javadoc-plugin</artifactId>
-	  <version>2.9.1</version>
-	  <configuration>
-	    <footer>&lt;script src="http://www.google-analytics.com/urchin.js" type="text/javascript"&gt;&lt;/script&gt;&lt;script type="text/javascript"&gt;_uacct = "UA-1326640-1";urchinTracker();&lt;/script&gt;</footer>
-	  </configuration>
-	</plugin>
       </plugins>
     </pluginManagement>
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ssh</artifactId>
-        <version>2.6</version>
-      </extension>
-    </extensions>  
   </build>
   <dependencyManagement>
     <dependencies>
@@ -198,57 +169,35 @@
   <reporting>
     <plugins>
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-project-info-reports-plugin</artifactId>
-	<version>2.7</version>
-      </plugin>
-      <plugin>
 	<artifactId>maven-javadoc-plugin</artifactId>
 	<version>2.9.1</version>
 	<configuration>
 	  <aggregate>true</aggregate>
-	  <minmemory>140m</minmemory>
-	  <maxmemory>140m</maxmemory>
 	  <breakiterator>true</breakiterator>
 	  <quiet>true</quiet>
 	  <source>1.5</source>
 	  <verbose>false</verbose>
 	  <linksource>true</linksource>
-	  <!-- <detectLinks>true</detectLinks> -->
-	  <links>
-	    <!-- JSE -->
-	    <link>http://java.sun.com/j2se/1.6.0/docs/api/</link>
-	    <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-	    <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
-	    <link>http://java.sun.com/j2se/1.3/docs/api/</link>
-	    <!-- JEE -->
-	    <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
-	    <link>http://java.sun.com/j2ee/sdk_1.3/techdocs/api/</link>          
-	    <!-- Libraries -->
-	    <!-- <link>http://jakarta.apache.org/commons/collections/apidocs</link> 
-		 <link>http://jakarta.apache.org/commons/logging/apidocs/</link> <link>http://www.junit.org/junit/javadoc/</link> -->
-	    <link>http://logging.apache.org/log4j/docs/api/</link>
-	    <link>http://jakarta.apache.org/regexp/apidocs/</link>
-	    <link>http://jakarta.apache.org/velocity/api/</link>
-	  </links>
+          <detectlinks>true</detectlinks>
 	</configuration>
       </plugin>
       <plugin>
-	<groupId>net.sf</groupId>
-	<artifactId>stat-scm</artifactId>
-	<version>1.2.0</version>
-	<configuration>
-	  <includes>
-	    <include>**/*.java</include>
-	  </includes>
-	  <excludes>
-	    <exclude>**/test/**/*.java</exclude>
-	  </excludes>
-	  <tags>3.0</tags>
-	  <tagsDir>/releases/</tagsDir>
-	  <cacheDir>/statsvn/</cacheDir>
-	  <title>BioJava SVN statistics</title>
-	</configuration>
+	<artifactId>maven-project-info-reports-plugin</artifactId>
+	<version>2.7</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>index</report>
+              <report>summary</report>
+              <report>modules</report>
+              <report>scm</report>
+              <report>dependency-management</report>
+              <report>dependencies</report>
+              <report>dependency-convergence</report>
+              <report>distribution-management</report>
+            </reports>
+          </reportSet>
+        </reportSets>
       </plugin>
     </plugins>
   </reporting>
@@ -258,7 +207,6 @@
     <module>biosql</module>
     <module>blast</module>
     <module>bytecode</module>
-    <module>das</module>
     <module>gui</module>
     <module>sequencing</module>
     <module>phylo</module>

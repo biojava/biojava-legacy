@@ -287,4 +287,110 @@ public final class IlluminaFastqReaderTest
             // expected
         }
     }
+
+    public void testParseReadable() throws Exception
+    {
+        IlluminaFastqReader illuminaFastqReader = (IlluminaFastqReader) createFastqReader();
+        final String input = "";
+        illuminaFastqReader.parse(new StringReader(input), new ParseListener() {
+                                      /** {@inheritDoc} */
+                                      public void description(final String description) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void sequence(final String sequence) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void appendSequence(final String sequence) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void repeatDescription(final String repeatDescription) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void quality(final String quality) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void appendQuality(final String quality) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void complete() throws IOException {
+                                          // empty
+                                      }
+                                  });
+    }
+ 
+    public void testParseReadableNullReadable() throws Exception
+    {
+        IlluminaFastqReader illuminaFastqReader = (IlluminaFastqReader) createFastqReader();
+        try
+        {
+            illuminaFastqReader.parse((Readable) null, new ParseListener() {
+                                          /** {@inheritDoc} */
+                                          public void description(final String description) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void sequence(final String sequence) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void appendSequence(final String sequence) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void repeatDescription(final String repeatDescription) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void quality(final String quality) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void appendQuality(final String quality) throws IOException {
+                                              // empty
+                                          }
+
+                                          /** {@inheritDoc} */
+                                          public void complete() throws IOException {
+                                              // empty
+                                          }
+                                      });
+            fail("parse(null, ) expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
+    }
+ 
+    public void testParseReadableNullParseListener() throws Exception
+    {
+        IlluminaFastqReader illuminaFastqReader = (IlluminaFastqReader) createFastqReader();
+        final String input = "";
+        try
+        {
+            illuminaFastqReader.parse(new StringReader(input), null);
+            fail("parse(, null) expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
+    }
 }

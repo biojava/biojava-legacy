@@ -57,14 +57,7 @@ abstract class AbstractFastqReader
      */
     protected abstract FastqVariant getVariant();
 
-    /**
-     * Parse the specified readable.
-     *
-     * @since 1.9.1
-     * @param readable readable, must not be null
-     * @param listener low-level event based parser callback, must not be null
-     * @throws IOException if an I/O error occurs
-     */
+    @Override
     public final void parse(final Readable readable, final ParseListener listener)
         throws IOException
     {
@@ -75,7 +68,7 @@ abstract class AbstractFastqReader
      * Parse the specified input supplier.
      *
      * @since 1.8.2
-     * @deprecated will be removed in version 1.10, see {@link #parse(Readable,ParseListener)}
+     * @deprecated will be removed in version 1.10, see {@link FastqReader#parse(Readable,ParseListener)}
      * @param supplier input supplier, must not be null
      * @param listener low-level event based parser callback, must not be null
      * @throws IOException if an I/O error occurs
@@ -87,14 +80,7 @@ abstract class AbstractFastqReader
         FastqParser.parse(supplier, listener);
     }
 
-    /**
-     * Stream the specified readable.
-     *
-     * @since 1.9.1
-     * @param readable readable, must not be null
-     * @param listener event based reader callback, must not be null
-     * @throws IOException if an I/O error occurs
-     */
+    @Override
     public final void stream(final Readable readable, final StreamListener listener)
         throws IOException
     {
@@ -105,7 +91,7 @@ abstract class AbstractFastqReader
      * Stream the specified input supplier.
      *
      * @since 1.8.2
-     * @deprecated will be removed in version 1.10, see {@link #stream(Readable,StreamListener)}
+     * @deprecated will be removed in version 1.10, see {@link FastqReader#stream(Readable,StreamListener)}
      * @param supplier input supplier, must not be null
      * @param listener event based reader callback, must not be null
      * @throws IOException if an I/O error occurs

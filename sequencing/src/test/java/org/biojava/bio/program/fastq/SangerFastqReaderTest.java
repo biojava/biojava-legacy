@@ -367,4 +367,110 @@ public final class SangerFastqReaderTest
             // expected
         }
     }
+
+    public void testParseReadable() throws Exception
+    {
+        SangerFastqReader sangerFastqReader = (SangerFastqReader) createFastqReader();
+        final String input = "";
+        sangerFastqReader.parse(new StringReader(input), new ParseListener() {
+                                      /** {@inheritDoc} */
+                                      public void description(final String description) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void sequence(final String sequence) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void appendSequence(final String sequence) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void repeatDescription(final String repeatDescription) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void quality(final String quality) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void appendQuality(final String quality) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void complete() throws IOException {
+                                          // empty
+                                      }
+                                  });
+    }
+ 
+    public void testParseReadableNullReadable() throws Exception
+    {
+        SangerFastqReader sangerFastqReader = (SangerFastqReader) createFastqReader();
+        try
+        {
+            sangerFastqReader.parse((Readable) null, new ParseListener() {
+                                          /** {@inheritDoc} */
+                                          public void description(final String description) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void sequence(final String sequence) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void appendSequence(final String sequence) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void repeatDescription(final String repeatDescription) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void quality(final String quality) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void appendQuality(final String quality) throws IOException {
+                                              // empty
+                                          }
+
+                                          /** {@inheritDoc} */
+                                          public void complete() throws IOException {
+                                              // empty
+                                          }
+                                      });
+            fail("parse(null, ) expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
+    }
+ 
+    public void testParseReadableNullParseListener() throws Exception
+    {
+        SangerFastqReader sangerFastqReader = (SangerFastqReader) createFastqReader();
+        final String input = "";
+        try
+        {
+            sangerFastqReader.parse(new StringReader(input), null);
+            fail("parse(, null) expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
+    }
 }

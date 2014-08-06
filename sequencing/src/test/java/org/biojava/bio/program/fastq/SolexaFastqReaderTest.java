@@ -287,4 +287,110 @@ public final class SolexaFastqReaderTest
             // expected
         }
     }
+
+    public void testParseReadable() throws Exception
+    {
+        SolexaFastqReader solexaFastqReader = (SolexaFastqReader) createFastqReader();
+        final String input = "";
+        solexaFastqReader.parse(new StringReader(input), new ParseListener() {
+                                      /** {@inheritDoc} */
+                                      public void description(final String description) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void sequence(final String sequence) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void appendSequence(final String sequence) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void repeatDescription(final String repeatDescription) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void quality(final String quality) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void appendQuality(final String quality) throws IOException {
+                                          // empty
+                                      }
+ 
+                                      /** {@inheritDoc} */
+                                      public void complete() throws IOException {
+                                          // empty
+                                      }
+                                  });
+    }
+ 
+    public void testParseReadableNullReadable() throws Exception
+    {
+        SolexaFastqReader solexaFastqReader = (SolexaFastqReader) createFastqReader();
+        try
+        {
+            solexaFastqReader.parse((Readable) null, new ParseListener() {
+                                          /** {@inheritDoc} */
+                                          public void description(final String description) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void sequence(final String sequence) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void appendSequence(final String sequence) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void repeatDescription(final String repeatDescription) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void quality(final String quality) throws IOException {
+                                              // empty
+                                          }
+ 
+                                          /** {@inheritDoc} */
+                                          public void appendQuality(final String quality) throws IOException {
+                                              // empty
+                                          }
+
+                                          /** {@inheritDoc} */
+                                          public void complete() throws IOException {
+                                              // empty
+                                          }
+                                      });
+            fail("parse(null, ) expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
+    }
+ 
+    public void testParseReadableNullParseListener() throws Exception
+    {
+        SolexaFastqReader solexaFastqReader = (SolexaFastqReader) createFastqReader();
+        final String input = "";
+        try
+        {
+            solexaFastqReader.parse(new StringReader(input), null);
+            fail("parse(, null) expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
+    }
 }

@@ -35,6 +35,26 @@ public interface FastqReader
 {
 
     /**
+     * Parse the specified readable.
+     *
+     * @since 1.9.1
+     * @param readable readable, must not be null
+     * @param listener low-level event based parser callback, must not be null
+     * @throws IOException if an I/O error occurs
+     */
+    void parse(Readable readable, ParseListener listener) throws IOException;
+
+    /**
+     * Stream the specified readable.
+     *
+     * @since 1.9.1
+     * @param readable readable, must not be null
+     * @param listener event based reader callback, must not be null
+     * @throws IOException if an I/O error occurs
+     */
+    void stream(Readable readable, StreamListener listener) throws IOException;
+
+    /**
      * Read zero or more FASTQ formatted sequences from the specified file.
      *
      * @param file file to read from, must not be null

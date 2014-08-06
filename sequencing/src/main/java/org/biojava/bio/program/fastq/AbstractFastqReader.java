@@ -22,8 +22,10 @@ package org.biojava.bio.program.fastq;
 
 import java.net.URL;
 
+import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -55,10 +57,18 @@ abstract class AbstractFastqReader
      */
     protected abstract FastqVariant getVariant();
 
+    @Override
+    public final void parse(final Readable readable, final ParseListener listener)
+        throws IOException
+    {
+        FastqParser.parse(readable, listener);
+    }
+
     /**
      * Parse the specified input supplier.
      *
      * @since 1.8.2
+     * @deprecated will be removed in version 1.10, see {@link FastqReader#parse(Readable,ParseListener)}
      * @param supplier input supplier, must not be null
      * @param listener low-level event based parser callback, must not be null
      * @throws IOException if an I/O error occurs
@@ -70,10 +80,18 @@ abstract class AbstractFastqReader
         FastqParser.parse(supplier, listener);
     }
 
+    @Override
+    public final void stream(final Readable readable, final StreamListener listener)
+        throws IOException
+    {
+        StreamingFastqParser.stream(readable, getVariant(), listener);
+    }
+
     /**
      * Stream the specified input supplier.
      *
      * @since 1.8.2
+     * @deprecated will be removed in version 1.10, see {@link FastqReader#stream(Readable,StreamListener)}
      * @param supplier input supplier, must not be null
      * @param listener event based reader callback, must not be null
      * @throws IOException if an I/O error occurs
@@ -92,8 +110,25 @@ abstract class AbstractFastqReader
         {
             throw new IllegalArgumentException("file must not be null");
         }
+
+        BufferedReader reader = null;
         Collect collect = new Collect();
-        stream(Files.newReaderSupplier(file, Charset.forName("US-ASCII")), collect);
+        try
+        {
+            reader = new BufferedReader(new FileReader(file));
+            stream(reader, collect);
+        }
+        finally
+        {
+            try
+            {
+                reader.close();
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+        }
         return collect.getResult();
     }
 
@@ -104,8 +139,25 @@ abstract class AbstractFastqReader
         {
             throw new IllegalArgumentException("url must not be null");
         }
+
+        BufferedReader reader = null;
         Collect collect = new Collect();
-        stream(Resources.newReaderSupplier(url, Charset.forName("US-ASCII")), collect);
+        try
+        {
+            reader = Resources.asCharSource(url, Charset.forName("UTF-8")).openBufferedStream();
+            stream(reader, collect);
+        }
+        finally
+        {
+            try
+            {
+                reader.close();
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+        }
         return collect.getResult();
     }
 
@@ -116,15 +168,25 @@ abstract class AbstractFastqReader
         {
             throw new IllegalArgumentException("inputStream must not be null");
         }
+
+        BufferedReader reader = null;
         Collect collect = new Collect();
-        stream(new InputSupplier<InputStreamReader>()
-               {
-                   /** {@inheritDoc} */
-                   public InputStreamReader getInput() throws IOException
-                   {
-                       return new InputStreamReader(inputStream);
-                   }
-               }, collect);
+        try
+        {
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            stream(reader, collect);
+        }
+        finally
+        {
+            try
+            {
+                reader.close();
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+        }
         return collect.getResult();
     }
 

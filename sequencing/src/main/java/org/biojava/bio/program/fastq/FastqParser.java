@@ -36,8 +36,37 @@ final class FastqParser
 {
 
     /**
+     * Parse the specified readable.
+     *
+     * @since 1.9.1
+     * @param readable readable, must not be null
+     * @param listener low-level event based parser callback, must not be null
+     * @throws IOException if an I/O error occurs
+     */
+    static void parse(final Readable readable, final ParseListener listener)
+        throws IOException
+    {
+        if (readable == null)
+        {
+            throw new IllegalArgumentException("readable must not be null");
+        }
+        FastqParserLineProcessor lineProcessor = new FastqParserLineProcessor(listener);
+        CharStreams.readLines(readable, lineProcessor);
+        if (lineProcessor.getState() == State.COMPLETE)
+        {
+            listener.complete();
+            lineProcessor.setState(State.DESCRIPTION);
+        }
+        if (lineProcessor.getState() != State.DESCRIPTION)
+        {
+            throw new IOException("truncated sequence"); // at line " + lineNumber);
+        }
+    }
+
+    /**
      * Parse the specified input supplier.
      *
+     * @deprecated will be removed in version 1.10, see {@link #parse(Readable,ParseListener)}
      * @param supplier input supplier, must not be null
      * @param listener low-level event based parser callback, must not be null
      * @throws IOException if an I/O error occurs

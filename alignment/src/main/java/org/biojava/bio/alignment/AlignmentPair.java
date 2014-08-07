@@ -25,7 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.biojava.bio.BioException;
+import org.biojava.bio.seq.GappedSequence;
 import org.biojava.bio.seq.Sequence;
+import org.biojava.bio.seq.impl.SimpleGappedSequence;
 import org.biojava.bio.symbol.Symbol;
 import org.biojava.bio.symbol.SymbolList;
 
@@ -533,4 +535,22 @@ public class AlignmentPair extends SimpleAlignment {
 		return nGapsQ / (float) query.length() * 100;
 	}
 
+
+    /**
+     * Return the query sequence as a gapped sequence.
+     *
+     * @return the query sequence as a gapped sequence
+     */
+    public GappedSequence getQuery() {
+        return (query instanceof GappedSequence) ? (GappedSequence) query : new SimpleGappedSequence(query);
+    }
+
+    /**
+     * Return the subject sequence as a gapped sequence.
+     *
+     * @return the subject sequence as a gapped sequence
+     */
+    public GappedSequence getSubject() {
+        return (subject instanceof GappedSequence) ? (GappedSequence) subject : new SimpleGappedSequence(subject);
+    }
 }

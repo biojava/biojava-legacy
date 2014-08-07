@@ -24,9 +24,14 @@
 package org.biojava.bio.alignment;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.io.StringReader;
 
 import junit.framework.TestCase;
@@ -483,5 +488,22 @@ public class SubstitutionMatrixTest extends TestCase {
         catch (NullPointerException e) {
             // expected
         }
+    }
+
+    public void testSerializable() {
+        assertTrue(SubstitutionMatrix.getNuc4_4() instanceof Serializable);
+    }
+
+    public void testSerialization() throws Exception {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(buffer);
+        out.writeObject(SubstitutionMatrix.getNuc4_4());
+        out.close();
+
+        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(buffer.toByteArray()));
+        Object dest = in.readObject();
+        in.close();
+
+        assertTrue(dest instanceof SubstitutionMatrix);
     }
 }

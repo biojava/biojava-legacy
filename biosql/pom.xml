@@ -4,11 +4,11 @@
   <parent>
     <artifactId>biojava-legacy</artifactId>
     <groupId>org.biojava</groupId>
-    <version>1.9.1-SNAPSHOT</version>
+    <version>1.9.1</version>
   </parent>
   <artifactId>biosql</artifactId>
   <packaging>jar</packaging>
-  <version>1.9.1-SNAPSHOT</version>
+  <version>1.9.1</version>
   <name>biosql</name>
   <description>BioJava biosql module</description>
   <dependencies>

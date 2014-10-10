@@ -24,7 +24,6 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import com.google.common.io.CharStreams;
-import com.google.common.io.InputSupplier;
 import com.google.common.io.LineProcessor;
 
 /**
@@ -52,34 +51,6 @@ final class FastqParser
         }
         FastqParserLineProcessor lineProcessor = new FastqParserLineProcessor(listener);
         CharStreams.readLines(readable, lineProcessor);
-        if (lineProcessor.getState() == State.COMPLETE)
-        {
-            listener.complete();
-            lineProcessor.setState(State.DESCRIPTION);
-        }
-        if (lineProcessor.getState() != State.DESCRIPTION)
-        {
-            throw new IOException("truncated sequence"); // at line " + lineNumber);
-        }
-    }
-
-    /**
-     * Parse the specified input supplier.
-     *
-     * @deprecated will be removed in version 1.10, see {@link #parse(Readable,ParseListener)}
-     * @param supplier input supplier, must not be null
-     * @param listener low-level event based parser callback, must not be null
-     * @throws IOException if an I/O error occurs
-     */
-    static <R extends Readable & Closeable> void parse(final InputSupplier<R> supplier, final ParseListener listener)
-        throws IOException
-    {
-        if (supplier == null)
-        {
-            throw new IllegalArgumentException("supplier must not be null");
-        }
-        FastqParserLineProcessor lineProcessor = new FastqParserLineProcessor(listener);
-        CharStreams.readLines(supplier, lineProcessor);
         if (lineProcessor.getState() == State.COMPLETE)
         {
             listener.complete();

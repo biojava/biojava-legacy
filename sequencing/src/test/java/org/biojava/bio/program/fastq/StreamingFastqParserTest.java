@@ -23,8 +23,6 @@ package org.biojava.bio.program.fastq;
 import java.io.IOException;
 import java.io.StringReader;
 
-import com.google.common.io.InputSupplier;
-
 import junit.framework.TestCase;
 
 /**
@@ -33,11 +31,11 @@ import junit.framework.TestCase;
 public class StreamingFastqParserTest extends TestCase
 {
 
-    public void testStreamNullSupplier() throws Exception
+    public void testStreamNullReadable() throws Exception
     {
         try
         {
-            StreamingFastqParser.stream((InputSupplier<StringReader>) null, FastqVariant.FASTQ_SANGER, new StreamListener() {
+            StreamingFastqParser.stream((Readable) null, FastqVariant.FASTQ_SANGER, new StreamListener() {
                 /** {@inheritDoc} */
                 public void fastq(final Fastq fastq) {
                     // empty
@@ -56,19 +54,13 @@ public class StreamingFastqParserTest extends TestCase
         try
         {
             final String input = "";
-            InputSupplier<StringReader> supplier = new InputSupplier<StringReader>() {
-                /** {@inheritDoc} */
-                public StringReader getInput() throws IOException {
-                    return new StringReader(input);
-                }
-            };
-            StreamingFastqParser.stream(supplier, null, new StreamListener() {
+            StreamingFastqParser.stream(new StringReader(input), null, new StreamListener() {
                 /** {@inheritDoc} */
                 public void fastq(final Fastq fastq) {
                     // empty
                 }
             });
-            fail("stream(null,,) expected IllegalArgumentException");
+            fail("stream(,null,) expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e)
         {
@@ -81,13 +73,8 @@ public class StreamingFastqParserTest extends TestCase
         try
         {
             final String input = "";
-            StreamingFastqParser.stream(new InputSupplier<StringReader>() {
-                /** {@inheritDoc} */
-                public StringReader getInput() throws IOException {
-                    return new StringReader(input);
-                }
-            }, FastqVariant.FASTQ_SANGER, null);
-            fail("stream(null,,) expected IllegalArgumentException");
+            StreamingFastqParser.stream(new StringReader(input), FastqVariant.FASTQ_SANGER, null);
+            fail("stream(,,null) expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e)
         {

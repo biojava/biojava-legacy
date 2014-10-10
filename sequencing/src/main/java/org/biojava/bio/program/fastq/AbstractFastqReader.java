@@ -37,7 +37,6 @@ import java.util.List;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import com.google.common.io.InputSupplier;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
@@ -64,43 +63,11 @@ abstract class AbstractFastqReader
         FastqParser.parse(readable, listener);
     }
 
-    /**
-     * Parse the specified input supplier.
-     *
-     * @since 1.8.2
-     * @deprecated will be removed in version 1.10, see {@link FastqReader#parse(Readable,ParseListener)}
-     * @param supplier input supplier, must not be null
-     * @param listener low-level event based parser callback, must not be null
-     * @throws IOException if an I/O error occurs
-     */
-    public final <R extends Readable & Closeable> void parse(final InputSupplier<R> supplier,
-                                                             final ParseListener listener)
-        throws IOException
-    {
-        FastqParser.parse(supplier, listener);
-    }
-
     @Override
     public final void stream(final Readable readable, final StreamListener listener)
         throws IOException
     {
         StreamingFastqParser.stream(readable, getVariant(), listener);
-    }
-
-    /**
-     * Stream the specified input supplier.
-     *
-     * @since 1.8.2
-     * @deprecated will be removed in version 1.10, see {@link FastqReader#stream(Readable,StreamListener)}
-     * @param supplier input supplier, must not be null
-     * @param listener event based reader callback, must not be null
-     * @throws IOException if an I/O error occurs
-     */
-    public final <R extends Readable & Closeable> void stream(final InputSupplier<R> supplier,
-                                                              final StreamListener listener)
-        throws IOException
-    {
-        StreamingFastqParser.stream(supplier, getVariant(), listener);
     }
 
     /** {@inheritDoc} */

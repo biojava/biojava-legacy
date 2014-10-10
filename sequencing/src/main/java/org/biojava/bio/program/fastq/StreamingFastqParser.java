@@ -23,8 +23,6 @@ package org.biojava.bio.program.fastq;
 import java.io.Closeable;
 import java.io.IOException;
 
-import com.google.common.io.InputSupplier;
-
 /**
  * Event based parser for FASTQ formatted sequences.
  *
@@ -60,118 +58,6 @@ final class StreamingFastqParser
 
         final FastqBuilder builder = new FastqBuilder().withVariant(variant);
         FastqParser.parse(readable, new ParseListener()
-            {
-                /** {@inheritDoc} */
-                public void description(final String description) throws IOException
-                {
-                    builder.withDescription(description);
-                }
-
-                /** {@inheritDoc} */
-                public void sequence(final String sequence) throws IOException
-                {
-                    builder.withSequence(sequence);
-                }
-
-                /** {@inheritDoc} */
-                public void appendSequence(final String sequence) throws IOException
-                {
-                    builder.appendSequence(sequence);
-                }
-
-                /** {@inheritDoc} */
-                public void repeatDescription(final String repeatDescription) throws IOException
-                {
-                    String description = builder.getDescription();
-                    if ((description != null) && (description.length() > 0) && (repeatDescription.length() > 0))
-                    {
-                        if (!description.equals(repeatDescription))
-                        {
-                            throw new IOException("repeat description must match description");
-                        }
-                    }
-                }
-
-                /**
-                 * Validate the specified quality line.
-                 *
-                 * @param quality quality line to validate
-                 * @throws IOException if an I/O error occurs
-                 */
-                private void validateQuality(final String quality) throws IOException
-                {
-                    for (int i = 0, size = quality.length(); i < size; i++)
-                    {
-                        char c = quality.charAt(i);
-                        int qualityScore = variant.qualityScore(c);
-                        if (qualityScore < variant.minimumQualityScore() || qualityScore > variant.maximumQualityScore())
-                        {
-                            throw new IOException("quality score must be between " + variant.minimumQualityScore() +
-                                                  " and " + variant.maximumQualityScore() + ", was " + qualityScore +
-                                                  " for ASCII char '" + c + "'");
-                        }
-                    }
-                }
-
-                /** {@inheritDoc} */
-                public void quality(final String quality) throws IOException
-                {
-                    validateQuality(quality);
-                    builder.withQuality(quality);
-                }
-
-                /** {@inheritDoc} */
-                public void appendQuality(final String quality) throws IOException
-                {
-                    validateQuality(quality);
-                    builder.appendQuality(quality);
-                }
-
-                /** {@inheritDoc} */
-                public void complete() throws IOException
-                {
-                    try
-                    {
-                        listener.fastq(builder.build());
-                    }
-                    catch (IllegalStateException e)
-                    {
-                        throw new IOException("caught an IllegalStateException " + e.getMessage());
-                        //throw new IOException("caught an IllegalStateException", e);  jdk 1.6+
-                    }
-                }
-            });
-    }
-
-    /**
-     * Stream the specified input supplier.
-     *
-     * @deprecated will be removed in version 1.10, see {@link #stream(Readable,FastqVariant,StreamListener)}
-     * @param supplier input supplier, must not be null
-     * @param variant FASTQ variant, must not be null
-     * @param listener event based reader callback, must not be null
-     * @throws IOException if an I/O error occurs
-     */
-    static <R extends Readable & Closeable> void stream(final InputSupplier<R> supplier,
-                                                        final FastqVariant variant,
-                                                        final StreamListener listener)
-        throws IOException
-    {
-        if (supplier == null)
-        {
-            throw new IllegalArgumentException("supplier must not be null");
-        }
-        if (variant == null)
-        {
-            throw new IllegalArgumentException("variant must not be null");
-        }
-        if (listener == null)
-        {
-            throw new IllegalArgumentException("listener must not be null");
-        }
-
-        final FastqBuilder builder = new FastqBuilder().withVariant(variant);
-        FastqParser.parse(supplier, new ParseListener()
             {
                 /** {@inheritDoc} */
                 public void description(final String description) throws IOException

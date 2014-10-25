@@ -100,7 +100,6 @@ public class GenbankFormatTest extends TestCase {
         assertEquals("NoAccess", sequence.getAccession());
     }
 
-    @Ignore("requires -Xmx1g to process size of file")
     public void testEnsemblGenbankFile() {
         gbFormat.setElideSymbols(true);
         RichSequence sequence = readDNAFile("/Homo_sapiens.GRCh38.77.chromosome.1.dat");

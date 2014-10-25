@@ -19,6 +19,7 @@ import org.biojavax.RichObjectFactory;
 import org.biojavax.bio.seq.RichSequence;
 import org.biojavax.bio.seq.io.GenbankFormat.Terms;
 import org.biojavax.bio.taxa.NCBITaxon;
+import org.junit.Ignore;
 
 /**
  * Tests for GenbankFormat. Ain't parsing fun?
@@ -97,6 +98,13 @@ public class GenbankFormatTest extends TestCase {
     	RichSequence sequence = readDNAFile("/NoAccession.gb");
         assertNotNull(sequence);
         assertEquals("NoAccess", sequence.getAccession());
+    }
+
+    @Ignore("requires -Xmx1g to process size of file")
+    public void testEnsemblGenbankFile() {
+        gbFormat.setElideSymbols(true);
+        RichSequence sequence = readDNAFile("/Homo_sapiens.GRCh38.77.chromosome.1.dat");
+        assertNotNull(sequence);
     }
 
     public void testCanReadWhatIsWritten() {

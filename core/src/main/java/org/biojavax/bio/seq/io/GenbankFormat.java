@@ -443,6 +443,7 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
 	                            if (val.endsWith("\"")) val = val.substring(1,val.length()-1); // strip quotes
 	                            // parameter on old feature
 	                            if (key.equals("db_xref")) {
+                                    val = val.replaceAll("\\s+","");
 	                                Matcher m = dbxp.matcher(val);
 	                                if (m.matches()) {
 	                                    String dbname = m.group(1);
@@ -593,6 +594,9 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
                     br.reset();
                     done = true;
                 } else {
+                    if (getElideSymbols() && firstSecKey.equals(START_SEQUENCE_TAG) && !line.startsWith(END_SEQUENCE_TAG)) {
+                        continue;
+                    }
                     Matcher m = sectp.matcher(line);
                     if (m.matches()) {
                         // new key

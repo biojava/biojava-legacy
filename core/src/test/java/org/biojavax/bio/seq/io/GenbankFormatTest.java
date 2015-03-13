@@ -102,7 +102,13 @@ public class GenbankFormatTest extends TestCase {
 
     public void testEnsemblGenbankFile() {
         gbFormat.setElideSymbols(true);
-        RichSequence sequence = readDNAFile("/Homo_sapiens.GRCh38.77.chromosome.1.dat");
+        RichSequence sequence = readDNAFile("/Homo_sapiens.GRCh38.77.chromosome.CHR_HSCHR8_6_CTG7.dat");
+        assertNotNull(sequence);
+    }
+
+    public void testEnsemblGenbankFileWithMultilineDbxref() {
+        gbFormat.setElideSymbols(true);
+        RichSequence sequence = readDNAFile("/Homo_sapiens.GRCh38.77.chromosome.CHR_HSCHR8_6_CTG7.dat.edit");
         assertNotNull(sequence);
     }
 

@@ -64,7 +64,7 @@ import org.biojavax.bio.seq.RichSequence;
  */
 public class RemoteQBlastService implements RemotePairwiseAlignmentService {
 
-	private static String baseurl = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi";
+	private static String baseurl = "http://blast.ncbi.nlm.nih.gov/Blast.cgi";
 	private URL aUrl;
 	private URLConnection uConn;
 	private OutputStreamWriter fromQBlast;

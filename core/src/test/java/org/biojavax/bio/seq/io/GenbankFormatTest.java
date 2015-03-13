@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.Iterator;
+import java.util.zip.GZIPInputStream;
 
 import junit.framework.TestCase;
 
@@ -19,6 +20,7 @@ import org.biojavax.RichObjectFactory;
 import org.biojavax.bio.seq.RichSequence;
 import org.biojavax.bio.seq.io.GenbankFormat.Terms;
 import org.biojavax.bio.taxa.NCBITaxon;
+import org.junit.Ignore;
 
 /**
  * Tests for GenbankFormat. Ain't parsing fun?
@@ -99,6 +101,20 @@ public class GenbankFormatTest extends TestCase {
         assertEquals("NoAccess", sequence.getAccession());
     }
 
+    public void testEnsemblGenbankFile() {
+        gbFormat.setElideSymbols(true);
+        GZIPInputStream gzInStream = null;
+        try {
+            InputStream inStream = this.getClass().getResourceAsStream("/Homo_sapiens.GRCh38.77.chromosome.1.dat.gz");
+            gzInStream = new GZIPInputStream(inStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Unable to create input stream");
+        }
+        RichSequence sequence = readDNAStream(gzInStream);
+        assertNotNull(sequence);
+    }
+
     public void testCanReadWhatIsWritten() {
         // Read a genbank file
         RichSequence sequence = readDNAFile("/AY069118.gb");
@@ -155,6 +171,10 @@ public class GenbankFormatTest extends TestCase {
      */
     private RichSequence readDNAFile(String filename) {
         InputStream inStream = this.getClass().getResourceAsStream(filename);
+        return readDNAStream(inStream);
+    }
+
+    private RichSequence readDNAStream(InputStream inStream) {
         BufferedReader br = new BufferedReader(new InputStreamReader(inStream));
         SymbolTokenization tokenization = RichSequence.IOTools.getDNAParser();
         Namespace namespace = RichObjectFactory.getDefaultNamespace();

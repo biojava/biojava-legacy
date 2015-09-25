@@ -40,12 +40,14 @@ abstract class AbstractFastqWriter
 {
 
     /**
-     * Validate the specified FASTQ formatted sequence for writing.
+     * Convert the specified FASTQ formatted sequence if necessary.
      *
-     * @param fastq FASTQ formatted sequence to validate, will not be null
-     * @throws IOException if the specified FASTQ formatted sequence is not valid for writing
+     * @since 1.9.3
+     * @param fastq FASTQ formatted sequence to convert, must not be null
+     * @return the specified FASTQ formatted sequence or a new FASTA formatted
+     *    sequence if conversion is necessary
      */
-    protected abstract void validate(final Fastq fastq) throws IOException;
+    protected abstract Fastq convert(final Fastq fastq);
 
     /** {@inheritDoc} */
     public final <T extends Appendable> T append(final T appendable, final Fastq... fastq) throws IOException
@@ -66,16 +68,15 @@ abstract class AbstractFastqWriter
         }
         for (Fastq f : fastq)
         {
-            validate(f);
             if (f != null)
             {
+                Fastq converted = convert(f);
                 appendable.append("@");
-                appendable.append(f.getDescription());
+                appendable.append(converted.getDescription());
                 appendable.append("\n");
-                appendable.append(f.getSequence());
-                appendable.append("\n");
-                appendable.append("+\n");
-                appendable.append(f.getQuality());
+                appendable.append(converted.getSequence());
+                appendable.append("\n+\n");
+                appendable.append(converted.getQuality());
                 appendable.append("\n");
             }
         }

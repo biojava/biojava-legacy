@@ -52,6 +52,14 @@ public enum FastqVariant
         }
 
         @Override
+        public int qualityScore(final double errorProbability)
+        {
+            // eq. 2
+            int phredQ = constrain(-10.0d * Math.log10(errorProbability));
+            return phredQ;
+        }
+
+        @Override
         public char quality(final int qualityScore)
         {
             if (qualityScore < minimumQualityScore())
@@ -94,6 +102,17 @@ public enum FastqVariant
         }
 
         @Override
+        public int qualityScore(final double errorProbability)
+        {
+            // eq. 2
+            double phredQ = -10.0d * Math.log10(errorProbability);
+            // eq. 4
+            int solexaQ = constrain(10.0d * Math.log10(Math.pow(10.0d, (phredQ/10.0d)) - 1.0d));
+
+            return solexaQ;
+        }
+
+        @Override
         public char quality(final int qualityScore)
         {
             if (qualityScore < minimumQualityScore())
@@ -111,7 +130,7 @@ public enum FastqVariant
         public double errorProbability(final int qualityScore)
         {
             double q = Math.pow(10.0d, ((double) qualityScore) / -10.0d);
-            return q / (1 + q);
+            return q / (1.0d + q);
         }
     },
 
@@ -134,6 +153,14 @@ public enum FastqVariant
         public int qualityScore(final char c)
         {
             return ((int) c) - 64;
+        }
+
+        @Override
+        public int qualityScore(final double errorProbability)
+        {
+            // eq. 2
+            int phredQ = constrain(-10.0d * Math.log10(errorProbability));
+            return phredQ;
         }
 
         @Override
@@ -256,6 +283,15 @@ public enum FastqVariant
     public abstract int qualityScore(char c);
 
     /**
+     * Convert the specified error probability to a quality score.
+     *
+     * @since 1.9.3
+     * @param errorProbability error probability
+     * @return the specified error probability converted to a quality score
+     */
+    public abstract int qualityScore(double errorProbability);
+
+    /**
      * Convert the specified quality score to a quality in ASCII format.
      *
      * @since 1.8.3
@@ -296,6 +332,21 @@ public enum FastqVariant
         return name().toLowerCase().replace('_', '-');
     }
 
+
+    /**
+     * Constrain the specified quality score in double precision to the minimum and maximum quality
+     * scores in int precision.
+     *
+     * @since 1.9.3
+     * @param qualityScore quality score in double precision
+     * @return the specified quality score in double precision constrained to the minimum and maximum quality
+     *    scores in int precision
+     */
+    protected int constrain(final double qualityScore)
+    {
+        // ick.
+        return Math.min(maximumQualityScore(), Math.max(minimumQualityScore(), Math.round((float) qualityScore)));
+    }
 
     /**
      * Return the FASTQ sequence format variant with the specified name, if any.  The name may

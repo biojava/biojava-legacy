@@ -22,7 +22,9 @@
 package org.biojava.bio.symbol;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.biojava.utils.SingletonList;
 
@@ -40,7 +42,7 @@ public final class Edit implements Serializable {
   public final int pos;
   public final int length;
   public final SymbolList replacement;
-  public HashMap<String, Object> props;
+  public final Map<String, Object> props;
 
   /**
    * Create a new Edit.
@@ -54,6 +56,7 @@ public final class Edit implements Serializable {
     this.pos = pos;
     this.length = length;
     this.replacement = replacement;
+    props = Collections.emptyMap();
   }
   
   /**
@@ -67,11 +70,11 @@ public final class Edit implements Serializable {
    *        metainformation to this edit; for example a property may describe
    *        the fate of features surrounding this edit.
    */
-  public Edit(int pos, int length, SymbolList replacement, HashMap<String, Object> props) {
+  public Edit(int pos, int length, SymbolList replacement, Map<String, Object> props) {
     this.pos = pos;
     this.length = length;
     this.replacement = replacement;
-    this.props = props;
+    this.props = Collections.unmodifiableMap(new HashMap<String, Object>(props));
   }
 
   /**
@@ -88,6 +91,7 @@ public final class Edit implements Serializable {
     SymbolList sl = new SimpleSymbolList(
         alpha, new SingletonList(replacement));
     this.replacement = sl;
+    props = Collections.emptyMap();
   }
 }
 

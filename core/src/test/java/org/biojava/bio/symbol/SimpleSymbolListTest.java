@@ -21,7 +21,9 @@
 
 package org.biojava.bio.symbol;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -107,8 +109,37 @@ public class SimpleSymbolListTest extends TestCase {
         throws Exception
     {
         SimpleSymbolList tsl = new SimpleSymbolList(sl1);
-        tsl.edit(new Edit(4, 2, sl2));
+        Edit edit = new Edit(4, 2, sl2);
+        tsl.edit(edit);
         assertTrue(compareSymbolList(tsl, DNATools.createDNA("gatatggaa")));
+        assertTrue(edit.props.isEmpty());
+    }
+
+    public void testReplacementWithProperties()
+        throws Exception
+    {
+        SimpleSymbolList tsl = new SimpleSymbolList(sl1);
+        Map<String, Object> props = new HashMap<String, Object>();
+        props.put("key", "value");
+        Edit edit = new Edit(4, 2, sl2, props);
+        tsl.edit(edit);
+        assertTrue(compareSymbolList(tsl, DNATools.createDNA("gatatggaa")));
+        assertEquals("value", edit.props.get("key"));
+    }
+
+    public void testReplacementWithNullProperties()
+        throws Exception
+    {
+        SimpleSymbolList tsl = new SimpleSymbolList(sl1);
+        try
+        {
+            tsl.edit(new Edit(4, 2, sl2, null));
+            fail("new Edit(..., null) expected NullPointerException");
+        }
+        catch (NullPointerException e)
+        {
+            // expected
+        }
     }
 
     public void testEditSuperlist()

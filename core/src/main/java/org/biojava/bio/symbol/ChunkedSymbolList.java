@@ -202,12 +202,12 @@ public class ChunkedSymbolList
             }
 
             //Make the chunks
-            int chunknum = newLength/chunkSize;
-            int chunkleft = newLength%chunkSize;
+            int chunkNum = newLength/chunkSize;
+            int chunkLeft = newLength%chunkSize;
             int chunkReused = (edit.pos-1)/chunkSize;
-            if(chunkleft>0) chunknum++;
-            SymbolList [] symListArray = new SymbolList[chunknum];
-            for(int i=0;i<chunknum-1;i++) {
+            if(chunkLeft>0) chunkNum++;
+            SymbolList [] symListArray = new SymbolList[chunkNum];
+            for(int i=0;i<chunkNum-1;i++) {
                 if(i<chunkReused) {
                     symListArray[i] = chunks[i];
                     continue;
@@ -216,14 +216,14 @@ public class ChunkedSymbolList
                 System.arraycopy(dest, i*chunkSize, chunk, 0, chunkSize);
                 symListArray[i] = new SimpleSymbolList(chunk, chunkSize, getAlphabet());
             }
-            if(chunkleft>0) {
-                Symbol[] chunk = new Symbol[chunkleft];
-                System.arraycopy(dest, (chunknum-1)*chunkSize, chunk, 0, chunkleft);
-                symListArray[chunknum-1] = new SimpleSymbolList(chunk, chunkleft, getAlphabet());
+            if(chunkLeft>0) {
+                Symbol[] chunk = new Symbol[chunkLeft];
+                System.arraycopy(dest, (chunkNum-1)*chunkSize, chunk, 0, chunkLeft);
+                symListArray[chunkNum-1] = new SimpleSymbolList(chunk, chunkLeft, getAlphabet());
             } else {
                 Symbol[] chunk = new Symbol[chunkSize];
-                System.arraycopy(dest, (chunknum-1)*chunkSize, chunk, 0, chunkSize);
-                symListArray[chunknum-1] = new SimpleSymbolList(chunk, chunkSize, getAlphabet());
+                System.arraycopy(dest, (chunkNum-1)*chunkSize, chunk, 0, chunkSize);
+                symListArray[chunkNum-1] = new SimpleSymbolList(chunk, chunkSize, getAlphabet());
             }
 
             chunks = symListArray;

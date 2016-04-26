@@ -146,10 +146,10 @@ public class ChunkedSymbolList
             cs.firePreChangeEvent(cevt);
         
             // now for the edit
-            int posRightFragInSourceArray5 = edit.pos + edit.length - 1;
-            int rightFragLength = length - posRightFragInSourceArray5;
-            int posRightFragInDestArray5 = posRightFragInSourceArray5 + edit.replacement.length() - edit.length;
-            int posReplaceFragInDestArray5 = edit.pos - 1;
+            int posRightFragInSourceArray = edit.pos + edit.length - 1;
+            int rightFragLength = length - posRightFragInSourceArray;
+            int posRightFragInDestArray = posRightFragInSourceArray + edit.replacement.length() - edit.length;
+            int posReplaceFragInDestArray = edit.pos - 1;
             int replaceFragLength = edit.replacement.length();
             int newLength = length + replaceFragLength - edit.length;
 
@@ -173,13 +173,13 @@ public class ChunkedSymbolList
             
             // copy the symbols after the edit
             if (rightFragLength > 0) {
-                int chunkNum = posRightFragInSourceArray5 / chunkSize;
-                int chunkStart = posRightFragInSourceArray5 % chunkSize;
+                int chunkNum = posRightFragInSourceArray / chunkSize;
+                int chunkStart = posRightFragInSourceArray % chunkSize;
                 int chunkCopied = 0;
                 for (int i = chunkNum; i < chunks.length; i++) {
                     SymbolList chunk = chunks[i];
                     Symbol[] chunkSymbol = ((SimpleSymbolList) chunk).getSymbolArray();
-                    int desStart = posRightFragInDestArray5 + chunkCopied;
+                    int desStart = posRightFragInDestArray + chunkCopied;
                     int desLength = chunk.length() - chunkStart;
                     int left = rightFragLength - chunkCopied;
                     if (left == 0) {
@@ -198,7 +198,7 @@ public class ChunkedSymbolList
 
             // copy the symbols within the edit
             for (int i = 1; i <= replaceFragLength; i++) {
-                dest[posReplaceFragInDestArray5 + i - 1] = edit.replacement.symbolAt(i);
+                dest[posReplaceFragInDestArray + i - 1] = edit.replacement.symbolAt(i);
             }
 
             //Make the chunks

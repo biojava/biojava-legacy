@@ -41,7 +41,7 @@ import org.biojava.utils.ChangeVetoException;
 public class SymbolListTest extends TestCase
 {
     // SymbolList lengths to run tests at.
-    int testLengths[] = {100, 16384, 32000, 100000};
+    int testLengths[] = {100, 16384, 32000, 32768, 32769, 100000};
 
     // number of times to repeat each test to deal with chance
     // matches in last symbol.
@@ -363,6 +363,143 @@ public class SymbolListTest extends TestCase
 
         // exercise the PackedSymbolList implementation
         assertTrue(runRepeatedSymbolListTests(arrayAlpha, symListAlpha, factory));
+    }
+    
+    /** test SymbolList editing.
+     * 
+     */
+    public void testSymbolListEditing() throws Exception {
+        FiniteAlphabet dna = DNATools.getDNA();
+
+        SymListFactory factory = new SymListFactory() {
+            public SymbolList createSymbolList(Symbol[] array, FiniteAlphabet alpha, int length) {
+                try {
+                    ChunkedSymbolListFactory chunker = new ChunkedSymbolListFactory(new SimpleSymbolListFactory());
+                    chunker.addSymbols(alpha, array, 0, length);
+                    return chunker.makeSymbolList();
+                } catch (IllegalAlphabetException iae) {
+                    return null;
+                }
+            }
+        };
+
+        //Insertion at the beginning
+        for (int i = 0; i < testLengths.length; i++) {
+            int length = testLengths[i];
+            Symbol [] array = new Symbol[length];
+            for (int s = 0; s < length; s++) {
+                array[s]=DNATools.a();
+            }
+            SymbolList sl = factory.createSymbolList(array, dna, length);
+            SymbolList il = DNATools.createDNA("g");
+            Edit e = new Edit(1,0,il);
+            sl.edit(e);
+            assertTrue(sl.symbolAt(1)==DNATools.g());
+            assertTrue(sl.symbolAt(2)==DNATools.a());
+            int newlen = length + e.replacement.length() - e.length;
+            String newseq = sl.seqString();
+            assertTrue(newlen==newseq.length());
+        }
+        
+        //Insertion at the end
+        for (int i = 0; i < testLengths.length; i++) {
+            int length = testLengths[i];
+            Symbol [] array = new Symbol[length];
+            for (int s = 0; s < length; s++) {
+                array[s]=DNATools.a();
+            }
+            SymbolList sl = factory.createSymbolList(array, dna, length);
+            SymbolList il = DNATools.createDNA("g");
+            Edit e = new Edit(testLengths[i]+1,0,il);
+            sl.edit(e);
+            assertTrue(sl.symbolAt(testLengths[i]+1)==DNATools.g());
+            assertTrue(sl.symbolAt(testLengths[i])==DNATools.a());
+            int newlen = length + e.replacement.length() - e.length;
+            String newseq = sl.seqString();
+            assertTrue(newlen==newseq.length());
+        }
+        
+        //Sequence exchange
+        for (int i = 0; i < testLengths.length; i++) {
+            int length = testLengths[i];
+            Symbol [] array = new Symbol[length];
+            for (int s = 0; s < length; s++) {
+                array[s]=DNATools.a();
+            }
+            SymbolList sl = factory.createSymbolList(array, dna, length);
+            SymbolList il = DNATools.createDNA("g");
+            Edit e = new Edit(1,testLengths[i],il);
+            sl.edit(e);
+            assertTrue(il.equals(sl));
+        }
+        
+        //Plain editing with substitution
+        for (int i = 0; i < testLengths.length; i++) {
+            int length = testLengths[i];
+            int start = length/2;
+            int elen = start/2;
+            Symbol [] array = new Symbol[length];
+            for (int s = 0; s < length; s++) {
+                array[s]=DNATools.a();
+            }
+            SymbolList sl = factory.createSymbolList(array, dna, length);
+            
+            array = new Symbol[elen];
+            for (int s = 0; s < elen; s++) {
+                array[s]=DNATools.g();
+            }
+            SymbolList il = factory.createSymbolList(array, dna, elen);
+            Edit e = new Edit(start,elen,il);
+            sl.edit(e);
+            assertTrue(sl.symbolAt(start-1)==DNATools.a());
+            assertTrue(sl.symbolAt(start)==DNATools.g());
+            int newlen = length + e.replacement.length() - e.length;
+            String newseq = sl.seqString();
+            assertTrue(newlen==newseq.length());
+        }
+        
+        //Plain editing with insertion
+        for (int i = 0; i < testLengths.length; i++) {
+            int length = testLengths[i];
+            int start = length/2;
+            int elen = start/2;
+            Symbol [] array = new Symbol[length];
+            for (int s = 0; s < length; s++) {
+                array[s]=DNATools.a();
+            }
+            SymbolList sl = factory.createSymbolList(array, dna, length);
+            
+            array = new Symbol[elen];
+            for (int s = 0; s < elen; s++) {
+                array[s]=DNATools.g();
+            }
+            SymbolList il = factory.createSymbolList(array, dna, elen);
+            Edit e = new Edit(start,0,il);
+            sl.edit(e);
+            assertTrue(sl.symbolAt(start-1)==DNATools.a());
+            assertTrue(sl.symbolAt(start)==DNATools.g());
+            int newlen = length + e.replacement.length() - e.length;
+            String newseq = sl.seqString();
+            assertTrue(newlen==newseq.length());
+        }
+        
+        //Plain editing with deletion
+        for (int i = 0; i < testLengths.length; i++) {
+            int length = testLengths[i];
+            int start = length/2;
+            int elen = start/2;
+            Symbol [] array = new Symbol[length];
+            for (int s = 0; s < length; s++) {
+                array[s]=DNATools.a();
+            }
+            SymbolList sl = factory.createSymbolList(array, dna, length);
+            
+            Edit e = new Edit(start,elen,SymbolList.EMPTY_LIST);
+            sl.edit(e);
+            int newlen = length + e.replacement.length() - e.length;
+            String newseq = sl.seqString();
+            assertTrue(newlen==newseq.length());
+        }
     }
 
     // creates a suite

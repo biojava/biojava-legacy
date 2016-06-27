@@ -65,7 +65,7 @@ import org.biojavax.bio.seq.io.RichSequenceBuilderFactory;
  */
 public class GenpeptRichSequenceDB extends AbstractRichSequenceDB implements RichSequenceDBLite {
     
-    protected static final String urlBatchSequences = "http://www.ncbi.nlm.nih.gov:80/entrez/eutils/efetch.fcgi";
+    protected static final String urlBatchSequences = "https://www.ncbi.nlm.nih.gov:80/entrez/eutils/efetch.fcgi";
     
     /**
      * The default constructor delegates to the parent class. The constructor refers

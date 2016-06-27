@@ -73,11 +73,11 @@ public class FetchURL {
         if (db.equalsIgnoreCase("Genbank") || db.equalsIgnoreCase("nucleotide")
                 || db.equalsIgnoreCase("Genpept") || db.equalsIgnoreCase("protein")
                 || db.equalsIgnoreCase("pubmed")) {
-            baseURL = "http://www.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?";
+            baseURL = "https://www.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?";
         } else if (db.equalsIgnoreCase("Swiss-prot")) {
             baseURL = "http://us.expasy.org/cgi-bin/get-sprot-raw.pl?";
         } else if (db.equalsIgnoreCase("LocusLink")) {
-            baseURL = "http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?";
+            baseURL = "https://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?";
         }
 
         return baseURL;

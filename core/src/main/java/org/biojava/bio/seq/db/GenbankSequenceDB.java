@@ -62,7 +62,7 @@ public class GenbankSequenceDB
   protected boolean IOExceptionFound=false;//check if IOException is found
   protected boolean ExceptionFound=false;//check if any exception is found
   protected static final String urlBatchSequences =
-    "http://www.ncbi.nlm.nih.gov:80/entrez/eutils/efetch.fcgi";
+    "https://www.ncbi.nlm.nih.gov:80/entrez/eutils/efetch.fcgi";
 
   public GenbankSequenceDB() {
   }

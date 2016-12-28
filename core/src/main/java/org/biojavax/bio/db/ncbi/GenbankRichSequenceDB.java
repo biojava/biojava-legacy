@@ -65,7 +65,7 @@ import org.biojavax.bio.seq.io.RichSequenceBuilderFactory;
  */
 public class GenbankRichSequenceDB extends AbstractRichSequenceDB implements RichSequenceDBLite {
     
-    protected static final String urlBatchSequences = "http://www.ncbi.nlm.nih.gov:80/entrez/eutils/efetch.fcgi";
+    protected static final String urlBatchSequences = "https://www.ncbi.nlm.nih.gov:80/entrez/eutils/efetch.fcgi";
 
     private String email = "anonymous@biojava.org";
     private String tool = "biojavax";

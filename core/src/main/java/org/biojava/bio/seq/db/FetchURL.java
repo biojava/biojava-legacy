@@ -65,7 +65,8 @@ public class FetchURL {
             retmode = format;
         } else
         if (databaseName.trim().equalsIgnoreCase("locuslink")) {
-            db = "locuslink";
+            throw new IllegalArgumentException("NCBI LocusLink was replaced by Entrez Gene " +
+                "in 2005. NCBI no longer provides LocusLink, and has also discontinued its URL redirect service.");
         }
     }
 
@@ -76,10 +77,7 @@ public class FetchURL {
             baseURL = "https://www.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?";
         } else if (db.equalsIgnoreCase("Swiss-prot")) {
             baseURL = "http://us.expasy.org/cgi-bin/get-sprot-raw.pl?";
-        } else if (db.equalsIgnoreCase("LocusLink")) {
-            baseURL = "https://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?";
         }
-
         return baseURL;
     }
 

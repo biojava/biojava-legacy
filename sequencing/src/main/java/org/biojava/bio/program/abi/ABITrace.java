@@ -63,7 +63,7 @@ public class ABITrace
 
   //the next three lines are the important persistent data
   private String sequence;
-  private int A[], G[], C[], T[], Basecalls[];
+  private int A[], G[], C[], T[], Basecalls[], Qcalls[];
   private int TraceLength, SeqLength;
 
   //This is the actual file data.
@@ -78,7 +78,7 @@ public class ABITrace
                          //allows ABITrace to handle that in a way that
                          //is invisible to the user.
   private static int AbsIndexBase=26; //The file location of the Index pointer
-  private int IndexBase,  PLOC;
+  private int IndexBase, PLOC, PCON;
 
   //the next declaration is for the actual file pointers
   private  int DATA9, DATA10, DATA11, DATA12, PBAS2, FWO;
@@ -151,6 +151,12 @@ public class ABITrace
  * array corresponds to an x-coordinate point in the graph that is a peak (a base location).
  */
   public int[] getBasecalls() { return Basecalls; }
+  
+  /**
+ * Returns an <code>int[]</code> array that represents the quality - each int in the
+ * array corresponds to an quality value 90-255) in the graph at a base location).
+ */
+  public int[] getQcalls() { return Qcalls; }
 
 /**
  * Returns the original programatically determined (unedited) sequence as a <code>SymbolList</code>.
@@ -290,6 +296,7 @@ public class ABITrace
     {
       setIndex();
       setBasecalls();
+      setQcalls();
       setSeq();
       setTraces();
     }
@@ -409,6 +416,24 @@ public class ABITrace
       }
     }
   }
+  
+    /**
+     * Fetch the quality calls from the trace data.
+     */
+    private void setQcalls() {
+        Qcalls = new int[SeqLength];
+        byte[] qq = new byte[SeqLength];
+        getSubArray(qq, PCON);
+        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(qq));
+        for (int i = 0; i <= SeqLength - 1; ++i) {
+            try {
+                Qcalls[i] = (int) dis.readByte();
+            } catch (IOException e)//This shouldn't happen. If it does something must be seriously wrong.
+            {
+                throw new IllegalStateException("Unexpected IOException encountered while manipulating internal streams.");
+            }
+        }
+    }
 
 /**
  * Utility method to return an int beginning at <code>pointer</code> in the TraceData array.
@@ -477,11 +502,11 @@ public class ABITrace
  */
   private void setIndex()
   {
-    int DataCounter, PBASCounter, PLOCCounter, NumRecords;
+    int DataCounter, PBASCounter, PLOCCounter, PCONCounter, NumRecords;
     byte[] RecNameArray = new byte[4];
     String RecName;
 
-    DataCounter = 0; PBASCounter = 0; PLOCCounter = 0;
+    DataCounter = 0; PBASCounter = 0; PLOCCounter = 0; PCONCounter = 0;
 
     IndexBase = getIntAt(AbsIndexBase + MacJunk);
     NumRecords = getIntAt(AbsIndexBase - 8 + MacJunk);
@@ -516,6 +541,12 @@ public class ABITrace
         if (PLOCCounter == 2)
           PLOC = IndexBase + (record * 28) + 20;
       }
+      if (RecName.equals("PCON"))
+      {
+        ++PCONCounter;
+        if (PCONCounter == 2)
+          PCON = IndexBase + (record * 28) + 20;
+      }
 
     } //next record
     TraceLength = getIntAt(DATA12 - 8);
@@ -526,6 +557,7 @@ public class ABITrace
     DATA11 = getIntAt(DATA11) + MacJunk;
     DATA12 = getIntAt(DATA12) + MacJunk;
     PBAS2 = getIntAt(PBAS2) + MacJunk;
+    PCON = getIntAt(PCON) + MacJunk;
   }
 
 /**

@@ -54,7 +54,7 @@ import java.net.URL;
  * @author Matthew Pocock
  * @version 0.5alpha
  */
-
+public class ABITrace {
     //the next three lines are the important persistent data
     private String sequence;
     private int A[], G[], C[], T[], Basecalls[], Qcalls[];

@@ -1,6 +1,3 @@
-.
- .
- 
 /*
  *                    BioJava development code
  *
@@ -64,6 +61,7 @@ public class ABITrace {
     private byte[] TraceData;
 
     private final int maximum;
+ 
     //the next four declaration lines comprise the file index information
     //sometimes when macintosh files are
     private int MacJunk; 

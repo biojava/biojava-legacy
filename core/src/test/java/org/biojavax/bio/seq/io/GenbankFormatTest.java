@@ -161,6 +161,27 @@ public class GenbankFormatTest extends TestCase {
         assertEquals(sequence.getInternalSymbolList().length(), 0);
     }
 
+    public void testNcbiExpandedAccessionFormats() throws Exception
+    {
+        RichSequence header0 = readDNAFile("/empty_header0.gb");
+        assertEquals("CP032762", header0.getName());
+        assertTrue(header0.getCircular());
+        assertEquals("BCT", header0.getDivision());
+        assertEquals("15-OCT-2018", header0.getAnnotation().getProperty(Terms.getDateUpdatedTerm()));
+
+        RichSequence header1 = readDNAFile("/empty_header1.gb");
+        assertEquals("AZZZAA02123456789", header1.getName());
+        assertFalse(header1.getCircular());
+        assertEquals("PRI", header1.getDivision());
+        assertEquals("15-OCT-2018", header1.getAnnotation().getProperty(Terms.getDateUpdatedTerm()));
+
+        RichSequence header2 = readDNAFile("/empty_header2.gb");
+        assertEquals("AZZZAA02123456789", header2.getName());
+        assertFalse(header2.getCircular());
+        assertEquals("PRI", header2.getDivision());
+        assertEquals("15-OCT-2018", header2.getAnnotation().getProperty(Terms.getDateUpdatedTerm()));
+    }
+
     /**
      * Read a genbank file, return a RichSequence
      * @param filename name of file to read

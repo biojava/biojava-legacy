@@ -33,6 +33,7 @@ import junit.framework.TestSuite;
 import org.biojava.bio.BioException;
 import org.biojava.bio.seq.Sequence;
 import org.biojava.bio.seq.SequenceIterator;
+import org.biojava.bio.seq.io.GenbankFormat;
 import org.biojava.bio.symbol.SymbolList;
 
 /**
@@ -200,7 +201,41 @@ public class SeqIOToolsTest extends TestCase
         }
 
       }
-    
+
+    private Sequence readGenbankResource(final String resource) throws Exception {
+        Sequence sequence = null;
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resource)));
+            sequence = SeqIOTools.readGenbank(reader).nextSequence();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+        finally {
+            try {
+                reader.close();
+            }
+            catch (Exception e) {
+                // ignore
+            }
+        }
+        return sequence;
+    }
+
+    public void testNcbiExpandedAccessionFormats() throws Exception
+    {
+        Sequence header0 = readGenbankResource("/empty_header0.gb");
+        assertEquals("CP032762", header0.getAnnotation().getProperty(GenbankFormat.LOCUS_TAG));
+
+        Sequence header1 = readGenbankResource("/empty_header1.gb");
+        assertEquals("AZZZAA02123456789", header1.getAnnotation().getProperty(GenbankFormat.LOCUS_TAG));
+
+        Sequence header2 = readGenbankResource("/empty_header2.gb");
+        assertEquals("AZZZAA02123456789", header2.getAnnotation().getProperty(GenbankFormat.LOCUS_TAG));
+    }
+
     public void testProteinReadersAndWriters()
     {
         /******* test readFastaProtein *********/

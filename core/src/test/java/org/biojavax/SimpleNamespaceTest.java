@@ -116,9 +116,13 @@ public class SimpleNamespaceTest extends TestCase {
      */
     public void testGetAcronym() {
         System.out.println("testGetAcronym");
-        //System.out.println(ns.getAcronym());
-        //should be set because of retreival from the LRU cache
-        assertEquals(acronym, ns.getAcronym());
+
+        try{
+            ns.setAcronym(acronym);
+            assertEquals(acronym, ns.getAcronym());
+        }catch(ChangeVetoException ex){
+            fail("Was not expecting "+ex.getClass().getName());
+        }
     }
 
     /**
@@ -126,8 +130,13 @@ public class SimpleNamespaceTest extends TestCase {
      */
     public void testGetAuthority() {
         System.out.println("testGetAuthority");
-        
-        assertEquals(authority,ns.getAuthority());
+
+        try{
+            ns.setAuthority(authority);
+            assertEquals(authority, ns.getAuthority());
+        }catch(ChangeVetoException ex){
+            fail("Was not expecting "+ex.getClass().getName());
+        }
     }
 
     /**
@@ -158,10 +167,16 @@ public class SimpleNamespaceTest extends TestCase {
     /**
      * Test of getURI method, of class org.biojavax.SimpleNamespace.
      */
-    public void testGetURI() {
+    public void testGetURI() throws Exception {
         System.out.println("testGetURI");
-        
-       assertEquals(uriString, ns.getURI().toString());
+
+        URI uri = new URI(uriString);
+        try{
+            ns.setURI(uri);
+            assertEquals(uriString, ns.getURI().toString());
+        }catch(ChangeVetoException ex){
+            fail("Was not expecting "+ex.getClass().getName());
+        }
     }
 
     /**

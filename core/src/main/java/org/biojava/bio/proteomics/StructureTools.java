@@ -34,7 +34,7 @@ import org.biojava.bio.symbol.FiniteAlphabet;
 public final class StructureTools {
   private static final FiniteAlphabet struct;
 
-  private static final AtomicSymbol _;
+  private static final AtomicSymbol space;
   private static final AtomicSymbol c;
   private static final AtomicSymbol h;
   private static final AtomicSymbol g;
@@ -50,7 +50,7 @@ public final class StructureTools {
 
       SymbolTokenization sTok = struct.getTokenization("token");
 
-      _ = (AtomicSymbol) sTok.parseToken(" ");
+      space = (AtomicSymbol) sTok.parseToken(" ");
       c = (AtomicSymbol) sTok.parseToken("c");
       h = (AtomicSymbol) sTok.parseToken("h");
       g = (AtomicSymbol) sTok.parseToken("g");
@@ -69,7 +69,7 @@ public final class StructureTools {
   }
 
   public AtomicSymbol get_() {
-    return _;
+    return space;
   }
 
   public AtomicSymbol getC() {

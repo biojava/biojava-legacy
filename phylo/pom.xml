@@ -4,11 +4,11 @@
   <parent>
     <artifactId>biojava-legacy</artifactId>
     <groupId>org.biojava</groupId>
-    <version>1.9.4-SNAPSHOT</version>
+    <version>1.9.4</version>
   </parent>
   <artifactId>phylo</artifactId>
   <packaging>jar</packaging>
-  <version>1.9.4-SNAPSHOT</version>
+  <version>1.9.4</version>
   <name>phylo</name>
   <description>BioJava phylo module</description>
   <dependencies>

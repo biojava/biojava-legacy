@@ -70,7 +70,7 @@ abstract class AbstractFastqReader
         StreamingFastqParser.stream(readable, getVariant(), listener);
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final Iterable<Fastq> read(final File file) throws IOException
     {
         if (file == null)
@@ -99,7 +99,7 @@ abstract class AbstractFastqReader
         return collect.getResult();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final Iterable<Fastq> read(final URL url) throws IOException
     {
         if (url == null)
@@ -128,7 +128,7 @@ abstract class AbstractFastqReader
         return collect.getResult();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final Iterable<Fastq> read(final InputStream inputStream) throws IOException
     {
         if (inputStream == null)
@@ -163,9 +163,9 @@ abstract class AbstractFastqReader
     private static final class Collect implements StreamListener
     {
         /** List of FASTQ formatted sequences. */
-        private final List<Fastq> result = Lists.newLinkedList();
+        private final List<Fastq> result = Lists.newArrayList();
 
-        /** {@inheritDoc} */
+        @Override
         public void fastq(final Fastq fastq)
         {
             result.add(fastq);

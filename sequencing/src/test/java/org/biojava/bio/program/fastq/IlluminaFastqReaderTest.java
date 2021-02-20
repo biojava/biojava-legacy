@@ -33,7 +33,7 @@ public final class IlluminaFastqReaderTest
     extends AbstractFastqReaderTest
 {
 
-    /** {@inheritDoc} */
+    @Override
     public Fastq createFastq()
     {
         return new FastqBuilder()
@@ -44,13 +44,13 @@ public final class IlluminaFastqReaderTest
             .build();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public FastqReader createFastqReader()
     {
         return new IlluminaFastqReader();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public FastqWriter createFastqWriter()
     {
         return new IlluminaFastqWriter();
@@ -171,41 +171,41 @@ public final class IlluminaFastqReaderTest
         IlluminaFastqReader illuminaFastqReader = (IlluminaFastqReader) createFastqReader();
         final String input = "";
         illuminaFastqReader.parse(new StringReader(input), new ParseListener() {
-                                      /** {@inheritDoc} */
-                                      public void description(final String description) throws IOException {
-                                          // empty
-                                      }
+                @Override
+                public void description(final String description) throws IOException {
+                    // empty
+                }
  
-                                      /** {@inheritDoc} */
-                                      public void sequence(final String sequence) throws IOException {
-                                          // empty
-                                      }
+                @Override
+                public void sequence(final String sequence) throws IOException {
+                    // empty
+                }
  
-                                      /** {@inheritDoc} */
-                                      public void appendSequence(final String sequence) throws IOException {
-                                          // empty
-                                      }
+                @Override
+                public void appendSequence(final String sequence) throws IOException {
+                    // empty
+                }
  
-                                      /** {@inheritDoc} */
-                                      public void repeatDescription(final String repeatDescription) throws IOException {
-                                          // empty
-                                      }
+                @Override
+                public void repeatDescription(final String repeatDescription) throws IOException {
+                    // empty
+                }
  
-                                      /** {@inheritDoc} */
-                                      public void quality(final String quality) throws IOException {
-                                          // empty
-                                      }
+                @Override
+                public void quality(final String quality) throws IOException {
+                    // empty
+                }
  
-                                      /** {@inheritDoc} */
-                                      public void appendQuality(final String quality) throws IOException {
-                                          // empty
-                                      }
+                @Override
+                public void appendQuality(final String quality) throws IOException {
+                    // empty
+                }
  
-                                      /** {@inheritDoc} */
-                                      public void complete() throws IOException {
-                                          // empty
-                                      }
-                                  });
+                @Override
+                public void complete() throws IOException {
+                    // empty
+                }
+            });
     }
  
     public void testParseReadableNullReadable() throws Exception
@@ -214,41 +214,41 @@ public final class IlluminaFastqReaderTest
         try
         {
             illuminaFastqReader.parse((Readable) null, new ParseListener() {
-                                          /** {@inheritDoc} */
-                                          public void description(final String description) throws IOException {
-                                              // empty
-                                          }
+                    @Override
+                    public void description(final String description) throws IOException {
+                        // empty
+                    }
  
-                                          /** {@inheritDoc} */
-                                          public void sequence(final String sequence) throws IOException {
-                                              // empty
-                                          }
+                    @Override
+                    public void sequence(final String sequence) throws IOException {
+                        // empty
+                    }
  
-                                          /** {@inheritDoc} */
-                                          public void appendSequence(final String sequence) throws IOException {
-                                              // empty
-                                          }
+                    @Override
+                    public void appendSequence(final String sequence) throws IOException {
+                        // empty
+                    }
  
-                                          /** {@inheritDoc} */
-                                          public void repeatDescription(final String repeatDescription) throws IOException {
-                                              // empty
-                                          }
+                    @Override
+                    public void repeatDescription(final String repeatDescription) throws IOException {
+                        // empty
+                    }
  
-                                          /** {@inheritDoc} */
-                                          public void quality(final String quality) throws IOException {
-                                              // empty
-                                          }
+                    @Override
+                    public void quality(final String quality) throws IOException {
+                        // empty
+                    }
  
-                                          /** {@inheritDoc} */
-                                          public void appendQuality(final String quality) throws IOException {
-                                              // empty
-                                          }
+                    @Override
+                    public void appendQuality(final String quality) throws IOException {
+                        // empty
+                    }
 
-                                          /** {@inheritDoc} */
-                                          public void complete() throws IOException {
-                                              // empty
-                                          }
-                                      });
+                    @Override
+                    public void complete() throws IOException {
+                        // empty
+                    }
+                });
             fail("parse(null, ) expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e)

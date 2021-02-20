@@ -35,6 +35,38 @@ public final class FastqBuilderTest
         assertNotNull(fastqBuilder);
     }
 
+    public void testConstructorFastq()
+    {
+        FastqBuilder fastqBuilder = new FastqBuilder()
+            .withDescription("description")
+            .withSequence("sequence")
+            .withQuality("quality_")
+            .withVariant(FastqVariant.FASTQ_SOLEXA);
+        Fastq fastq = fastqBuilder.build();
+
+        FastqBuilder fastqBuilder2 = new FastqBuilder(fastq);
+        assertNotNull(fastqBuilder2);
+
+        Fastq fastq2 = fastqBuilder2.build();
+        assertEquals(fastq.getDescription(), fastq2.getDescription());
+        assertEquals(fastq.getSequence(), fastq2.getSequence());
+        assertEquals(fastq.getQuality(), fastq2.getQuality());
+        assertEquals(fastq.getVariant(), fastq2.getVariant());
+    }
+
+    public void testConstructorNullFastq()
+    {
+        try
+        {
+            new FastqBuilder(null);
+            fail("ctr(null) expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
+    }
+
     public void testBuildDefault()
     {
         try

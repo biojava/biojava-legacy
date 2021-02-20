@@ -36,7 +36,7 @@ public class StreamingFastqParserTest extends TestCase
         try
         {
             StreamingFastqParser.stream((Readable) null, FastqVariant.FASTQ_SANGER, new StreamListener() {
-                /** {@inheritDoc} */
+                @Override
                 public void fastq(final Fastq fastq) {
                     // empty
                 }
@@ -55,7 +55,7 @@ public class StreamingFastqParserTest extends TestCase
         {
             final String input = "";
             StreamingFastqParser.stream(new StringReader(input), null, new StreamListener() {
-                /** {@inheritDoc} */
+                @Override
                 public void fastq(final Fastq fastq) {
                     // empty
                 }

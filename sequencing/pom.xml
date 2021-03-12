@@ -4,11 +4,11 @@
   <parent>
     <artifactId>biojava-legacy</artifactId>
     <groupId>org.biojava</groupId>
-    <version>1.9.5-SNAPSHOT</version>
+    <version>1.9.5</version>
   </parent>
   <artifactId>sequencing</artifactId>
   <packaging>jar</packaging>
-  <version>1.9.5-SNAPSHOT</version>
+  <version>1.9.5</version>
   <name>sequencing</name>
   <description>BioJava sequencing module</description>
   <dependencyManagement>

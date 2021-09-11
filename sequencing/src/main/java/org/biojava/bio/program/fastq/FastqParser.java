@@ -49,16 +49,24 @@ final class FastqParser
         {
             throw new IllegalArgumentException("readable must not be null");
         }
-        FastqParserLineProcessor lineProcessor = new FastqParserLineProcessor(listener);
-        CharStreams.readLines(readable, lineProcessor);
-        if (lineProcessor.getState() == State.COMPLETE)
+        final FastqParserLineProcessor lineProcessor = new FastqParserLineProcessor(listener);
+        try
         {
-            listener.complete();
-            lineProcessor.setState(State.DESCRIPTION);
+            CharStreams.readLines(readable, lineProcessor);
+
+            if (lineProcessor.getState() == State.COMPLETE)
+            {
+                listener.complete();
+                lineProcessor.setState(State.DESCRIPTION);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new IOException("parse error at line " + lineProcessor.getLineNumber() + ", state " + lineProcessor.getState(), e);
         }
         if (lineProcessor.getState() != State.DESCRIPTION)
         {
-            throw new IOException("truncated sequence"); // at line " + lineNumber);
+            throw new IOException("truncated sequence at line " + lineProcessor.getLineNumber());
         }
     }
 
@@ -69,6 +77,9 @@ final class FastqParser
     {
         /** Parser state. */
         private State state = State.DESCRIPTION;
+
+        /** Line number. */
+        private long lineNumber = 0;
 
         /** Sequence length. */
         private int sequenceLength = 0;
@@ -115,6 +126,16 @@ final class FastqParser
             this.state = state;
         }
 
+        /**
+         * Return the line number.
+         *
+         * @return the line number
+         */
+        private long getLineNumber()
+        {
+            return lineNumber;
+        }
+
         @Override
         public Object getResult()
         {
@@ -124,6 +145,8 @@ final class FastqParser
         @Override
         public boolean processLine(final String line) throws IOException
         {
+            lineNumber++;
+
             String sequence = null;
             String quality = null;
             switch (state)

@@ -67,7 +67,7 @@ public final class SolexaFastqReaderTest
         }
         catch (IOException e)
         {
-            assertTrue(e.getMessage().contains("description must begin with a '@' character"));
+            assertTrue(e.getCause().getMessage().contains("description must begin with a '@' character"));
         }
     }
 
@@ -82,7 +82,7 @@ public final class SolexaFastqReaderTest
         }
         catch (IOException e)
         {
-            assertTrue(e.getMessage().contains("repeat description must match description"));
+            assertTrue(e.getCause().getMessage().contains("repeat description must match description"));
         }
     }
 

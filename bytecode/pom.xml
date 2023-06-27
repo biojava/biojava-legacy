@@ -4,12 +4,12 @@
   <parent>
     <artifactId>biojava-legacy</artifactId>
     <groupId>org.biojava</groupId>
-    <version>1.9.6</version>
+    <version>1.9.7-SNAPSHOT</version>
   </parent>
   <groupId>org.biojava</groupId>
   <packaging>jar</packaging>
   <artifactId>bytecode</artifactId>
-  <version>1.9.6</version>
+  <version>1.9.7-SNAPSHOT</version>
   <name>bytecode</name>
   <description>BioJava bytecode module</description>
   <dependencies>

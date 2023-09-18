@@ -4,11 +4,11 @@
   <parent>
     <artifactId>biojava-legacy</artifactId>
     <groupId>org.biojava</groupId>
-    <version>1.9.7-SNAPSHOT</version>
+    <version>1.9.7</version>
   </parent>
   <artifactId>blast</artifactId>
   <packaging>jar</packaging>
-  <version>1.9.7-SNAPSHOT</version>
+  <version>1.9.7</version>
   <name>blast</name>
   <description>BioJava blast module</description>
   <dependencies>
